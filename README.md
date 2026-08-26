@@ -1,10 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // Cualquier persona puede ver tus trabajos
+    // Reglas para el catálogo de Manualidades MD
+    match /catalog/{document=**} {
+      // Cualquier persona (clientes) puede ver los trabajos, fotos y videos para ganar su confianza
       allow read: if true; 
-      // Solo usuarios que hayan iniciado sesión pueden modificar los datos
+      
+      // Solo tú o usuarios autenticados (administradores) pueden agregar, modificar o actualizar fotos, videos y precios
       allow write: if request.auth != null; 
     }
   }
