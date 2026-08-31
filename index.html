@@ -14,7 +14,6 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Animación blob */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -31,7 +30,6 @@
         }
         .premium-card { border: 1px solid rgba(212, 175, 55, 0.2); }
 
-        /* Transiciones modales */
         .modal-transition {
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
@@ -46,7 +44,6 @@
             pointer-events: auto;
         }
 
-        /* Indicador de carga */
         .loader {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #7c3aed;
@@ -81,12 +78,10 @@
                     <button onclick="showSection('catalog')" class="text-gray-600 hover:text-purple-600 font-medium transition">Catálogo Digital</button>
                     <button onclick="showSection('contact')" class="text-gray-600 hover:text-purple-600 font-medium transition">Contáctanos</button>
                     <div class="h-6 w-px bg-gray-200"></div>
-                    <!-- Botón carrito -->
                     <button onclick="openCartModal()" class="relative p-2 text-gray-600 hover:text-purple-600 transition">
                         <i class="fas fa-shopping-bag text-xl"></i>
                         <span id="cart-badge-desktop" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-pink-500 rounded-full hidden">0</span>
                     </button>
-                    <!-- Botón admin / login -->
                     <div id="auth-buttons-desktop">
                         <button id="btn-login-desktop" onclick="openLoginModal()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full font-medium transition">Admin</button>
                         <button id="btn-logout-desktop" onclick="logout()" class="hidden text-sm bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-full font-medium transition">Cerrar sesión</button>
@@ -315,9 +310,14 @@
 
         <!-- ===== SECCIÓN ADMIN (solo visible para admin) ===== -->
         <div id="section-admin" class="hidden space-y-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
-                <button onclick="showSection('catalog')" class="text-purple-600 hover:text-purple-800 font-medium"><i class="fas fa-arrow-left mr-1"></i> Ver catálogo</button>
+                <div class="flex gap-2">
+                    <button onclick="restoreSampleCatalog()" class="bg-yellow-100 text-yellow-800 font-medium py-2 px-4 rounded-lg hover:bg-yellow-200 transition text-sm">
+                        <i class="fas fa-undo-alt mr-1"></i> Restaurar catálogo de ejemplo
+                    </button>
+                    <button onclick="showSection('catalog')" class="text-purple-600 hover:text-purple-800 font-medium text-sm"><i class="fas fa-arrow-left mr-1"></i> Ver catálogo</button>
+                </div>
             </div>
 
             <!-- Formulario para crear/editar producto -->
@@ -483,7 +483,7 @@
     </footer>
 
     <!-- ==================== SCRIPTS ==================== -->
-    <!-- Firebase SDKs (compatibles con módulos) -->
+    <!-- Firebase SDKs -->
     <script type="importmap">
         {
             "imports": {
@@ -511,10 +511,11 @@
             updateDoc, 
             deleteDoc,
             query,
-            orderBy
+            orderBy,
+            getDocs,
+            writeBatch
         } from 'firebase/firestore';
 
-        // Tus credenciales
         const firebaseConfig = {
             apiKey: "AIzaSyATAqRUThwU_oulXnVtwzZ1aKTjkcvPDQ4",
             authDomain: "variadades-md.firebaseapp.com",
@@ -530,20 +531,76 @@
         const db = getFirestore(app);
 
         // ================================================================
-        // 2. ESTADO GLOBAL
+        // 2. DATOS DE CATÁLOGO DE EJEMPLO (versión anterior)
+        // ================================================================
+        const SAMPLE_PRODUCTS = [
+            {
+                name: "Caja Sorpresa de Aniversario",
+                category: "Regalos",
+                price: 25000,
+                promoPrice: 20000,
+                isPromo: true,
+                desc: "Hermosa caja personalizada que incluye fotografías, chocolates premium y un mensaje oculto. Perfecta para sorprender a tu pareja.\n\nIncluye:\n- Caja decorada a mano\n- 10 fotos polaroid\n- Surtido de chocolates",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fdf2f8/be185d?text=Foto+Exterior' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fbcfe8/831843?text=Foto+Detalle+Interior' },
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
+                ]
+            },
+            {
+                name: "Centro de Mesa Bautizo",
+                category: "Eventos",
+                price: 15000,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Centros de mesa delicados con temática angelical. Utilizamos bases de madera pintadas a mano y detalles en foami brillante.\n\n*Precio referencial por unidad. Descuentos a partir de 12 unidades.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/eff6ff/1d4ed8?text=Centro+de+Mesa+1' },
+                    { type: 'img', src: 'https://placehold.co/800x800/dbeafe/1e3a8a?text=Ángulo+Diferente' }
+                ]
+            },
+            {
+                name: "Arreglo Floral en Globo",
+                category: "Regalos",
+                price: 18500,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Globo burbuja personalizado con pintura interior y texto exterior, acompañado de rosas (naturales o artificiales a elección).",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/f0fdf4/15803d?text=Globo+Personalizado' }
+                ]
+            },
+            {
+                name: "Recuerdos Boda (Velas)",
+                category: "Eventos",
+                price: 3500,
+                promoPrice: 3000,
+                isPromo: true,
+                desc: "Pequeñas velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
+                media: [
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual' }
+                ]
+            }
+        ];
+
+        // ================================================================
+        // 3. ESTADO GLOBAL
         // ================================================================
         const state = {
-            products: [],          // todos los productos desde Firestore
+            products: [],
             currentFilter: 'Todos',
             currentSection: 'home',
             cart: [],
-            user: null,           // { uid, email, isAdmin }
+            user: null,
             isAdmin: false,
-            editingId: null,      // id del producto que se está editando
+            editingId: null,
+            initialLoadDone: false
         };
 
         // ================================================================
-        // 3. UTILIDADES
+        // 4. UTILIDADES
         // ================================================================
         const formatMoney = (amount) => {
             return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', maximumFractionDigits: 0 }).format(amount || 0);
@@ -575,7 +632,7 @@
         };
 
         // ================================================================
-        // 4. NAVEGACIÓN
+        // 5. NAVEGACIÓN
         // ================================================================
         window.showSection = function(sectionId) {
             document.querySelectorAll('#section-home, #section-catalog, #section-contact, #section-admin').forEach(el => el.classList.add('hidden'));
@@ -590,7 +647,7 @@
         };
 
         // ================================================================
-        // 5. MODALES (genéricos)
+        // 6. MODALES
         // ================================================================
         const openModal = (id) => {
             const modal = document.getElementById(id);
@@ -617,7 +674,7 @@
         };
 
         // ================================================================
-        // 6. AUTENTICACIÓN Y ROL DE ADMIN
+        // 7. AUTENTICACIÓN Y ADMIN
         // ================================================================
         async function checkIfAdmin(uid) {
             try {
@@ -639,7 +696,6 @@
             }
             try {
                 const userCred = await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged se encargará del resto
                 closeModal('login-modal');
                 showNotification(`Bienvenido ${userCred.user.email}`, 'success');
             } catch (error) {
@@ -657,23 +713,19 @@
             }
         };
 
-        // Escuchar cambios de autenticación
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 state.user = user;
                 const isAdmin = await checkIfAdmin(user.uid);
                 state.isAdmin = isAdmin;
-                // Mostrar elementos de admin
                 updateUIForAuth(true);
                 if (isAdmin) {
                     showNotification('Modo administrador activado', 'success');
-                    // Mostrar sección de admin si estaba visible? O solo mostrar el botón.
                 }
             } else {
                 state.user = null;
                 state.isAdmin = false;
                 updateUIForAuth(false);
-                // Si estábamos en sección admin, redirigir a catálogo
                 if (state.currentSection === 'admin') {
                     showSection('catalog');
                 }
@@ -682,10 +734,8 @@
 
         function updateUIForAuth(loggedIn) {
             const isAdmin = state.isAdmin;
-            // Botones escritorio
             document.getElementById('btn-login-desktop').classList.toggle('hidden', loggedIn);
             document.getElementById('btn-logout-desktop').classList.toggle('hidden', !loggedIn);
-            // Botones móvil
             document.getElementById('btn-login-mobile').classList.toggle('hidden', loggedIn);
             document.getElementById('btn-logout-mobile').classList.toggle('hidden', !loggedIn);
             const adminMobile = document.getElementById('btn-admin-mobile');
@@ -694,11 +744,8 @@
             } else {
                 adminMobile.classList.add('hidden');
             }
-            // Mostrar sección admin en el nav (solo si es admin)
-            // Podríamos añadir un enlace en el menú, pero ya está.
         }
 
-        // Función para mostrar el panel admin (desde el botón)
         window.showAdminPanel = function() {
             if (state.isAdmin) {
                 showSection('admin');
@@ -709,11 +756,8 @@
         };
 
         // ================================================================
-        // 7. CRUD DE PRODUCTOS EN FIRESTORE
+        // 8. CRUD DE PRODUCTOS
         // ================================================================
-        // Colección: catalog
-
-        // Guardar (crear o actualizar)
         window.saveProduct = async function() {
             if (!state.isAdmin) {
                 showNotification('No tienes permisos', 'error');
@@ -732,7 +776,6 @@
                 return;
             }
 
-            // Obtener multimedia
             const mediaFields = document.querySelectorAll('#media-fields-container .flex');
             const media = [];
             mediaFields.forEach(container => {
@@ -760,11 +803,9 @@
 
             try {
                 if (editId) {
-                    // Actualizar
                     await updateDoc(doc(db, 'catalog', editId), productData);
                     showNotification('Producto actualizado', 'success');
                 } else {
-                    // Crear
                     await addDoc(collection(db, 'catalog'), productData);
                     showNotification('Producto creado', 'success');
                 }
@@ -775,7 +816,6 @@
             }
         };
 
-        // Eliminar
         window.deleteProduct = async function(id) {
             if (!state.isAdmin) return;
             if (!confirm('¿Eliminar este producto permanentemente?')) return;
@@ -787,7 +827,6 @@
             }
         };
 
-        // Cargar producto para editar (rellena el formulario)
         window.editProduct = function(id) {
             if (!state.isAdmin) return;
             const product = state.products.find(p => p.id === id);
@@ -802,7 +841,6 @@
             document.getElementById('form-title').textContent = 'Editar producto';
             document.getElementById('form-submit-btn').textContent = 'Actualizar producto';
 
-            // Limpiar media fields y agregar los existentes
             const container = document.getElementById('media-fields-container');
             container.innerHTML = '';
             if (product.media && product.media.length > 0) {
@@ -810,15 +848,11 @@
                     addMediaField(med.type, med.src);
                 });
             } else {
-                // agregar uno vacío
                 addMediaField('img', '');
             }
-
-            // Desplazar al formulario
             document.getElementById('admin-form-container').scrollIntoView({ behavior: 'smooth' });
         };
 
-        // Resetear formulario
         function resetForm() {
             document.getElementById('edit-product-id').value = '';
             document.getElementById('prod-name').value = '';
@@ -828,7 +862,6 @@
             document.getElementById('prod-desc').value = '';
             document.getElementById('form-title').textContent = 'Agregar nuevo producto';
             document.getElementById('form-submit-btn').textContent = 'Guardar producto';
-            // Reiniciar media fields a solo uno vacío
             const container = document.getElementById('media-fields-container');
             container.innerHTML = '';
             addMediaField('img', '');
@@ -836,7 +869,7 @@
         window.resetForm = resetForm;
 
         // ================================================================
-        // 8. MANEJO DE MULTIMEDIA EN FORMULARIO
+        // 9. MULTIMEDIA EN FORMULARIO
         // ================================================================
         window.addMediaField = function(type = 'img', url = '') {
             const container = document.getElementById('media-fields-container');
@@ -863,7 +896,64 @@
         };
 
         // ================================================================
-        // 9. CARGA EN TIEMPO REAL DEL CATÁLOGO DESDE FIRESTORE
+        // 10. RESTAURAR CATÁLOGO DE EJEMPLO (desde el panel)
+        // ================================================================
+        window.restoreSampleCatalog = async function() {
+            if (!state.isAdmin) {
+                showNotification('No tienes permisos', 'error');
+                return;
+            }
+            if (!confirm('Esto eliminará todos los productos actuales y los reemplazará con los de ejemplo. ¿Continuar?')) return;
+
+            try {
+                // Eliminar todos los documentos de la colección catalog
+                const snapshot = await getDocs(collection(db, 'catalog'));
+                const batch = writeBatch(db);
+                snapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+
+                // Insertar los productos de ejemplo
+                const colRef = collection(db, 'catalog');
+                for (const prod of SAMPLE_PRODUCTS) {
+                    await addDoc(colRef, {
+                        ...prod,
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+                showNotification('Catálogo restaurado con los productos de ejemplo', 'success');
+            } catch (e) {
+                console.error('Error restaurando catálogo:', e);
+                showNotification('Error al restaurar: ' + e.message, 'error');
+            }
+        };
+
+        // ================================================================
+        // 11. CARGA INICIAL Y SIEMBRA DE DATOS
+        // ================================================================
+        async function seedIfEmpty() {
+            try {
+                const snapshot = await getDocs(collection(db, 'catalog'));
+                if (snapshot.empty) {
+                    showNotification('Cargando catálogo de ejemplo...', 'info');
+                    const colRef = collection(db, 'catalog');
+                    for (const prod of SAMPLE_PRODUCTS) {
+                        await addDoc(colRef, {
+                            ...prod,
+                            updatedAt: new Date().toISOString()
+                        });
+                    }
+                    showNotification('Catálogo de ejemplo cargado exitosamente', 'success');
+                }
+            } catch (e) {
+                console.error('Error al sembrar datos:', e);
+                showNotification('Error al cargar datos de ejemplo', 'error');
+            }
+        }
+
+        // ================================================================
+        // 12. ESCUCHA EN TIEMPO REAL DEL CATÁLOGO
         // ================================================================
         function listenCatalog() {
             const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
@@ -873,11 +963,15 @@
                     products.push({ id: doc.id, ...doc.data() });
                 });
                 state.products = products;
-                // Actualizar vistas
                 renderCatalog();
                 renderAdminProductList();
-                // Actualizar también el carrito? Los precios pueden cambiar, mejor no.
-                // Si un producto en el carrito ya no existe, lo quitamos? No lo hacemos por simplicidad.
+                // Si es la primera vez que se carga, sembrar datos si está vacío
+                if (!state.initialLoadDone) {
+                    state.initialLoadDone = true;
+                    if (products.length === 0) {
+                        seedIfEmpty();
+                    }
+                }
             }, (error) => {
                 console.error('Error en onSnapshot:', error);
                 showNotification('Error al cargar catálogo', 'error');
@@ -885,7 +979,7 @@
         }
 
         // ================================================================
-        // 10. RENDERIZADO DEL CATÁLOGO (PÚBLICO)
+        // 13. RENDERIZADO DEL CATÁLOGO (PÚBLICO)
         // ================================================================
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
@@ -974,7 +1068,7 @@
         }
 
         // ================================================================
-        // 11. RENDERIZADO DE LISTA DE PRODUCTOS EN ADMIN
+        // 14. RENDERIZADO DE LISTA DE PRODUCTOS EN ADMIN
         // ================================================================
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
@@ -1008,7 +1102,7 @@
         }
 
         // ================================================================
-        // 12. FILTRO DEL CATÁLOGO
+        // 15. FILTRO DEL CATÁLOGO
         // ================================================================
         window.setCatalogFilter = function(filter) {
             state.currentFilter = filter;
@@ -1032,7 +1126,7 @@
         };
 
         // ================================================================
-        // 13. MODAL DE DETALLE DE PRODUCTO (con galería)
+        // 16. MODAL DE DETALLE DE PRODUCTO (CON GALERÍA)
         // ================================================================
         let currentProductMedia = [];
         let currentMediaIndex = 0;
@@ -1049,7 +1143,6 @@
                 : [{ type: 'img', src: 'https://placehold.co/800x800/e2e8f0/64748b?text=Sin+Imagen' }];
             currentMediaIndex = 0;
 
-            // Configurar controles
             const prevBtn = document.getElementById('modal-prev-btn');
             const nextBtn = document.getElementById('modal-next-btn');
             const indicators = document.getElementById('modal-media-indicators');
@@ -1067,7 +1160,6 @@
 
             updateModalMedia();
 
-            // Llenar datos
             document.getElementById('modal-product-category').textContent = product.category || 'General';
             document.getElementById('modal-product-name').textContent = product.name;
             document.getElementById('modal-product-desc').textContent = product.desc;
@@ -1139,7 +1231,7 @@
         };
 
         // ================================================================
-        // 14. CARRITO / COTIZACIÓN
+        // 17. CARRITO / COTIZACIÓN
         // ================================================================
         window.addToCart = function(productId) {
             const product = state.products.find(p => p.id === productId);
@@ -1222,7 +1314,7 @@
         };
 
         // ================================================================
-        // 15. DESCARGA DE CATÁLOGO (simulación)
+        // 18. DESCARGA DE CATÁLOGO (SIMULACIÓN)
         // ================================================================
         window.downloadCatalog = function() {
             showNotification('Generando Catálogo PDF... (Simulación)', 'success');
@@ -1230,14 +1322,14 @@
         };
 
         // ================================================================
-        // 16. INICIALIZACIÓN
+        // 19. INICIALIZACIÓN
         // ================================================================
         listenCatalog();
 
         // Mostrar sección inicial
         showSection('home');
 
-        // Pequeño helper para cerrar modales con overlay
+        // Cerrar modales al hacer clic en el overlay
         document.querySelectorAll('.fixed.inset-0.bg-black\\/70, .fixed.inset-0.bg-black.bg-opacity-50').forEach(overlay => {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
@@ -1247,10 +1339,11 @@
             });
         });
 
-        console.log('🚀 Manualidades MD con Firebase activo');
+        console.log('🚀 Manualidades MD con Firebase y catálogo de ejemplo');
+        console.log('ℹ️ Si la base de datos está vacía, se cargarán los productos de ejemplo automáticamente.');
         console.log('ℹ️ Para administrar, inicia sesión con un usuario que tenga un documento en la colección "admins" con su UID.');
 
-        // Exportar algunas funciones al scope global para que los onclick funcionen
+        // Exportar funciones globales
         window.renderCatalog = renderCatalog;
         window.renderAdminProductList = renderAdminProductList;
         window.updateCartUI = updateCartUI;
