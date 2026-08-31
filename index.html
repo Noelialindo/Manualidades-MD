@@ -18,9 +18,10 @@
         .animate-blob { animation: blob 7s infinite; }
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animation-delay-2000 { animation-delay: 2s; }
-        /* Estilo para el video en modal */
         .modal-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .modal-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        /* Estilos para ordenamiento */
+        .sort-btn.active { background-color: #7c3aed; color: white; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -118,11 +119,11 @@
             </div>
         </div>
 
-        <!-- SECCIÓN CATÁLOGO -->
+        <!-- SECCIÓN CATÁLOGO (con ordenamiento) -->
         <div id="section-catalog" class="hidden space-y-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div><h2 class="text-3xl font-bold text-gray-900 brand-font">Nuestros Trabajos Realizados</h2><p class="text-gray-600 mt-2">Explora galerías de fotos y videos para inspirarte.</p></div>
-                <div class="flex gap-2 bg-gray-100 p-1.5 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
+                <div class="flex flex-wrap gap-2 bg-gray-100 p-1.5 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
                     <button onclick="setCatalogFilter('Todos')" id="filter-Todos" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-purple-700 whitespace-nowrap">Todos</button>
                     <button onclick="setCatalogFilter('Arreglos Florales')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Flores</button>
                     <button onclick="setCatalogFilter('Centros de Mesa')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Centros</button>
@@ -132,6 +133,15 @@
                     <button onclick="setCatalogFilter('Decoración Cumpleaños')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Cumpleaños</button>
                     <button onclick="setCatalogFilter('Promociones')" id="filter-Promociones" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-pink-600 bg-pink-50 hover:bg-pink-100 whitespace-nowrap"><i class="fas fa-star mr-1"></i> Promos</button>
                 </div>
+            </div>
+            <!-- Ordenamiento -->
+            <div class="flex flex-wrap items-center gap-2 text-sm">
+                <span class="text-gray-600 font-medium">Ordenar por:</span>
+                <button onclick="setCatalogSort('price-asc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price-asc">Precio ↑</button>
+                <button onclick="setCatalogSort('price-desc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price-desc">Precio ↓</button>
+                <button onclick="setCatalogSort('name-asc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name-asc">Nombre A-Z</button>
+                <button onclick="setCatalogSort('name-desc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name-desc">Nombre Z-A</button>
+                <button onclick="setCatalogSort('default')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="default">Más reciente</button>
             </div>
             <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-sm mb-6 flex items-start sm:items-center gap-4">
                 <div class="bg-white p-3 rounded-full shadow-sm text-purple-600"><i class="fas fa-handshake text-xl"></i></div>
@@ -169,7 +179,7 @@
             </div>
         </div>
 
-        <!-- ===== SECCIÓN ADMIN (con todos los campos) ===== -->
+        <!-- ===== SECCIÓN ADMIN (con ordenamiento en la lista) ===== -->
         <div id="section-admin" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
@@ -184,12 +194,12 @@
                 </div>
             </div>
 
+            <!-- Formulario -->
             <div id="admin-form-container" class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 id="form-title" class="text-xl font-bold text-gray-800 mb-4">Agregar nuevo producto</h3>
                 <form id="admin-product-form" onsubmit="event.preventDefault(); saveProduct();">
                     <input type="hidden" id="edit-product-id" value="" />
 
-                    <!-- Campos básicos -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
@@ -211,7 +221,6 @@
                         </div>
                     </div>
 
-                    <!-- Precios -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Precio (₡) *</label>
@@ -224,7 +233,6 @@
                         </div>
                     </div>
 
-                    <!-- Descripción -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
                         <textarea id="prod-desc" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"></textarea>
@@ -234,38 +242,19 @@
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (URLs, hasta 5)</label>
                         <div id="images-container" class="space-y-2">
-                            <div class="flex gap-2 items-center">
-                                <input type="text" placeholder="URL de imagen 1" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <input type="text" placeholder="URL de imagen 2" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <input type="text" placeholder="URL de imagen 3" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <input type="text" placeholder="URL de imagen 4" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-                            </div>
-                            <div class="flex gap-2 items-center">
-                                <input type="text" placeholder="URL de imagen 5" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-                            </div>
+                            <!-- Se generan 5 campos por JS -->
                         </div>
                         <p class="text-xs text-gray-400 mt-1">Puedes dejar campos vacíos. Se mostrarán hasta 5 imágenes en la galería.</p>
                     </div>
 
-                    <!-- Video (opcional) -->
+                    <!-- Video -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">URL de video (YouTube, Vimeo, etc.)</label>
                         <input type="url" id="prod-video" placeholder="https://www.youtube.com/embed/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
                         <p class="text-xs text-gray-400 mt-1">Si es de YouTube, usa el enlace de inserción (embed).</p>
                     </div>
 
-                    <!-- TikTok (opcional) -->
+                    <!-- TikTok -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Link de TikTok (opcional)</label>
                         <input type="url" id="prod-tiktok" placeholder="https://www.tiktok.com/@usuario/video/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
@@ -279,39 +268,41 @@
                 </form>
             </div>
 
-            <!-- Lista de productos -->
+            <!-- Lista de productos (con ordenamiento) -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Productos existentes</h3>
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Productos existentes</h3>
+                    <div class="flex gap-2 text-sm">
+                        <span class="text-gray-600">Ordenar:</span>
+                        <button onclick="setAdminSort('name')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name">Nombre</button>
+                        <button onclick="setAdminSort('price')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price">Precio</button>
+                        <button onclick="setAdminSort('date')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="date">Fecha</button>
+                    </div>
+                </div>
                 <div id="admin-product-list" class="space-y-3"></div>
             </div>
         </div>
     </main>
 
     <!-- ===== MODALES ===== -->
-
     <!-- Modal de detalle de producto (público) -->
     <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
             <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
-            <!-- Galería multimedia -->
             <div class="md:w-1/2 h-72 md:h-auto relative bg-gray-900 group">
-                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden relative">
-                    <!-- Se inyecta dinámicamente -->
-                </div>
+                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden relative"></div>
                 <div id="modal-product-badge" class="absolute top-4 left-4 z-10"></div>
                 <button id="modal-prev-btn" onclick="prevMedia()" class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-left"></i></button>
                 <button id="modal-next-btn" onclick="nextMedia()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-right"></i></button>
                 <div id="modal-media-indicators" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
                 <div id="modal-media-type-label" class="absolute top-4 right-16 bg-black/60 text-white text-xs px-2 py-1 rounded shadow-md z-10 backdrop-blur-sm hidden"><i class="fas fa-video mr-1"></i> Video</div>
             </div>
-            <!-- Detalles -->
             <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto hide-scrollbar relative">
                 <span id="modal-product-category" class="text-xs font-bold text-purple-600 uppercase tracking-widest mb-1 block"></span>
                 <h3 id="modal-product-name" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 brand-font leading-tight"></h3>
                 <div id="modal-product-price" class="mb-3 text-xl flex items-center flex-wrap gap-2"></div>
                 <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mb-4 rounded"></div>
                 <p id="modal-product-desc" class="text-gray-600 mb-4 text-sm leading-relaxed whitespace-pre-line flex-grow"></p>
-                <!-- TikTok link -->
                 <div id="modal-tiktok-link" class="mb-4 hidden">
                     <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-medium">
                         <i class="fab fa-tiktok text-xl"></i> Ver en TikTok
@@ -421,6 +412,8 @@
         const state = {
             products: [],
             currentFilter: 'Todos',
+            currentSort: 'default',    // para catálogo público
+            adminSort: 'date',          // para lista admin
             cart: [],
             user: null,
             isAdmin: false,
@@ -461,7 +454,7 @@
         };
 
         // ================================================================
-        // NAVEGACIÓN
+        // NAVEGACIÓN Y MODALES
         // ================================================================
         window.showSection = function(sectionId) {
             document.querySelectorAll('#section-home, #section-catalog, #section-contact, #section-admin').forEach(el => el.classList.add('hidden'));
@@ -596,7 +589,7 @@
         };
 
         // ================================================================
-        // CRUD DE PRODUCTOS (con todos los campos)
+        // CRUD DE PRODUCTOS
         // ================================================================
         window.saveProduct = async function() {
             const errorMsg = document.getElementById('form-error-msg');
@@ -616,7 +609,6 @@
             const tiktokUrl = document.getElementById('prod-tiktok').value.trim();
             const editId = document.getElementById('edit-product-id').value;
 
-            // Validaciones
             if (!name) { errorMsg.textContent = 'El nombre es obligatorio'; errorMsg.classList.remove('hidden'); return; }
             if (!category) { errorMsg.textContent = 'Selecciona una categoría'; errorMsg.classList.remove('hidden'); return; }
             if (isNaN(price) || price < 0) { errorMsg.textContent = 'Ingresa un precio válido'; errorMsg.classList.remove('hidden'); return; }
@@ -642,7 +634,7 @@
                 promoPrice,
                 isPromo: (promoPrice > 0 && promoPrice < price),
                 desc,
-                images,          // array de URLs
+                images,
                 videoUrl: videoUrl || '',
                 tiktokUrl: tiktokUrl || '',
                 updatedAt: new Date().toISOString()
@@ -695,17 +687,14 @@
             document.getElementById('form-title').textContent = 'Editar producto';
             document.getElementById('form-submit-btn').textContent = 'Actualizar producto';
 
-            // Cargar imágenes
             const container = document.getElementById('images-container');
             container.innerHTML = '';
             const images = product.images || [];
             if (images.length === 0) {
-                // Agregar un campo vacío
                 addImageField('');
             } else {
                 images.forEach(url => addImageField(url));
             }
-            // Asegurar al menos 5 campos para edición (opcional)
             while (container.children.length < 5) {
                 addImageField('');
             }
@@ -724,7 +713,6 @@
             document.getElementById('prod-tiktok').value = '';
             document.getElementById('form-title').textContent = 'Agregar nuevo producto';
             document.getElementById('form-submit-btn').textContent = 'Guardar producto';
-            // Resetear imágenes: dejar 5 campos vacíos
             const container = document.getElementById('images-container');
             container.innerHTML = '';
             for (let i = 0; i < 5; i++) {
@@ -767,7 +755,7 @@
         });
 
         // ================================================================
-        // CATÁLOGO DE EJEMPLO (con todos los campos)
+        // CATÁLOGO DE EJEMPLO
         // ================================================================
         const SAMPLE_PRODUCTS = [
             {
@@ -935,6 +923,37 @@
         }
 
         // ================================================================
+        // ORDENAMIENTO PARA CATÁLOGO PÚBLICO
+        // ================================================================
+        window.setCatalogSort = function(sortType) {
+            state.currentSort = sortType;
+            // Actualizar clases de botones
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-purple-600', 'text-white');
+                if (btn.dataset.sort === sortType) {
+                    btn.classList.add('active', 'bg-purple-600', 'text-white');
+                } else {
+                    btn.classList.add('border-gray-300', 'text-gray-700');
+                }
+            });
+            renderCatalog();
+        };
+
+        // ================================================================
+        // ORDENAMIENTO PARA LISTA ADMIN
+        // ================================================================
+        window.setAdminSort = function(sortType) {
+            state.adminSort = sortType;
+            document.querySelectorAll('.admin-sort-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-purple-600', 'text-white');
+                if (btn.dataset.sort === sortType) {
+                    btn.classList.add('active', 'bg-purple-600', 'text-white');
+                }
+            });
+            renderAdminProductList();
+        };
+
+        // ================================================================
         // RENDERIZADO DEL CATÁLOGO (PÚBLICO)
         // ================================================================
         function renderCatalog() {
@@ -947,6 +966,21 @@
                 filtered = filtered.filter(p => p.isPromo === true);
             } else if (state.currentFilter !== 'Todos') {
                 filtered = filtered.filter(p => p.category === state.currentFilter);
+            }
+
+            // Aplicar ordenamiento
+            const sort = state.currentSort;
+            if (sort === 'price-asc') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price-desc') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sort === 'name-asc') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sort === 'name-desc') {
+                filtered.sort((a, b) => b.name.localeCompare(a.name));
+            } else {
+                // default: por fecha de actualización (más reciente primero)
+                filtered.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
             }
 
             if (filtered.length === 0) {
@@ -1022,17 +1056,28 @@
         }
 
         // ================================================================
-        // RENDERIZADO ADMIN
+        // RENDERIZADO ADMIN (con ordenamiento)
         // ================================================================
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
             if (!container) return;
-            if (state.products.length === 0) {
+
+            let list = [...state.products];
+            if (state.adminSort === 'name') {
+                list.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (state.adminSort === 'price') {
+                list.sort((a, b) => a.price - b.price);
+            } else {
+                // date
+                list.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+            }
+
+            if (list.length === 0) {
                 container.innerHTML = '<p class="text-gray-500">No hay productos aún.</p>';
                 return;
             }
             let html = '';
-            state.products.forEach(p => {
+            list.forEach(p => {
                 const price = formatMoney(p.price);
                 const coverImg = p.images && p.images.length > 0 ? p.images[0] : 'https://placehold.co/100x100';
                 html += `
@@ -1081,7 +1126,7 @@
         };
 
         // ================================================================
-        // MODAL DE DETALLE DE PRODUCTO (Galería mejorada)
+        // MODAL DE DETALLE DE PRODUCTO (Galería)
         // ================================================================
         let currentProductMedia = [];
         let currentMediaIndex = 0;
@@ -1093,7 +1138,6 @@
                 return;
             }
 
-            // Construir array de medios: imágenes + video (si existe)
             const mediaItems = [];
             if (product.images && product.images.length > 0) {
                 product.images.forEach(url => {
@@ -1127,7 +1171,6 @@
 
             updateModalMedia();
 
-            // Llenar datos
             document.getElementById('modal-product-category').textContent = product.category || 'General';
             document.getElementById('modal-product-name').textContent = product.name;
             document.getElementById('modal-product-desc').textContent = product.desc;
@@ -1145,7 +1188,6 @@
                 badgeEl.innerHTML = '';
             }
 
-            // TikTok link
             const tiktokContainer = document.getElementById('modal-tiktok-link');
             if (product.tiktokUrl && product.tiktokUrl.trim() !== '') {
                 tiktokContainer.classList.remove('hidden');
@@ -1171,7 +1213,6 @@
             container.style.opacity = '0';
             setTimeout(() => {
                 if (media.type === 'video') {
-                    // Asumimos que es un embed de YouTube o similar
                     const videoId = media.src.includes('embed') ? media.src : 
                         media.src.includes('youtube.com/watch?v=') ? media.src.replace('watch?v=', 'embed/') : media.src;
                     container.innerHTML = `
@@ -1319,8 +1360,8 @@
             });
         });
 
-        console.log('🚀 Manualidades MD con panel completo');
-        console.log('ℹ️ Ahora puedes agregar productos con múltiples imágenes, video y TikTok.');
+        console.log('🚀 Manualidades MD con panel completo y ordenamiento');
+        console.log('ℹ️ Ahora puedes ordenar por precio, nombre y fecha.');
         console.log('ℹ️ Asegúrate de tener un documento en la colección "admins" con el UID del admin.');
 
         window.renderCatalog = renderCatalog;
