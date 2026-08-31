@@ -8,7 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* Estilos base */
         body { font-family: 'Inter', sans-serif; background-color: #fcfcfd; }
         .brand-font { font-family: 'Playfair Display', serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -23,26 +22,7 @@
         .animate-blob { animation: blob 7s infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
 
-        .gold-gradient {
-            background: linear-gradient(135deg, #d4af37, #f3e5ab, #d4af37);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
         .premium-card { border: 1px solid rgba(212, 175, 55, 0.2); }
-
-        .modal-transition {
-            transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-        .modal-hidden {
-            opacity: 0;
-            transform: scale(0.95);
-            pointer-events: none;
-        }
-        .modal-visible {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
 
         .loader {
             border: 3px solid #f3f3f3;
@@ -61,7 +41,6 @@
     <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
                 <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
                     <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg transform rotate-3">
                         <span class="brand-font transform -rotate-3">M</span>
@@ -72,7 +51,6 @@
                     </div>
                 </div>
 
-                <!-- Menú escritorio -->
                 <div class="hidden md:flex space-x-8 items-center">
                     <button onclick="showSection('home')" class="text-gray-600 hover:text-purple-600 font-medium transition">Inicio</button>
                     <button onclick="showSection('catalog')" class="text-gray-600 hover:text-purple-600 font-medium transition">Catálogo Digital</button>
@@ -88,7 +66,6 @@
                     </div>
                 </div>
 
-                <!-- Menú móvil -->
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="openCartModal()" class="relative p-2 text-gray-600">
                         <i class="fas fa-shopping-bag text-xl"></i>
@@ -101,7 +78,6 @@
             </div>
         </div>
 
-        <!-- Menú móvil panel -->
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <button onclick="showSection('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Inicio</button>
@@ -128,7 +104,6 @@
     <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
 
-        <!-- Notificaciones -->
         <div id="notification-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-2"></div>
 
         <!-- ===== SECCIÓN INICIO ===== -->
@@ -163,7 +138,6 @@
                 </div>
             </div>
 
-            <!-- Features -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
                 <div class="text-center p-6">
                     <div class="w-16 h-16 mx-auto bg-pink-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3">
@@ -188,7 +162,6 @@
                 </div>
             </div>
 
-            <!-- Redes -->
             <div id="social-engagement" class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 md:p-12 border border-pink-100 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
                 <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-40 h-40 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
@@ -217,13 +190,16 @@
                 </div>
                 <div class="flex gap-2 bg-gray-100 p-1.5 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
                     <button onclick="setCatalogFilter('Todos')" id="filter-Todos" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-purple-700 whitespace-nowrap">Todos</button>
-                    <button onclick="setCatalogFilter('Regalos')" id="filter-Regalos" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Regalos</button>
-                    <button onclick="setCatalogFilter('Eventos')" id="filter-Eventos" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Eventos</button>
+                    <button onclick="setCatalogFilter('Arreglos Florales')" id="filter-Arreglos Florales" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Arreglos Florales</button>
+                    <button onclick="setCatalogFilter('Centros de Mesa')" id="filter-Centros de Mesa" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Centros de Mesa</button>
+                    <button onclick="setCatalogFilter('Faroles')" id="filter-Faroles" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Faroles</button>
+                    <button onclick="setCatalogFilter('Maquetas Escolares')" id="filter-Maquetas Escolares" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Maquetas</button>
+                    <button onclick="setCatalogFilter('Recuerdos de Fiestas')" id="filter-Recuerdos de Fiestas" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Recuerdos</button>
+                    <button onclick="setCatalogFilter('Decoración Cumpleaños')" id="filter-Decoración Cumpleaños" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Cumpleaños</button>
                     <button onclick="setCatalogFilter('Promociones')" id="filter-Promociones" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-pink-600 bg-pink-50 hover:bg-pink-100 whitespace-nowrap"><i class="fas fa-star mr-1"></i> Promos</button>
                 </div>
             </div>
 
-            <!-- Caja informativa -->
             <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-sm mb-6 flex items-start sm:items-center gap-4">
                 <div class="bg-white p-3 rounded-full shadow-sm text-purple-600">
                     <i class="fas fa-handshake text-xl"></i>
@@ -236,9 +212,8 @@
                 </div>
             </div>
 
-            <!-- Grid de productos -->
             <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Los productos se cargan desde Firestore -->
+                <!-- Productos desde Firestore -->
             </div>
             <div id="empty-catalog-msg" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
                 <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
@@ -308,7 +283,7 @@
             </div>
         </div>
 
-        <!-- ===== SECCIÓN ADMIN (solo visible para admin) ===== -->
+        <!-- ===== SECCIÓN ADMIN ===== -->
         <div id="section-admin" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
@@ -320,7 +295,6 @@
                 </div>
             </div>
 
-            <!-- Formulario para crear/editar producto -->
             <div id="admin-form-container" class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 id="form-title" class="text-xl font-bold text-gray-800 mb-4">Agregar nuevo producto</h3>
                 <form id="admin-product-form" onsubmit="event.preventDefault(); saveProduct();">
@@ -333,7 +307,17 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
-                            <input type="text" id="prod-category" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Regalos, Eventos..." />
+                            <select id="prod-category" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none">
+                                <option value="Arreglos Florales">Arreglos Florales</option>
+                                <option value="Centros de Mesa">Centros de Mesa</option>
+                                <option value="Faroles">Faroles</option>
+                                <option value="Maquetas Escolares">Maquetas Escolares</option>
+                                <option value="Recuerdos de Fiestas">Recuerdos de Fiestas</option>
+                                <option value="Decoración Cumpleaños">Decoración Cumpleaños</option>
+                                <option value="Regalos">Regalos</option>
+                                <option value="Eventos">Eventos</option>
+                                <option value="Otros">Otros</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -352,11 +336,9 @@
                         <textarea id="prod-desc" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"></textarea>
                     </div>
 
-                    <!-- Multimedia -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Multimedia (imágenes / videos)</label>
                         <div id="media-fields-container" class="space-y-2">
-                            <!-- Campo de ejemplo -->
                             <div class="flex gap-2 items-center">
                                 <select class="media-type w-32 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none">
                                     <option value="img">Imagen</option>
@@ -376,7 +358,6 @@
                 </form>
             </div>
 
-            <!-- Lista de productos editable -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Productos existentes</h3>
                 <div id="admin-product-list" class="space-y-3">
@@ -389,7 +370,7 @@
 
     <!-- ==================== MODALES ==================== -->
 
-    <!-- Modal de detalle de producto (público) -->
+    <!-- Modal de detalle de producto -->
     <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
             <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
@@ -423,7 +404,7 @@
         </div>
     </div>
 
-    <!-- Modal de cotización (carrito) -->
+    <!-- Modal de cotización -->
     <div id="cart-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
             <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
@@ -483,7 +464,6 @@
     </footer>
 
     <!-- ==================== SCRIPTS ==================== -->
-    <!-- Firebase SDKs -->
     <script type="importmap">
         {
             "imports": {
@@ -506,7 +486,6 @@
             onSnapshot, 
             doc, 
             getDoc,
-            setDoc,
             addDoc, 
             updateDoc, 
             deleteDoc,
@@ -531,9 +510,163 @@
         const db = getFirestore(app);
 
         // ================================================================
-        // 2. DATOS DE CATÁLOGO DE EJEMPLO (versión anterior)
+        // 2. CATÁLOGO DE EJEMPLO AMPLIADO
         // ================================================================
         const SAMPLE_PRODUCTS = [
+            // Arreglos Florales
+            {
+                name: "Ramo Eterno de Rosas Preservadas",
+                category: "Arreglos Florales",
+                price: 32000,
+                promoPrice: 25000,
+                isPromo: true,
+                desc: "Ramo de rosas naturales preservadas que duran más de un año. Incluye caja de presentación y tarjeta personalizada.\n\nPerfecto para aniversarios, cumpleaños o detalles de lujo.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fce4ec/f06292?text=Ramo+Rosas' },
+                    { type: 'img', src: 'https://placehold.co/800x800/f8bbd0/c2185b?text=Detalle+Caja' },
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
+                ]
+            },
+            {
+                name: "Arreglo Floral en Caja Sorpresa",
+                category: "Arreglos Florales",
+                price: 18000,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Caja decorativa que se abre revelando un hermoso arreglo de flores variadas. Ideal para regalar en cualquier ocasión.\n\nElige entre rosas, girasoles o flores mixtas.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/f3e5f5/8e24aa?text=Caja+Floral' },
+                    { type: 'img', src: 'https://placehold.co/800x800/e1bee7/6a1b9a?text=Interior+Flores' }
+                ]
+            },
+            // Centros de Mesa
+            {
+                name: "Centro de Mesa Bautizo Angelical",
+                category: "Centros de Mesa",
+                price: 15000,
+                promoPrice: 12000,
+                isPromo: true,
+                desc: "Base de madera pintada a mano con figuras de ángeles en foami y flores blancas. Perfecto para bautizos y comuniones.\n\n*Precio por unidad. Descuento a partir de 10 unidades.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/e3f2fd/0d47a1?text=Centro+Bautizo' },
+                    { type: 'img', src: 'https://placehold.co/800x800/bbdefb/1565c0?text=Ángulo+Superior' }
+                ]
+            },
+            {
+                name: "Centro de Mesa Boda Vintage",
+                category: "Centros de Mesa",
+                price: 22000,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Composición elegante con candelabros, flores secas y detalles dorados. Estilo rústico-chic.\n\nIncluye base de madera reciclada y velas de soja.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fef9e7/f57f17?text=Vintage+Mesa' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Candelabro' },
+                    { type: 'img', src: 'https://placehold.co/800x800/ffecb3/e65100?text=Flores+Secas' }
+                ]
+            },
+            // Faroles
+            {
+                name: "Farol Mágico LED Personalizado",
+                category: "Faroles",
+                price: 9500,
+                promoPrice: 7500,
+                isPromo: true,
+                desc: "Farol de vidrio con base de madera, iluminado por luces cálidas LED. Se puede personalizar con nombres o fechas.\n\nIdeal para decoración de bodas, cumpleaños o como lámpara de noche.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fff9c4/f9a825?text=Farol+LED' },
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
+                ]
+            },
+            {
+                name: "Farol Colgante de Papel",
+                category: "Faroles",
+                price: 6500,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Farol decorativo de papel artesanal con diseños geométricos. Disponible en varios colores y tamaños.\n\nPerfecto para fiestas temáticas y decoración de interiores.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/f3e5f5/7b1fa2?text=Farol+Papel' },
+                    { type: 'img', src: 'https://placehold.co/800x800/e1bee7/6a1b9a?text=Colgante' }
+                ]
+            },
+            // Maquetas Escolares
+            {
+                name: "Maqueta Ecosistema Acuático",
+                category: "Maquetas Escolares",
+                price: 12000,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Maqueta educativa de un ecosistema acuático con animales y plantas de plástico, base de corcho y fondo pintado.\n\nIdeal para proyectos escolares de ciencias naturales.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/e0f7fa/006064?text=Maqueta+Acuática' },
+                    { type: 'img', src: 'https://placehold.co/800x800/b2ebf2/00838f?text=Detalle+Animales' }
+                ]
+            },
+            {
+                name: "Maqueta Sistema Solar 3D",
+                category: "Maquetas Escolares",
+                price: 18000,
+                promoPrice: 15000,
+                isPromo: true,
+                desc: "Maqueta del sistema solar con planetas pintados a mano, suspendidos con hilos de nylon. Incluye base giratoria.\n\nPerfecto para ferias científicas y regalos educativos.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/ede7f6/4527a0?text=Sistema+Solar' },
+                    { type: 'img', src: 'https://placehold.co/800x800/d1c4e9/311b92?text=Planetas' },
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
+                ]
+            },
+            // Recuerdos de Fiestas
+            {
+                name: "Recuerdos Boda - Velas Aromáticas",
+                category: "Recuerdos de Fiestas",
+                price: 3500,
+                promoPrice: 3000,
+                isPromo: true,
+                desc: "Velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
+                media: [
+                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual' }
+                ]
+            },
+            {
+                name: "Kit Recuerdos Cumpleaños Infantil",
+                category: "Recuerdos de Fiestas",
+                price: 2500,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Bolsa sorpresa con dulces, stickers, lápices de colores y un pequeño juguete. Personalizada con el nombre del cumpleañero.\n\nIdeal para fiestas infantiles de hasta 50 niños.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fce4ec/f06292?text=Kit+Cumple' },
+                    { type: 'img', src: 'https://placehold.co/800x800/f8bbd0/c2185b?text=Contenido' }
+                ]
+            },
+            // Decoración Cumpleaños
+            {
+                name: "Guirnalda de Banderines Personalizada",
+                category: "Decoración Cumpleaños",
+                price: 4500,
+                promoPrice: 3800,
+                isPromo: true,
+                desc: "Guirnalda de banderines de tela con letras de fieltro. Puedes elegir el mensaje (hasta 15 caracteres).\n\nReutilizable y fácil de colgar.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/fff9c4/f57f17?text=Banderines' },
+                    { type: 'img', src: 'https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Letras' }
+                ]
+            },
+            {
+                name: "Centro de Mesa Globo Burbuja",
+                category: "Decoración Cumpleaños",
+                price: 18500,
+                promoPrice: 0,
+                isPromo: false,
+                desc: "Globo burbuja personalizado con pintura interior y texto exterior, acompañado de rosas (naturales o artificiales a elección).\n\nIdeal como centro de mesa o regalo principal.",
+                media: [
+                    { type: 'img', src: 'https://placehold.co/800x800/f0fdf4/15803d?text=Globo+Personalizado' }
+                ]
+            },
+            // Otros artículos
             {
                 name: "Caja Sorpresa de Aniversario",
                 category: "Regalos",
@@ -548,39 +681,15 @@
                 ]
             },
             {
-                name: "Centro de Mesa Bautizo",
-                category: "Eventos",
-                price: 15000,
+                name: "Llavero Personalizado con Foto",
+                category: "Otros",
+                price: 5500,
                 promoPrice: 0,
                 isPromo: false,
-                desc: "Centros de mesa delicados con temática angelical. Utilizamos bases de madera pintadas a mano y detalles en foami brillante.\n\n*Precio referencial por unidad. Descuentos a partir de 12 unidades.",
+                desc: "Llavero de acero inoxidable con tu foto o diseño. Ideal para regalos de equipo, cumpleaños o detalles promocionales.\n\nTamaño 3x3 cm, incluye cadena.",
                 media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/eff6ff/1d4ed8?text=Centro+de+Mesa+1' },
-                    { type: 'img', src: 'https://placehold.co/800x800/dbeafe/1e3a8a?text=Ángulo+Diferente' }
-                ]
-            },
-            {
-                name: "Arreglo Floral en Globo",
-                category: "Regalos",
-                price: 18500,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Globo burbuja personalizado con pintura interior y texto exterior, acompañado de rosas (naturales o artificiales a elección).",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/f0fdf4/15803d?text=Globo+Personalizado' }
-                ]
-            },
-            {
-                name: "Recuerdos Boda (Velas)",
-                category: "Eventos",
-                price: 3500,
-                promoPrice: 3000,
-                isPromo: true,
-                desc: "Pequeñas velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
-                media: [
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual' }
+                    { type: 'img', src: 'https://placehold.co/800x800/e0e0e0/424242?text=Llavero' },
+                    { type: 'img', src: 'https://placehold.co/800x800/bdbdbd/212121?text=Detalle+Foto' }
                 ]
             }
         ];
@@ -674,7 +783,7 @@
         };
 
         // ================================================================
-        // 7. AUTENTICACIÓN Y ADMIN
+        // 7. AUTENTICACIÓN
         // ================================================================
         async function checkIfAdmin(uid) {
             try {
@@ -765,7 +874,7 @@
             }
 
             const name = document.getElementById('prod-name').value.trim();
-            const category = document.getElementById('prod-category').value.trim();
+            const category = document.getElementById('prod-category').value;
             const price = parseFloat(document.getElementById('prod-price').value);
             const promoPrice = parseFloat(document.getElementById('prod-promo-price').value) || 0;
             const desc = document.getElementById('prod-desc').value.trim();
@@ -856,7 +965,7 @@
         function resetForm() {
             document.getElementById('edit-product-id').value = '';
             document.getElementById('prod-name').value = '';
-            document.getElementById('prod-category').value = '';
+            document.getElementById('prod-category').value = 'Arreglos Florales';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-promo-price').value = '';
             document.getElementById('prod-desc').value = '';
@@ -896,7 +1005,7 @@
         };
 
         // ================================================================
-        // 10. RESTAURAR CATÁLOGO DE EJEMPLO (desde el panel)
+        // 10. RESTAURAR CATÁLOGO DE EJEMPLO
         // ================================================================
         window.restoreSampleCatalog = async function() {
             if (!state.isAdmin) {
@@ -906,7 +1015,6 @@
             if (!confirm('Esto eliminará todos los productos actuales y los reemplazará con los de ejemplo. ¿Continuar?')) return;
 
             try {
-                // Eliminar todos los documentos de la colección catalog
                 const snapshot = await getDocs(collection(db, 'catalog'));
                 const batch = writeBatch(db);
                 snapshot.forEach(doc => {
@@ -914,7 +1022,6 @@
                 });
                 await batch.commit();
 
-                // Insertar los productos de ejemplo
                 const colRef = collection(db, 'catalog');
                 for (const prod of SAMPLE_PRODUCTS) {
                     await addDoc(colRef, {
@@ -930,7 +1037,7 @@
         };
 
         // ================================================================
-        // 11. CARGA INICIAL Y SIEMBRA DE DATOS
+        // 11. SIEMBRA AUTOMÁTICA SI ESTÁ VACÍO
         // ================================================================
         async function seedIfEmpty() {
             try {
@@ -953,7 +1060,7 @@
         }
 
         // ================================================================
-        // 12. ESCUCHA EN TIEMPO REAL DEL CATÁLOGO
+        // 12. ESCUCHA EN TIEMPO REAL
         // ================================================================
         function listenCatalog() {
             const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
@@ -965,7 +1072,6 @@
                 state.products = products;
                 renderCatalog();
                 renderAdminProductList();
-                // Si es la primera vez que se carga, sembrar datos si está vacío
                 if (!state.initialLoadDone) {
                     state.initialLoadDone = true;
                     if (products.length === 0) {
@@ -1325,11 +1431,8 @@
         // 19. INICIALIZACIÓN
         // ================================================================
         listenCatalog();
-
-        // Mostrar sección inicial
         showSection('home');
 
-        // Cerrar modales al hacer clic en el overlay
         document.querySelectorAll('.fixed.inset-0.bg-black\\/70, .fixed.inset-0.bg-black.bg-opacity-50').forEach(overlay => {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
@@ -1339,17 +1442,16 @@
             });
         });
 
-        console.log('🚀 Manualidades MD con Firebase y catálogo de ejemplo');
-        console.log('ℹ️ Si la base de datos está vacía, se cargarán los productos de ejemplo automáticamente.');
-        console.log('ℹ️ Para administrar, inicia sesión con un usuario que tenga un documento en la colección "admins" con su UID.');
+        console.log('🚀 Manualidades MD con catálogo ampliado');
+        console.log('ℹ️ Si la base de datos está vacía, se cargarán productos de ejemplo variados.');
+        console.log('ℹ️ Para administrar, inicia sesión con un usuario que tenga documento en la colección "admins" con su UID.');
 
-        // Exportar funciones globales
         window.renderCatalog = renderCatalog;
         window.renderAdminProductList = renderAdminProductList;
         window.updateCartUI = updateCartUI;
 
         // ================================================================
-        // FIN DEL MÓDULO
+        // FIN
         // ================================================================
     </script>
 
