@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manualidades MD | Detalles Únicos y Personalizados</title>
+    <title>Manualidades MD | Panel Admin y Catálogo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -12,32 +12,20 @@
         .brand-font { font-family: 'Playfair Display', serif; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-
         .premium-card { border: 1px solid rgba(212, 175, 55, 0.2); }
-
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #7c3aed;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #7c3aed; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .animate-blob { animation: blob 7s infinite; }
+        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+        .animation-delay-2000 { animation-delay: 2s; }
+        /* Estilo para el video en modal */
+        .modal-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .modal-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
-    <!-- ==================== NAVEGACIÓN ==================== -->
+    <!-- ===== NAVEGACIÓN ===== -->
     <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -50,10 +38,9 @@
                         <p class="text-xs text-purple-600 font-medium tracking-widest uppercase">Detalles Únicos</p>
                     </div>
                 </div>
-
                 <div class="hidden md:flex space-x-8 items-center">
                     <button onclick="showSection('home')" class="text-gray-600 hover:text-purple-600 font-medium transition">Inicio</button>
-                    <button onclick="showSection('catalog')" class="text-gray-600 hover:text-purple-600 font-medium transition">Catálogo Digital</button>
+                    <button onclick="showSection('catalog')" class="text-gray-600 hover:text-purple-600 font-medium transition">Catálogo</button>
                     <button onclick="showSection('contact')" class="text-gray-600 hover:text-purple-600 font-medium transition">Contáctanos</button>
                     <div class="h-6 w-px bg-gray-200"></div>
                     <button onclick="openCartModal()" class="relative p-2 text-gray-600 hover:text-purple-600 transition">
@@ -65,7 +52,6 @@
                         <button id="btn-logout-desktop" onclick="logout()" class="hidden text-sm bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-full font-medium transition">Cerrar sesión</button>
                     </div>
                 </div>
-
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="openCartModal()" class="relative p-2 text-gray-600">
                         <i class="fas fa-shopping-bag text-xl"></i>
@@ -77,11 +63,10 @@
                 </div>
             </div>
         </div>
-
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <button onclick="showSection('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Inicio</button>
-                <button onclick="showSection('catalog'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Catálogo Digital</button>
+                <button onclick="showSection('catalog'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Catálogo</button>
                 <button onclick="showSection('contact'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Contáctanos</button>
                 <button id="btn-admin-mobile" onclick="showAdminPanel(); toggleMobileMenu();" class="hidden w-full text-left px-3 py-3 text-base font-medium text-purple-600 hover:bg-purple-50 rounded-lg">Panel Admin</button>
                 <button id="btn-login-mobile" onclick="openLoginModal(); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Admin</button>
@@ -90,7 +75,7 @@
         </div>
     </nav>
 
-    <!-- ==================== BANNER PROMOCIONAL ==================== -->
+    <!-- ===== BANNER PROMOCIONAL ===== -->
     <div onclick="setCatalogFilter('Promociones'); showSection('catalog');" class="cursor-pointer bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white text-center py-3 px-4 shadow-md relative z-40 overflow-hidden hover:opacity-90 transition-opacity">
         <div class="animate-pulse flex justify-center items-center gap-3">
             <i class="fab fa-instagram text-yellow-300 text-lg md:text-xl"></i>
@@ -101,21 +86,16 @@
         </div>
     </div>
 
-    <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
-
         <div id="notification-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-2"></div>
 
-        <!-- ===== SECCIÓN INICIO ===== -->
+        <!-- SECCIÓN INICIO (resumida) -->
         <div id="section-home" class="space-y-16">
             <div class="relative rounded-[2rem] overflow-hidden bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 shadow-sm mt-4">
                 <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
                     <svg class="absolute w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                                <path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="currentColor" stroke="currentColor" stroke-width="1"></path>
-                            </pattern>
-                        </defs>
+                        <defs><pattern id="pattern" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="currentColor" stroke="currentColor" stroke-width="1"></path></pattern></defs>
                         <rect width="100%" height="100%" fill="url(#pattern)"></rect>
                     </svg>
                 </div>
@@ -124,133 +104,53 @@
                 <div class="relative p-10 md:p-16 text-center z-10">
                     <span class="inline-block py-1 px-4 rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 text-sm font-bold tracking-wider mb-4 border border-yellow-300 shadow-sm uppercase"><i class="fas fa-paint-brush mr-2"></i>Trabajos Garantizados</span>
                     <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight brand-font">Detalles únicos para momentos especiales</h1>
-                    <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">
-                        Nos especializamos en productos artesanales personalizados. Creemos que cada detalle entregado debe ser de calidad. Nos acomodamos a tu presupuesto, ofreciendo opciones variadas y garantizando seguridad al mostrarte nuestros trabajos reales.
-                    </p>
+                    <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">Nos especializamos en productos artesanales personalizados. Creemos que cada detalle entregado debe ser de calidad. Nos acomodamos a tu presupuesto, ofreciendo opciones variadas y garantizando seguridad al mostrarte nuestros trabajos reales.</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="showSection('catalog')" class="px-8 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                            <i class="fas fa-book-open mr-2"></i> Ver Catálogo de Trabajos
-                        </button>
-                        <button onclick="downloadCatalog()" class="px-8 py-3.5 bg-white text-purple-700 font-semibold rounded-full border border-purple-200 hover:border-purple-500 hover:bg-purple-50 transition-all shadow-md flex items-center justify-center gap-2 transform hover:-translate-y-1">
-                            <i class="fas fa-download text-xl"></i> Descargar PDF
-                        </button>
+                        <button onclick="showSection('catalog')" class="px-8 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"><i class="fas fa-book-open mr-2"></i> Ver Catálogo</button>
+                        <button onclick="downloadCatalog()" class="px-8 py-3.5 bg-white text-purple-700 font-semibold rounded-full border border-purple-200 hover:border-purple-500 hover:bg-purple-50 transition-all shadow-md flex items-center justify-center gap-2 transform hover:-translate-y-1"><i class="fas fa-download text-xl"></i> Descargar PDF</button>
                     </div>
                 </div>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto bg-pink-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3">
-                        <i class="fas fa-heart text-2xl text-pink-500 transform -rotate-3"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">100% Personalizado</h3>
-                    <p class="text-gray-600">Creamos lo que tienes en mente. Colores, tamaños y estilos adaptados a tu gusto y ocasión.</p>
-                </div>
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center mb-4 transform -rotate-3">
-                        <i class="fas fa-hand-holding-usd text-2xl text-purple-500 transform rotate-3"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Ajuste de Presupuesto</h3>
-                    <p class="text-gray-600">Nuestros precios varían según materiales. Te ofrecemos opciones para acomodarnos a tu presupuesto.</p>
-                </div>
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto bg-indigo-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3">
-                        <i class="fas fa-shield-check text-2xl text-indigo-500 transform -rotate-3"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Calidad Garantizada</h3>
-                    <p class="text-gray-600">Mira nuestras fotos y videos de trabajos reales. Te garantizamos seguridad y amor en cada detalle.</p>
-                </div>
-            </div>
-
-            <div id="social-engagement" class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 md:p-12 border border-pink-100 shadow-sm relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
-                <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-40 h-40 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
-                <div class="text-center relative z-10 mb-10">
-                    <span class="inline-block py-1 px-4 rounded-full bg-pink-100 text-pink-700 text-xs font-bold tracking-widest mb-3 uppercase shadow-sm border border-pink-200"><i class="fas fa-hashtag mr-1"></i> Comunidad Manualidades MD</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 brand-font">Síguenos en Redes Sociales</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto text-lg">Descubre el detrás de escena, videos de nuestros procesos y entérate de nuestras promociones de temporada antes que nadie.</p>
-                </div>
-                <div class="mt-10 text-center relative z-10 flex flex-col sm:flex-row justify-center gap-4">
-                    <button onclick="showNotification('Redirigiendo a Instagram...','success')" class="px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-full hover:from-pink-600 hover:to-rose-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                        <i class="fab fa-instagram text-2xl"></i> Síguenos en Instagram
-                    </button>
-                    <button onclick="showNotification('Redirigiendo a Facebook...','info')" class="px-8 py-3.5 bg-[#1877F2] text-white font-semibold rounded-full hover:bg-[#166fe5] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                        <i class="fab fa-facebook-f text-2xl"></i> Únete en Facebook
-                    </button>
-                </div>
+                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-pink-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3"><i class="fas fa-heart text-2xl text-pink-500 transform -rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">100% Personalizado</h3><p class="text-gray-600">Creamos lo que tienes en mente. Colores, tamaños y estilos adaptados a tu gusto y ocasión.</p></div>
+                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center mb-4 transform -rotate-3"><i class="fas fa-hand-holding-usd text-2xl text-purple-500 transform rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Ajuste de Presupuesto</h3><p class="text-gray-600">Nuestros precios varían según materiales. Te ofrecemos opciones para acomodarnos a tu presupuesto.</p></div>
+                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-indigo-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3"><i class="fas fa-shield-check text-2xl text-indigo-500 transform -rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Calidad Garantizada</h3><p class="text-gray-600">Mira nuestras fotos y videos de trabajos reales. Te garantizamos seguridad y amor en cada detalle.</p></div>
             </div>
         </div>
 
-        <!-- ===== SECCIÓN CATÁLOGO ===== -->
+        <!-- SECCIÓN CATÁLOGO -->
         <div id="section-catalog" class="hidden space-y-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900 brand-font">Nuestros Trabajos Realizados</h2>
-                    <p class="text-gray-600 mt-2">Explora galerías de fotos y videos para inspirarte.</p>
-                </div>
+                <div><h2 class="text-3xl font-bold text-gray-900 brand-font">Nuestros Trabajos Realizados</h2><p class="text-gray-600 mt-2">Explora galerías de fotos y videos para inspirarte.</p></div>
                 <div class="flex gap-2 bg-gray-100 p-1.5 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
                     <button onclick="setCatalogFilter('Todos')" id="filter-Todos" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-purple-700 whitespace-nowrap">Todos</button>
-                    <button onclick="setCatalogFilter('Arreglos Florales')" id="filter-Arreglos Florales" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Arreglos Florales</button>
-                    <button onclick="setCatalogFilter('Centros de Mesa')" id="filter-Centros de Mesa" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Centros de Mesa</button>
-                    <button onclick="setCatalogFilter('Faroles')" id="filter-Faroles" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Faroles</button>
-                    <button onclick="setCatalogFilter('Maquetas Escolares')" id="filter-Maquetas Escolares" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Maquetas</button>
-                    <button onclick="setCatalogFilter('Recuerdos de Fiestas')" id="filter-Recuerdos de Fiestas" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Recuerdos</button>
-                    <button onclick="setCatalogFilter('Decoración Cumpleaños')" id="filter-Decoración Cumpleaños" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Cumpleaños</button>
+                    <button onclick="setCatalogFilter('Arreglos Florales')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Flores</button>
+                    <button onclick="setCatalogFilter('Centros de Mesa')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Centros</button>
+                    <button onclick="setCatalogFilter('Faroles')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Faroles</button>
+                    <button onclick="setCatalogFilter('Maquetas Escolares')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Maquetas</button>
+                    <button onclick="setCatalogFilter('Recuerdos de Fiestas')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Recuerdos</button>
+                    <button onclick="setCatalogFilter('Decoración Cumpleaños')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Cumpleaños</button>
                     <button onclick="setCatalogFilter('Promociones')" id="filter-Promociones" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-pink-600 bg-pink-50 hover:bg-pink-100 whitespace-nowrap"><i class="fas fa-star mr-1"></i> Promos</button>
                 </div>
             </div>
-
             <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-sm mb-6 flex items-start sm:items-center gap-4">
-                <div class="bg-white p-3 rounded-full shadow-sm text-purple-600">
-                    <i class="fas fa-handshake text-xl"></i>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 text-lg mb-1">Nos adaptamos a tu presupuesto</h4>
-                    <p class="text-gray-700 text-sm md:text-base leading-relaxed">
-                        Los precios mostrados son <span class="font-semibold underline decoration-purple-300">referenciales</span>. El costo final varía dependiendo de lo que decidas y quieras. Nos acomodamos al presupuesto de cada cliente ajustando materiales, tamaños y detalles. ¡Añade lo que te guste a tu cotización para asesorarte personalmente!
-                    </p>
-                </div>
+                <div class="bg-white p-3 rounded-full shadow-sm text-purple-600"><i class="fas fa-handshake text-xl"></i></div>
+                <div><h4 class="font-bold text-gray-900 text-lg mb-1">Nos adaptamos a tu presupuesto</h4><p class="text-gray-700 text-sm md:text-base leading-relaxed">Los precios mostrados son <span class="font-semibold underline decoration-purple-300">referenciales</span>. El costo final varía dependiendo de lo que decidas y quieras. Nos acomodamos al presupuesto de cada cliente ajustando materiales, tamaños y detalles. ¡Añade lo que te guste a tu cotización para asesorarte personalmente!</p></div>
             </div>
-
-            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Productos desde Firestore -->
-            </div>
-            <div id="empty-catalog-msg" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
-                <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-bold text-gray-700">No hay productos en esta categoría</h3>
-                <p class="text-gray-500 mt-2">Prueba seleccionando otra pestaña.</p>
-            </div>
+            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <div id="empty-catalog-msg" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300"><i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i><h3 class="text-xl font-bold text-gray-700">No hay productos en esta categoría</h3><p class="text-gray-500 mt-2">Prueba seleccionando otra pestaña.</p></div>
         </div>
 
-        <!-- ===== SECCIÓN CONTACTO ===== -->
+        <!-- SECCIÓN CONTACTO (resumida) -->
         <div id="section-contact" class="hidden">
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row border border-gray-100">
                 <div class="lg:w-5/12 bg-gradient-to-br from-purple-700 to-indigo-800 p-10 text-white relative overflow-hidden">
                     <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-5 rounded-full blur-2xl"></div>
                     <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-black opacity-10 rounded-full blur-2xl"></div>
-                    <div class="relative z-10">
-                        <h2 class="text-3xl font-bold brand-font mb-2">Hablemos de tu idea</h2>
-                        <p class="text-purple-100 mb-10">Cuéntanos qué tienes en mente, para qué evento es y para cuándo lo necesitas. Te daremos varias opciones.</p>
+                    <div class="relative z-10"><h2 class="text-3xl font-bold brand-font mb-2">Hablemos de tu idea</h2><p class="text-purple-100 mb-10">Cuéntanos qué tienes en mente, para qué evento es y para cuándo lo necesitas. Te daremos varias opciones.</p>
                         <div class="space-y-6">
-                            <div class="flex items-start">
-                                <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0">
-                                    <i class="fab fa-whatsapp text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">WhatsApp</h4>
-                                    <p class="text-purple-200">Atención directa y rápida</p>
-                                    <a href="#" class="inline-block mt-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold py-1.5 px-4 rounded-full transition shadow-sm">Enviar Mensaje</a>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0">
-                                    <i class="fas fa-map-marker-alt text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Entregas</h4>
-                                    <p class="text-purple-200">Consultar zonas de cobertura y envíos disponibles.</p>
-                                </div>
-                            </div>
+                            <div class="flex items-start"><div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0"><i class="fab fa-whatsapp text-2xl"></i></div><div><h4 class="font-semibold text-lg">WhatsApp</h4><p class="text-purple-200">Atención directa y rápida</p><a href="#" class="inline-block mt-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold py-1.5 px-4 rounded-full transition shadow-sm">Enviar Mensaje</a></div></div>
+                            <div class="flex items-start"><div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0"><i class="fas fa-map-marker-alt text-2xl"></i></div><div><h4 class="font-semibold text-lg">Entregas</h4><p class="text-purple-200">Consultar zonas de cobertura y envíos disponibles.</p></div></div>
                         </div>
                     </div>
                 </div>
@@ -258,38 +158,27 @@
                     <h3 class="text-2xl font-bold text-gray-900 mb-6">Envíanos una consulta rápida</h3>
                     <form onsubmit="event.preventDefault(); showNotification('Mensaje enviado. Te contactaremos pronto.', 'success'); this.reset();" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-                                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. María Pérez" />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono / WhatsApp</label>
-                                <input type="tel" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Número de contacto" />
-                            </div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label><input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. María Pérez" /></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Teléfono / WhatsApp</label><input type="tel" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Número de contacto" /></div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">¿Qué tipo de evento o detalle buscas?</label>
-                            <input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. Cumpleaños, Boda, Regalo sorpresa..." />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Cuéntanos más detalles</label>
-                            <textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white resize-none" placeholder="Colores preferidos, temáticas, presupuesto aproximado..."></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2">
-                            <i class="fas fa-paper-plane"></i> Enviar Consulta
-                        </button>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">¿Qué tipo de evento o detalle buscas?</label><input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. Cumpleaños, Boda, Regalo sorpresa..." /></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Cuéntanos más detalles</label><textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white resize-none" placeholder="Colores preferidos, temáticas, presupuesto aproximado..."></textarea></div>
+                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="fas fa-paper-plane"></i> Enviar Consulta</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- ===== SECCIÓN ADMIN ===== -->
+        <!-- ===== SECCIÓN ADMIN (con todos los campos) ===== -->
         <div id="section-admin" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
                 <div class="flex gap-2">
+                    <button onclick="testFirestoreConnection()" class="bg-blue-100 text-blue-800 font-medium py-2 px-4 rounded-lg hover:bg-blue-200 transition text-sm">
+                        <i class="fas fa-plug mr-1"></i> Probar conexión
+                    </button>
                     <button onclick="restoreSampleCatalog()" class="bg-yellow-100 text-yellow-800 font-medium py-2 px-4 rounded-lg hover:bg-yellow-200 transition text-sm">
-                        <i class="fas fa-undo-alt mr-1"></i> Restaurar catálogo de ejemplo
+                        <i class="fas fa-undo-alt mr-1"></i> Restaurar ejemplos
                     </button>
                     <button onclick="showSection('catalog')" class="text-purple-600 hover:text-purple-800 font-medium text-sm"><i class="fas fa-arrow-left mr-1"></i> Ver catálogo</button>
                 </div>
@@ -300,6 +189,7 @@
                 <form id="admin-product-form" onsubmit="event.preventDefault(); saveProduct();">
                     <input type="hidden" id="edit-product-id" value="" />
 
+                    <!-- Campos básicos -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
@@ -320,6 +210,8 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Precios -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Precio (₡) *</label>
@@ -331,71 +223,103 @@
                             <p class="text-xs text-gray-500 mt-1">Si es mayor que 0 y menor que el precio normal, se mostrará como oferta.</p>
                         </div>
                     </div>
+
+                    <!-- Descripción -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
                         <textarea id="prod-desc" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"></textarea>
                     </div>
 
+                    <!-- Imágenes (hasta 5) -->
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Multimedia (imágenes / videos)</label>
-                        <div id="media-fields-container" class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (URLs, hasta 5)</label>
+                        <div id="images-container" class="space-y-2">
                             <div class="flex gap-2 items-center">
-                                <select class="media-type w-32 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none">
-                                    <option value="img">Imagen</option>
-                                    <option value="video">Video</option>
-                                </select>
-                                <input type="text" placeholder="URL del medio" class="media-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                                <button type="button" onclick="removeMediaField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                                <input type="text" placeholder="URL de imagen 1" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="text" placeholder="URL de imagen 2" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="text" placeholder="URL de imagen 3" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="text" placeholder="URL de imagen 4" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="text" placeholder="URL de imagen 5" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
-                        <button type="button" onclick="addMediaField()" class="mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium"><i class="fas fa-plus-circle mr-1"></i> Añadir otro medio</button>
+                        <p class="text-xs text-gray-400 mt-1">Puedes dejar campos vacíos. Se mostrarán hasta 5 imágenes en la galería.</p>
+                    </div>
+
+                    <!-- Video (opcional) -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL de video (YouTube, Vimeo, etc.)</label>
+                        <input type="url" id="prod-video" placeholder="https://www.youtube.com/embed/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
+                        <p class="text-xs text-gray-400 mt-1">Si es de YouTube, usa el enlace de inserción (embed).</p>
+                    </div>
+
+                    <!-- TikTok (opcional) -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Link de TikTok (opcional)</label>
+                        <input type="url" id="prod-tiktok" placeholder="https://www.tiktok.com/@usuario/video/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
                     </div>
 
                     <div class="mt-6 flex gap-3">
                         <button type="submit" id="form-submit-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition shadow">Guardar producto</button>
                         <button type="button" onclick="resetForm()" class="bg-gray-200 text-gray-700 font-bold py-2.5 px-6 rounded-lg hover:bg-gray-300 transition">Cancelar</button>
                     </div>
+                    <div id="form-error-msg" class="mt-3 text-red-600 text-sm hidden"></div>
                 </form>
             </div>
 
+            <!-- Lista de productos -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Productos existentes</h3>
-                <div id="admin-product-list" class="space-y-3">
-                    <!-- Se carga dinámicamente -->
-                </div>
+                <div id="admin-product-list" class="space-y-3"></div>
             </div>
         </div>
-
     </main>
 
-    <!-- ==================== MODALES ==================== -->
+    <!-- ===== MODALES ===== -->
 
-    <!-- Modal de detalle de producto -->
+    <!-- Modal de detalle de producto (público) -->
     <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
             <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
+            <!-- Galería multimedia -->
             <div class="md:w-1/2 h-72 md:h-auto relative bg-gray-900 group">
-                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden"></div>
+                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden relative">
+                    <!-- Se inyecta dinámicamente -->
+                </div>
                 <div id="modal-product-badge" class="absolute top-4 left-4 z-10"></div>
                 <button id="modal-prev-btn" onclick="prevMedia()" class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-left"></i></button>
                 <button id="modal-next-btn" onclick="nextMedia()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-right"></i></button>
                 <div id="modal-media-indicators" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
                 <div id="modal-media-type-label" class="absolute top-4 right-16 bg-black/60 text-white text-xs px-2 py-1 rounded shadow-md z-10 backdrop-blur-sm hidden"><i class="fas fa-video mr-1"></i> Video</div>
             </div>
+            <!-- Detalles -->
             <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto hide-scrollbar relative">
                 <span id="modal-product-category" class="text-xs font-bold text-purple-600 uppercase tracking-widest mb-1 block"></span>
                 <h3 id="modal-product-name" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 brand-font leading-tight"></h3>
                 <div id="modal-product-price" class="mb-3 text-xl flex items-center flex-wrap gap-2"></div>
                 <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mb-4 rounded"></div>
-                <p id="modal-product-desc" class="text-gray-600 mb-6 text-sm leading-relaxed whitespace-pre-line flex-grow"></p>
+                <p id="modal-product-desc" class="text-gray-600 mb-4 text-sm leading-relaxed whitespace-pre-line flex-grow"></p>
+                <!-- TikTok link -->
+                <div id="modal-tiktok-link" class="mb-4 hidden">
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-medium">
+                        <i class="fab fa-tiktok text-xl"></i> Ver en TikTok
+                    </a>
+                </div>
                 <div class="bg-indigo-50/80 border border-indigo-100 p-4 rounded-xl mb-6 text-sm text-indigo-900 flex flex-col gap-2 shadow-inner">
-                    <div class="flex items-start gap-2 font-semibold">
-                        <i class="fas fa-info-circle text-indigo-500 mt-0.5 text-lg"></i>
-                        <p>Cotización Flexible y Segura</p>
-                    </div>
-                    <p class="text-xs opacity-90 pl-6 leading-relaxed">
-                        Este precio es referencial. <b>Nos acomodamos a tu presupuesto</b> ajustando tamaños o materiales. Al elegirnos, tienes la garantía de estar viendo nuestros trabajos 100% reales.
-                    </p>
+                    <div class="flex items-start gap-2 font-semibold"><i class="fas fa-info-circle text-indigo-500 mt-0.5 text-lg"></i><p>Cotización Flexible y Segura</p></div>
+                    <p class="text-xs opacity-90 pl-6 leading-relaxed">Este precio es referencial. <b>Nos acomodamos a tu presupuesto</b> ajustando tamaños o materiales. Al elegirnos, tienes la garantía de estar viendo nuestros trabajos 100% reales.</p>
                 </div>
                 <button id="modal-add-btn" class="w-full mt-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition shadow-lg flex justify-center items-center gap-2 transform hover:-translate-y-0.5">
                     <i class="fas fa-cart-plus text-lg"></i> Añadir a mi Cotización
@@ -404,7 +328,7 @@
         </div>
     </div>
 
-    <!-- Modal de cotización -->
+    <!-- Modal de cotización (carrito) -->
     <div id="cart-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
             <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
@@ -413,14 +337,9 @@
             </div>
             <div id="cart-items" class="p-5 overflow-y-auto flex-grow space-y-4 bg-white"></div>
             <div class="p-5 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-gray-600 font-medium">Total Estimado:</span>
-                    <span id="cart-total" class="text-2xl font-bold text-gray-900">₡0</span>
-                </div>
+                <div class="flex justify-between items-center mb-4"><span class="text-gray-600 font-medium">Total Estimado:</span><span id="cart-total" class="text-2xl font-bold text-gray-900">₡0</span></div>
                 <p class="text-xs text-center text-gray-500 mb-4">*El precio final se ajustará según tus requerimientos exactos.</p>
-                <button onclick="sendQuoteWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl hover:bg-[#20bd5a] transition shadow-md flex justify-center items-center gap-2">
-                    <i class="fab fa-whatsapp text-xl"></i> Enviar Cotización por WhatsApp
-                </button>
+                <button onclick="sendQuoteWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl hover:bg-[#20bd5a] transition shadow-md flex justify-center items-center gap-2"><i class="fab fa-whatsapp text-xl"></i> Enviar Cotización por WhatsApp</button>
             </div>
         </div>
     </div>
@@ -429,30 +348,16 @@
     <div id="login-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center backdrop-blur-sm p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl p-8 relative">
             <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i class="fas fa-times"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
-                    <i class="fas fa-lock text-xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Acceso Administrativo</h3>
-                <p class="text-gray-500 text-sm mt-1">Ingresa con tu correo y contraseña</p>
-            </div>
+            <div class="text-center mb-6"><div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600"><i class="fas fa-lock text-xl"></i></div><h3 class="text-xl font-bold text-gray-900">Acceso Administrativo</h3><p class="text-gray-500 text-sm mt-1">Ingresa con tu correo y contraseña</p></div>
             <form id="login-form" onsubmit="event.preventDefault(); login();" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="admin@manualidadesmd.com" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="••••••••" />
-                </div>
-                <button type="submit" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-lg hover:bg-gray-800 transition shadow mt-2">
-                    Ingresar
-                </button>
+                <div><label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label><input type="email" id="login-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="admin@manualidadesmd.com" /></div>
+                <div><label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label><input type="password" id="login-password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="••••••••" /></div>
+                <button type="submit" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-lg hover:bg-gray-800 transition shadow mt-2">Ingresar</button>
             </form>
         </div>
     </div>
 
-    <!-- ==================== FOOTER ==================== -->
+    <!-- ===== FOOTER ===== -->
     <footer class="bg-white border-t border-gray-100 py-8 mt-auto z-10 relative">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mx-auto mb-3 transform rotate-3">M</div>
@@ -463,7 +368,7 @@
         </div>
     </footer>
 
-    <!-- ==================== SCRIPTS ==================== -->
+    <!-- ===== SCRIPTS ===== -->
     <script type="importmap">
         {
             "imports": {
@@ -476,7 +381,7 @@
 
     <script type="module">
         // ================================================================
-        // 1. IMPORTACIONES Y CONFIGURACIÓN DE FIREBASE
+        // IMPORTS Y CONFIGURACIÓN
         // ================================================================
         import { initializeApp } from 'firebase/app';
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -492,7 +397,8 @@
             query,
             orderBy,
             getDocs,
-            writeBatch
+            writeBatch,
+            setDoc
         } from 'firebase/firestore';
 
         const firebaseConfig = {
@@ -510,197 +416,11 @@
         const db = getFirestore(app);
 
         // ================================================================
-        // 2. CATÁLOGO DE EJEMPLO AMPLIADO
-        // ================================================================
-        const SAMPLE_PRODUCTS = [
-            // Arreglos Florales
-            {
-                name: "Ramo Eterno de Rosas Preservadas",
-                category: "Arreglos Florales",
-                price: 32000,
-                promoPrice: 25000,
-                isPromo: true,
-                desc: "Ramo de rosas naturales preservadas que duran más de un año. Incluye caja de presentación y tarjeta personalizada.\n\nPerfecto para aniversarios, cumpleaños o detalles de lujo.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fce4ec/f06292?text=Ramo+Rosas' },
-                    { type: 'img', src: 'https://placehold.co/800x800/f8bbd0/c2185b?text=Detalle+Caja' },
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
-                ]
-            },
-            {
-                name: "Arreglo Floral en Caja Sorpresa",
-                category: "Arreglos Florales",
-                price: 18000,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Caja decorativa que se abre revelando un hermoso arreglo de flores variadas. Ideal para regalar en cualquier ocasión.\n\nElige entre rosas, girasoles o flores mixtas.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/f3e5f5/8e24aa?text=Caja+Floral' },
-                    { type: 'img', src: 'https://placehold.co/800x800/e1bee7/6a1b9a?text=Interior+Flores' }
-                ]
-            },
-            // Centros de Mesa
-            {
-                name: "Centro de Mesa Bautizo Angelical",
-                category: "Centros de Mesa",
-                price: 15000,
-                promoPrice: 12000,
-                isPromo: true,
-                desc: "Base de madera pintada a mano con figuras de ángeles en foami y flores blancas. Perfecto para bautizos y comuniones.\n\n*Precio por unidad. Descuento a partir de 10 unidades.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/e3f2fd/0d47a1?text=Centro+Bautizo' },
-                    { type: 'img', src: 'https://placehold.co/800x800/bbdefb/1565c0?text=Ángulo+Superior' }
-                ]
-            },
-            {
-                name: "Centro de Mesa Boda Vintage",
-                category: "Centros de Mesa",
-                price: 22000,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Composición elegante con candelabros, flores secas y detalles dorados. Estilo rústico-chic.\n\nIncluye base de madera reciclada y velas de soja.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fef9e7/f57f17?text=Vintage+Mesa' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Candelabro' },
-                    { type: 'img', src: 'https://placehold.co/800x800/ffecb3/e65100?text=Flores+Secas' }
-                ]
-            },
-            // Faroles
-            {
-                name: "Farol Mágico LED Personalizado",
-                category: "Faroles",
-                price: 9500,
-                promoPrice: 7500,
-                isPromo: true,
-                desc: "Farol de vidrio con base de madera, iluminado por luces cálidas LED. Se puede personalizar con nombres o fechas.\n\nIdeal para decoración de bodas, cumpleaños o como lámpara de noche.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fff9c4/f9a825?text=Farol+LED' },
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
-                ]
-            },
-            {
-                name: "Farol Colgante de Papel",
-                category: "Faroles",
-                price: 6500,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Farol decorativo de papel artesanal con diseños geométricos. Disponible en varios colores y tamaños.\n\nPerfecto para fiestas temáticas y decoración de interiores.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/f3e5f5/7b1fa2?text=Farol+Papel' },
-                    { type: 'img', src: 'https://placehold.co/800x800/e1bee7/6a1b9a?text=Colgante' }
-                ]
-            },
-            // Maquetas Escolares
-            {
-                name: "Maqueta Ecosistema Acuático",
-                category: "Maquetas Escolares",
-                price: 12000,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Maqueta educativa de un ecosistema acuático con animales y plantas de plástico, base de corcho y fondo pintado.\n\nIdeal para proyectos escolares de ciencias naturales.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/e0f7fa/006064?text=Maqueta+Acuática' },
-                    { type: 'img', src: 'https://placehold.co/800x800/b2ebf2/00838f?text=Detalle+Animales' }
-                ]
-            },
-            {
-                name: "Maqueta Sistema Solar 3D",
-                category: "Maquetas Escolares",
-                price: 18000,
-                promoPrice: 15000,
-                isPromo: true,
-                desc: "Maqueta del sistema solar con planetas pintados a mano, suspendidos con hilos de nylon. Incluye base giratoria.\n\nPerfecto para ferias científicas y regalos educativos.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/ede7f6/4527a0?text=Sistema+Solar' },
-                    { type: 'img', src: 'https://placehold.co/800x800/d1c4e9/311b92?text=Planetas' },
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
-                ]
-            },
-            // Recuerdos de Fiestas
-            {
-                name: "Recuerdos Boda - Velas Aromáticas",
-                category: "Recuerdos de Fiestas",
-                price: 3500,
-                promoPrice: 3000,
-                isPromo: true,
-                desc: "Velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
-                media: [
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual' }
-                ]
-            },
-            {
-                name: "Kit Recuerdos Cumpleaños Infantil",
-                category: "Recuerdos de Fiestas",
-                price: 2500,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Bolsa sorpresa con dulces, stickers, lápices de colores y un pequeño juguete. Personalizada con el nombre del cumpleañero.\n\nIdeal para fiestas infantiles de hasta 50 niños.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fce4ec/f06292?text=Kit+Cumple' },
-                    { type: 'img', src: 'https://placehold.co/800x800/f8bbd0/c2185b?text=Contenido' }
-                ]
-            },
-            // Decoración Cumpleaños
-            {
-                name: "Guirnalda de Banderines Personalizada",
-                category: "Decoración Cumpleaños",
-                price: 4500,
-                promoPrice: 3800,
-                isPromo: true,
-                desc: "Guirnalda de banderines de tela con letras de fieltro. Puedes elegir el mensaje (hasta 15 caracteres).\n\nReutilizable y fácil de colgar.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fff9c4/f57f17?text=Banderines' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Letras' }
-                ]
-            },
-            {
-                name: "Centro de Mesa Globo Burbuja",
-                category: "Decoración Cumpleaños",
-                price: 18500,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Globo burbuja personalizado con pintura interior y texto exterior, acompañado de rosas (naturales o artificiales a elección).\n\nIdeal como centro de mesa o regalo principal.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/f0fdf4/15803d?text=Globo+Personalizado' }
-                ]
-            },
-            // Otros artículos
-            {
-                name: "Caja Sorpresa de Aniversario",
-                category: "Regalos",
-                price: 25000,
-                promoPrice: 20000,
-                isPromo: true,
-                desc: "Hermosa caja personalizada que incluye fotografías, chocolates premium y un mensaje oculto. Perfecta para sorprender a tu pareja.\n\nIncluye:\n- Caja decorada a mano\n- 10 fotos polaroid\n- Surtido de chocolates",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/fdf2f8/be185d?text=Foto+Exterior' },
-                    { type: 'img', src: 'https://placehold.co/800x800/fbcfe8/831843?text=Foto+Detalle+Interior' },
-                    { type: 'video', src: 'https://www.w3schools.com/html/mov_bbb.mp4' }
-                ]
-            },
-            {
-                name: "Llavero Personalizado con Foto",
-                category: "Otros",
-                price: 5500,
-                promoPrice: 0,
-                isPromo: false,
-                desc: "Llavero de acero inoxidable con tu foto o diseño. Ideal para regalos de equipo, cumpleaños o detalles promocionales.\n\nTamaño 3x3 cm, incluye cadena.",
-                media: [
-                    { type: 'img', src: 'https://placehold.co/800x800/e0e0e0/424242?text=Llavero' },
-                    { type: 'img', src: 'https://placehold.co/800x800/bdbdbd/212121?text=Detalle+Foto' }
-                ]
-            }
-        ];
-
-        // ================================================================
-        // 3. ESTADO GLOBAL
+        // ESTADO
         // ================================================================
         const state = {
             products: [],
             currentFilter: 'Todos',
-            currentSection: 'home',
             cart: [],
             user: null,
             isAdmin: false,
@@ -709,7 +429,7 @@
         };
 
         // ================================================================
-        // 4. UTILIDADES
+        // UTILIDADES
         // ================================================================
         const formatMoney = (amount) => {
             return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', maximumFractionDigits: 0 }).format(amount || 0);
@@ -741,13 +461,12 @@
         };
 
         // ================================================================
-        // 5. NAVEGACIÓN
+        // NAVEGACIÓN
         // ================================================================
         window.showSection = function(sectionId) {
             document.querySelectorAll('#section-home, #section-catalog, #section-contact, #section-admin').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(`section-${sectionId}`);
             if (target) target.classList.remove('hidden');
-            state.currentSection = sectionId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -755,9 +474,6 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         };
 
-        // ================================================================
-        // 6. MODALES
-        // ================================================================
         const openModal = (id) => {
             const modal = document.getElementById(id);
             modal.classList.remove('hidden');
@@ -773,17 +489,11 @@
         };
         window.closeModal = closeModal;
 
-        window.openLoginModal = function() {
-            openModal('login-modal');
-        };
-
-        window.openCartModal = function() {
-            updateCartUI();
-            openModal('cart-modal');
-        };
+        window.openLoginModal = function() { openModal('login-modal'); };
+        window.openCartModal = function() { updateCartUI(); openModal('cart-modal'); };
 
         // ================================================================
-        // 7. AUTENTICACIÓN
+        // AUTENTICACIÓN
         // ================================================================
         async function checkIfAdmin(uid) {
             try {
@@ -807,6 +517,7 @@
                 const userCred = await signInWithEmailAndPassword(auth, email, password);
                 closeModal('login-modal');
                 showNotification(`Bienvenido ${userCred.user.email}`, 'success');
+                console.log('✅ Usuario autenticado:', userCred.user.uid);
             } catch (error) {
                 console.error('Login error:', error);
                 showNotification('Credenciales incorrectas o error de conexión', 'error');
@@ -828,8 +539,11 @@
                 const isAdmin = await checkIfAdmin(user.uid);
                 state.isAdmin = isAdmin;
                 updateUIForAuth(true);
+                console.log('🔑 Usuario:', user.email, '| Admin:', isAdmin);
                 if (isAdmin) {
                     showNotification('Modo administrador activado', 'success');
+                } else {
+                    showNotification('Usuario sin permisos de administrador', 'info');
                 }
             } else {
                 state.user = null;
@@ -865,11 +579,31 @@
         };
 
         // ================================================================
-        // 8. CRUD DE PRODUCTOS
+        // PRUEBA DE CONEXIÓN
+        // ================================================================
+        window.testFirestoreConnection = async function() {
+            try {
+                showNotification('Probando conexión a Firestore...', 'info');
+                const testRef = doc(db, 'test', 'connection');
+                await setDoc(testRef, { timestamp: new Date().toISOString() });
+                await deleteDoc(testRef);
+                showNotification('✅ Conexión exitosa a Firestore', 'success');
+                console.log('✅ Prueba de Firestore exitosa');
+            } catch (e) {
+                console.error('❌ Error de conexión a Firestore:', e);
+                showNotification('❌ Error al conectar con Firestore: ' + e.message, 'error');
+            }
+        };
+
+        // ================================================================
+        // CRUD DE PRODUCTOS (con todos los campos)
         // ================================================================
         window.saveProduct = async function() {
-            if (!state.isAdmin) {
-                showNotification('No tienes permisos', 'error');
+            const errorMsg = document.getElementById('form-error-msg');
+            errorMsg.classList.add('hidden');
+
+            if (!state.user || !state.isAdmin) {
+                showNotification('Debes iniciar sesión como administrador', 'error');
                 return;
             }
 
@@ -878,24 +612,26 @@
             const price = parseFloat(document.getElementById('prod-price').value);
             const promoPrice = parseFloat(document.getElementById('prod-promo-price').value) || 0;
             const desc = document.getElementById('prod-desc').value.trim();
+            const videoUrl = document.getElementById('prod-video').value.trim();
+            const tiktokUrl = document.getElementById('prod-tiktok').value.trim();
             const editId = document.getElementById('edit-product-id').value;
 
-            if (!name || !category || isNaN(price) || price < 0 || !desc) {
-                showNotification('Completa todos los campos obligatorios', 'error');
-                return;
-            }
+            // Validaciones
+            if (!name) { errorMsg.textContent = 'El nombre es obligatorio'; errorMsg.classList.remove('hidden'); return; }
+            if (!category) { errorMsg.textContent = 'Selecciona una categoría'; errorMsg.classList.remove('hidden'); return; }
+            if (isNaN(price) || price < 0) { errorMsg.textContent = 'Ingresa un precio válido'; errorMsg.classList.remove('hidden'); return; }
+            if (!desc) { errorMsg.textContent = 'La descripción es obligatoria'; errorMsg.classList.remove('hidden'); return; }
 
-            const mediaFields = document.querySelectorAll('#media-fields-container .flex');
-            const media = [];
-            mediaFields.forEach(container => {
-                const type = container.querySelector('.media-type').value;
-                const url = container.querySelector('.media-url').value.trim();
-                if (url) {
-                    media.push({ type, src: url });
-                }
+            // Obtener imágenes
+            const imageInputs = document.querySelectorAll('#images-container .image-url');
+            const images = [];
+            imageInputs.forEach(input => {
+                const url = input.value.trim();
+                if (url) images.push(url);
             });
-            if (media.length === 0) {
-                showNotification('Agrega al menos una imagen o video', 'error');
+            if (images.length === 0) {
+                errorMsg.textContent = 'Agrega al menos una imagen (URL)';
+                errorMsg.classList.remove('hidden');
                 return;
             }
 
@@ -906,22 +642,29 @@
                 promoPrice,
                 isPromo: (promoPrice > 0 && promoPrice < price),
                 desc,
-                media,
+                images,          // array de URLs
+                videoUrl: videoUrl || '',
+                tiktokUrl: tiktokUrl || '',
                 updatedAt: new Date().toISOString()
             };
+
+            console.log('📦 Guardando producto:', productData);
 
             try {
                 if (editId) {
                     await updateDoc(doc(db, 'catalog', editId), productData);
-                    showNotification('Producto actualizado', 'success');
+                    showNotification('Producto actualizado correctamente', 'success');
                 } else {
-                    await addDoc(collection(db, 'catalog'), productData);
-                    showNotification('Producto creado', 'success');
+                    const docRef = await addDoc(collection(db, 'catalog'), { ...productData, createdAt: new Date().toISOString() });
+                    console.log('✅ Producto creado con ID:', docRef.id);
+                    showNotification('Producto creado correctamente', 'success');
                 }
                 resetForm();
             } catch (e) {
-                console.error('Error guardando producto:', e);
-                showNotification('Error al guardar: ' + e.message, 'error');
+                console.error('❌ Error guardando producto:', e);
+                errorMsg.textContent = 'Error al guardar: ' + e.message;
+                errorMsg.classList.remove('hidden');
+                showNotification('Error al guardar el producto', 'error');
             }
         };
 
@@ -947,18 +690,26 @@
             document.getElementById('prod-price').value = product.price;
             document.getElementById('prod-promo-price').value = product.promoPrice || '';
             document.getElementById('prod-desc').value = product.desc;
+            document.getElementById('prod-video').value = product.videoUrl || '';
+            document.getElementById('prod-tiktok').value = product.tiktokUrl || '';
             document.getElementById('form-title').textContent = 'Editar producto';
             document.getElementById('form-submit-btn').textContent = 'Actualizar producto';
 
-            const container = document.getElementById('media-fields-container');
+            // Cargar imágenes
+            const container = document.getElementById('images-container');
             container.innerHTML = '';
-            if (product.media && product.media.length > 0) {
-                product.media.forEach(med => {
-                    addMediaField(med.type, med.src);
-                });
+            const images = product.images || [];
+            if (images.length === 0) {
+                // Agregar un campo vacío
+                addImageField('');
             } else {
-                addMediaField('img', '');
+                images.forEach(url => addImageField(url));
             }
+            // Asegurar al menos 5 campos para edición (opcional)
+            while (container.children.length < 5) {
+                addImageField('');
+            }
+
             document.getElementById('admin-form-container').scrollIntoView({ behavior: 'smooth' });
         };
 
@@ -969,44 +720,141 @@
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-promo-price').value = '';
             document.getElementById('prod-desc').value = '';
+            document.getElementById('prod-video').value = '';
+            document.getElementById('prod-tiktok').value = '';
             document.getElementById('form-title').textContent = 'Agregar nuevo producto';
             document.getElementById('form-submit-btn').textContent = 'Guardar producto';
-            const container = document.getElementById('media-fields-container');
+            // Resetear imágenes: dejar 5 campos vacíos
+            const container = document.getElementById('images-container');
             container.innerHTML = '';
-            addMediaField('img', '');
+            for (let i = 0; i < 5; i++) {
+                addImageField('');
+            }
+            document.getElementById('form-error-msg').classList.add('hidden');
         }
         window.resetForm = resetForm;
 
         // ================================================================
-        // 9. MULTIMEDIA EN FORMULARIO
+        // MANEJO DE CAMPOS DE IMAGEN
         // ================================================================
-        window.addMediaField = function(type = 'img', url = '') {
-            const container = document.getElementById('media-fields-container');
+        function addImageField(value = '') {
+            const container = document.getElementById('images-container');
             const div = document.createElement('div');
             div.className = 'flex gap-2 items-center';
             div.innerHTML = `
-                <select class="media-type w-32 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none">
-                    <option value="img" ${type === 'img' ? 'selected' : ''}>Imagen</option>
-                    <option value="video" ${type === 'video' ? 'selected' : ''}>Video</option>
-                </select>
-                <input type="text" placeholder="URL del medio" class="media-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" value="${url}" />
-                <button type="button" onclick="removeMediaField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
+                <input type="text" placeholder="URL de imagen" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" value="${value}" />
+                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
             `;
             container.appendChild(div);
-        };
+        }
 
-        window.removeMediaField = function(btn) {
-            const container = document.getElementById('media-fields-container');
+        window.removeImageField = function(btn) {
+            const container = document.getElementById('images-container');
             if (container.children.length <= 1) {
-                showNotification('Debe haber al menos un medio', 'error');
+                showNotification('Debe haber al menos un campo de imagen', 'error');
                 return;
             }
             btn.closest('.flex').remove();
         };
 
+        // Inicializar el formulario con 5 campos vacíos al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('images-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                addImageField('');
+            }
+        });
+
         // ================================================================
-        // 10. RESTAURAR CATÁLOGO DE EJEMPLO
+        // CATÁLOGO DE EJEMPLO (con todos los campos)
         // ================================================================
+        const SAMPLE_PRODUCTS = [
+            {
+                name: "Ramo Eterno de Rosas Preservadas",
+                category: "Arreglos Florales",
+                price: 32000,
+                promoPrice: 25000,
+                isPromo: true,
+                desc: "Ramo de rosas naturales preservadas que duran más de un año. Incluye caja de presentación y tarjeta personalizada.\n\nPerfecto para aniversarios, cumpleaños o detalles de lujo.",
+                images: [
+                    "https://placehold.co/800x800/fce4ec/f06292?text=Ramo+Rosas",
+                    "https://placehold.co/800x800/f8bbd0/c2185b?text=Detalle+Caja"
+                ],
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                tiktokUrl: "https://www.tiktok.com/@usuario/video/123456789"
+            },
+            {
+                name: "Centro de Mesa Bautizo Angelical",
+                category: "Centros de Mesa",
+                price: 15000,
+                promoPrice: 12000,
+                isPromo: true,
+                desc: "Base de madera pintada a mano con figuras de ángeles en foami y flores blancas. Perfecto para bautizos y comuniones.\n\n*Precio por unidad. Descuento a partir de 10 unidades.",
+                images: [
+                    "https://placehold.co/800x800/e3f2fd/0d47a1?text=Centro+Bautizo",
+                    "https://placehold.co/800x800/bbdefb/1565c0?text=Ángulo+Superior"
+                ],
+                videoUrl: "",
+                tiktokUrl: ""
+            },
+            {
+                name: "Farol Mágico LED Personalizado",
+                category: "Faroles",
+                price: 9500,
+                promoPrice: 7500,
+                isPromo: true,
+                desc: "Farol de vidrio con base de madera, iluminado por luces cálidas LED. Se puede personalizar con nombres o fechas.\n\nIdeal para decoración de bodas, cumpleaños o como lámpara de noche.",
+                images: [
+                    "https://placehold.co/800x800/fff9c4/f9a825?text=Farol+LED"
+                ],
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                tiktokUrl: ""
+            },
+            {
+                name: "Maqueta Sistema Solar 3D",
+                category: "Maquetas Escolares",
+                price: 18000,
+                promoPrice: 15000,
+                isPromo: true,
+                desc: "Maqueta del sistema solar con planetas pintados a mano, suspendidos con hilos de nylon. Incluye base giratoria.\n\nPerfecto para ferias científicas y regalos educativos.",
+                images: [
+                    "https://placehold.co/800x800/ede7f6/4527a0?text=Sistema+Solar",
+                    "https://placehold.co/800x800/d1c4e9/311b92?text=Planetas"
+                ],
+                videoUrl: "",
+                tiktokUrl: ""
+            },
+            {
+                name: "Recuerdos Boda - Velas Aromáticas",
+                category: "Recuerdos de Fiestas",
+                price: 3500,
+                promoPrice: 3000,
+                isPromo: true,
+                desc: "Velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
+                images: [
+                    "https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda",
+                    "https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual"
+                ],
+                videoUrl: "",
+                tiktokUrl: ""
+            },
+            {
+                name: "Guirnalda de Banderines Personalizada",
+                category: "Decoración Cumpleaños",
+                price: 4500,
+                promoPrice: 3800,
+                isPromo: true,
+                desc: "Guirnalda de banderines de tela con letras de fieltro. Puedes elegir el mensaje (hasta 15 caracteres).\n\nReutilizable y fácil de colgar.",
+                images: [
+                    "https://placehold.co/800x800/fff9c4/f57f17?text=Banderines",
+                    "https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Letras"
+                ],
+                videoUrl: "",
+                tiktokUrl: ""
+            }
+        ];
+
         window.restoreSampleCatalog = async function() {
             if (!state.isAdmin) {
                 showNotification('No tienes permisos', 'error');
@@ -1026,6 +874,7 @@
                 for (const prod of SAMPLE_PRODUCTS) {
                     await addDoc(colRef, {
                         ...prod,
+                        createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     });
                 }
@@ -1037,7 +886,7 @@
         };
 
         // ================================================================
-        // 11. SIEMBRA AUTOMÁTICA SI ESTÁ VACÍO
+        // SIEMBRA AUTOMÁTICA
         // ================================================================
         async function seedIfEmpty() {
             try {
@@ -1048,6 +897,7 @@
                     for (const prod of SAMPLE_PRODUCTS) {
                         await addDoc(colRef, {
                             ...prod,
+                            createdAt: new Date().toISOString(),
                             updatedAt: new Date().toISOString()
                         });
                     }
@@ -1060,7 +910,7 @@
         }
 
         // ================================================================
-        // 12. ESCUCHA EN TIEMPO REAL
+        // ESCUCHA EN TIEMPO REAL
         // ================================================================
         function listenCatalog() {
             const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
@@ -1085,7 +935,7 @@
         }
 
         // ================================================================
-        // 13. RENDERIZADO DEL CATÁLOGO (PÚBLICO)
+        // RENDERIZADO DEL CATÁLOGO (PÚBLICO)
         // ================================================================
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
@@ -1117,14 +967,15 @@
                     ? `<div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md z-20 animate-pulse"><i class="fas fa-tag"></i> OFERTA</div>`
                     : '';
 
-                const coverMedia = item.media && item.media.length > 0 ? item.media[0] : { src: 'https://placehold.co/400x400' };
-                const hasVideo = item.media && item.media.some(m => m.type === 'video');
-                const multiImage = item.media && item.media.length > 1;
+                const coverImage = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/400x400/e2e8f0/64748b?text=Sin+Imagen';
+                const hasVideo = item.videoUrl && item.videoUrl.trim() !== '';
+                const hasTiktok = item.tiktokUrl && item.tiktokUrl.trim() !== '';
                 let mediaIcons = '';
-                if (hasVideo || multiImage) {
+                if (hasVideo || hasTiktok || (item.images && item.images.length > 1)) {
                     mediaIcons = `<div class="absolute top-2 left-2 flex gap-1 z-20">`;
                     if (hasVideo) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-video"></i></span>`;
-                    if (multiImage) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-images"></i> ${item.media.length}</span>`;
+                    if (hasTiktok) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fab fa-tiktok"></i></span>`;
+                    if (item.images && item.images.length > 1) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-images"></i> ${item.images.length}</span>`;
                     mediaIcons += `</div>`;
                 }
 
@@ -1135,12 +986,9 @@
                         ${promoBadge}
                         <div class="relative overflow-hidden h-56 cursor-pointer bg-gray-100" onclick="openProductModal('${item.id}')">
                             ${mediaIcons}
-                            ${coverMedia.type === 'video'
-                                ? `<video src="${coverMedia.src}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" muted></video>`
-                                : `<img src="${coverMedia.src}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=Producto'">`
-                            }
+                            <img src="${coverImage}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=Producto'">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                                <span class="text-white text-sm font-semibold flex items-center shadow-lg"><i class="fas fa-search-plus mr-2"></i> Ver Fotos/Videos</span>
+                                <span class="text-white text-sm font-semibold flex items-center shadow-lg"><i class="fas fa-search-plus mr-2"></i> Ver detalles</span>
                             </div>
                         </div>
                         <div class="p-5 flex-grow flex flex-col relative">
@@ -1174,7 +1022,7 @@
         }
 
         // ================================================================
-        // 14. RENDERIZADO DE LISTA DE PRODUCTOS EN ADMIN
+        // RENDERIZADO ADMIN
         // ================================================================
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
@@ -1186,11 +1034,12 @@
             let html = '';
             state.products.forEach(p => {
                 const price = formatMoney(p.price);
+                const coverImg = p.images && p.images.length > 0 ? p.images[0] : 'https://placehold.co/100x100';
                 html += `
                     <div class="flex items-center justify-between p-3 border-b border-gray-100 hover:bg-gray-50 rounded-lg">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden shrink-0">
-                                <img src="${p.media && p.media.length > 0 ? p.media[0].src : 'https://placehold.co/100x100'}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
+                                <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-800">${p.name}</h4>
@@ -1208,7 +1057,7 @@
         }
 
         // ================================================================
-        // 15. FILTRO DEL CATÁLOGO
+        // FILTROS
         // ================================================================
         window.setCatalogFilter = function(filter) {
             state.currentFilter = filter;
@@ -1232,7 +1081,7 @@
         };
 
         // ================================================================
-        // 16. MODAL DE DETALLE DE PRODUCTO (CON GALERÍA)
+        // MODAL DE DETALLE DE PRODUCTO (Galería mejorada)
         // ================================================================
         let currentProductMedia = [];
         let currentMediaIndex = 0;
@@ -1244,9 +1093,21 @@
                 return;
             }
 
-            currentProductMedia = product.media && product.media.length > 0
-                ? product.media
-                : [{ type: 'img', src: 'https://placehold.co/800x800/e2e8f0/64748b?text=Sin+Imagen' }];
+            // Construir array de medios: imágenes + video (si existe)
+            const mediaItems = [];
+            if (product.images && product.images.length > 0) {
+                product.images.forEach(url => {
+                    mediaItems.push({ type: 'img', src: url });
+                });
+            }
+            if (product.videoUrl && product.videoUrl.trim() !== '') {
+                mediaItems.push({ type: 'video', src: product.videoUrl });
+            }
+            if (mediaItems.length === 0) {
+                mediaItems.push({ type: 'img', src: 'https://placehold.co/800x800/e2e8f0/64748b?text=Sin+imagen' });
+            }
+
+            currentProductMedia = mediaItems;
             currentMediaIndex = 0;
 
             const prevBtn = document.getElementById('modal-prev-btn');
@@ -1266,6 +1127,7 @@
 
             updateModalMedia();
 
+            // Llenar datos
             document.getElementById('modal-product-category').textContent = product.category || 'General';
             document.getElementById('modal-product-name').textContent = product.name;
             document.getElementById('modal-product-desc').textContent = product.desc;
@@ -1281,6 +1143,15 @@
                 badgeEl.innerHTML = `<span class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded shadow-lg animate-pulse flex items-center gap-1"><i class="fas fa-tag"></i> OFERTA ESPECIAL</span>`;
             } else {
                 badgeEl.innerHTML = '';
+            }
+
+            // TikTok link
+            const tiktokContainer = document.getElementById('modal-tiktok-link');
+            if (product.tiktokUrl && product.tiktokUrl.trim() !== '') {
+                tiktokContainer.classList.remove('hidden');
+                tiktokContainer.querySelector('a').href = product.tiktokUrl;
+            } else {
+                tiktokContainer.classList.add('hidden');
             }
 
             document.getElementById('modal-add-btn').onclick = () => {
@@ -1300,7 +1171,14 @@
             container.style.opacity = '0';
             setTimeout(() => {
                 if (media.type === 'video') {
-                    container.innerHTML = `<video src="${media.src}" class="w-full h-full object-contain bg-black" controls autoplay muted loop playsinline></video>`;
+                    // Asumimos que es un embed de YouTube o similar
+                    const videoId = media.src.includes('embed') ? media.src : 
+                        media.src.includes('youtube.com/watch?v=') ? media.src.replace('watch?v=', 'embed/') : media.src;
+                    container.innerHTML = `
+                        <div class="modal-video-container w-full h-full">
+                            <iframe src="${videoId}" frameborder="0" allowfullscreen class="w-full h-full"></iframe>
+                        </div>
+                    `;
                     typeLabel.innerHTML = '<i class="fas fa-video mr-1"></i> Video';
                     typeLabel.classList.remove('hidden');
                 } else {
@@ -1337,7 +1215,7 @@
         };
 
         // ================================================================
-        // 17. CARRITO / COTIZACIÓN
+        // CARRITO
         // ================================================================
         window.addToCart = function(productId) {
             const product = state.products.find(p => p.id === productId);
@@ -1379,12 +1257,11 @@
             state.cart.forEach(item => {
                 const finalPrice = (item.isPromo && item.promoPrice > 0) ? item.promoPrice : item.price;
                 total += finalPrice;
-                const coverSrc = item.media && item.media.length > 0 ? item.media[0].src : 'https://placehold.co/100x100';
+                const coverImg = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/100x100';
                 html += `
                     <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
-                        <div class="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden shrink-0 relative">
-                            ${item.media && item.media[0].type === 'video' ? '<div class="absolute inset-0 bg-black/30 flex items-center justify-center text-white"><i class="fas fa-video text-xs"></i></div>' : ''}
-                            <img src="${coverSrc}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
+                        <div class="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden shrink-0">
+                            <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
                         </div>
                         <div class="flex-grow">
                             <h4 class="text-sm font-bold text-gray-900 line-clamp-1">${item.name}</h4>
@@ -1414,13 +1291,13 @@
             });
             msg += `\n*Total Referencial:* ${formatMoney(total)}\n\nQuisiera saber qué opciones de materiales/tamaños me ofrecen. ¡Gracias!`;
             const encodedMsg = encodeURIComponent(msg);
-            const phone = "50600000000"; // Reemplaza con el número real
+            const phone = "50600000000"; // Reemplaza con tu número
             window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
             closeModal('cart-modal');
         };
 
         // ================================================================
-        // 18. DESCARGA DE CATÁLOGO (SIMULACIÓN)
+        // DESCARGA PDF (SIMULACIÓN)
         // ================================================================
         window.downloadCatalog = function() {
             showNotification('Generando Catálogo PDF... (Simulación)', 'success');
@@ -1428,7 +1305,7 @@
         };
 
         // ================================================================
-        // 19. INICIALIZACIÓN
+        // INICIALIZACIÓN
         // ================================================================
         listenCatalog();
         showSection('home');
@@ -1442,17 +1319,13 @@
             });
         });
 
-        console.log('🚀 Manualidades MD con catálogo ampliado');
-        console.log('ℹ️ Si la base de datos está vacía, se cargarán productos de ejemplo variados.');
-        console.log('ℹ️ Para administrar, inicia sesión con un usuario que tenga documento en la colección "admins" con su UID.');
+        console.log('🚀 Manualidades MD con panel completo');
+        console.log('ℹ️ Ahora puedes agregar productos con múltiples imágenes, video y TikTok.');
+        console.log('ℹ️ Asegúrate de tener un documento en la colección "admins" con el UID del admin.');
 
         window.renderCatalog = renderCatalog;
         window.renderAdminProductList = renderAdminProductList;
         window.updateCartUI = updateCartUI;
-
-        // ================================================================
-        // FIN
-        // ================================================================
     </script>
 
 </body>
