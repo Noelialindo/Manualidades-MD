@@ -1,370 +1,479 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manualidades MD | Panel Admin y Catálogo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manualidades MD - Noelia Lindo Obando</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fcfcfd; }
-        .brand-font { font-family: 'Playfair Display', serif; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .premium-card { border: 1px solid rgba(212, 175, 55, 0.2); }
-        .modal-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .modal-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .animate-blob { animation: blob 7s infinite; }
-        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .sort-btn.active { background-color: #7c3aed; color: white; }
-        .notification { transition: all 0.3s ease; }
-        .image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-active { overflow: hidden; }
         .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
-    <!-- ===== NAVEGACIÓN ===== -->
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg transform rotate-3">
-                        <span class="brand-font transform -rotate-3">M</span>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900 brand-font leading-none tracking-tight">Manualidades MD</h1>
-                        <p class="text-xs text-purple-600 font-medium tracking-widest uppercase">Detalles Únicos</p>
-                    </div>
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center" onclick="showSection('home')">
+                        <span id="site-title" class="font-bold text-2xl text-purple-600 tracking-tight">Manualidades MD</span>
+                    </a>
                 </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <button onclick="showSection('home')" class="text-gray-600 hover:text-purple-600 font-medium transition">Inicio</button>
-                    <button onclick="showSection('catalog')" class="text-gray-600 hover:text-purple-600 font-medium transition">Catálogo</button>
-                    <button onclick="showSection('contact')" class="text-gray-600 hover:text-purple-600 font-medium transition">Contáctanos</button>
-                    <div class="h-6 w-px bg-gray-200"></div>
-                    <button onclick="openCartModal()" class="relative p-2 text-gray-600 hover:text-purple-600 transition">
-                        <i class="fas fa-shopping-bag text-xl"></i>
-                        <span id="cart-badge-desktop" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-pink-500 rounded-full hidden">0</span>
-                    </button>
-                    <div id="auth-buttons-desktop">
-                        <button id="btn-login-desktop" onclick="openLoginModal()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full font-medium transition">Admin</button>
-                        <button id="btn-logout-desktop" onclick="logout()" class="hidden text-sm bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-full font-medium transition">Cerrar sesión</button>
-                    </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                    <a href="#" onclick="showSection('home')" class="border-transparent text-gray-500 hover:border-purple-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Inicio</a>
+                    <a href="#" onclick="showSection('portfolio')" class="border-transparent text-gray-500 hover:border-purple-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Mis Trabajos</a>
+                    <a href="#" onclick="showSection('catalog')" class="border-transparent text-gray-500 hover:border-purple-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Catálogo</a>
+                    <a href="#" onclick="showSection('reviews')" class="border-transparent text-gray-500 hover:border-purple-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reseñas</a>
                 </div>
-                <div class="md:hidden flex items-center gap-4">
-                    <button onclick="openCartModal()" class="relative p-2 text-gray-600">
-                        <i class="fas fa-shopping-bag text-xl"></i>
-                        <span id="cart-badge-mobile" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-pink-500 rounded-full hidden">0</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-400 hover:text-purple-500 focus:outline-none">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
                     </button>
-                    <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-purple-600 focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
+                    <button onclick="openAdminLogin()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <i class="fas fa-user-cog"></i>
                     </button>
+                    <div class="flex items-center sm:hidden ml-2">
+                        <button onclick="toggleMobileMenu()" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500" aria-expanded="false">
+                            <span class="sr-only">Abrir menú principal</span>
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
-            <div class="px-4 pt-2 pb-6 space-y-2">
-                <button onclick="showSection('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Inicio</button>
-                <button onclick="showSection('catalog'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Catálogo</button>
-                <button onclick="showSection('contact'); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Contáctanos</button>
-                <button id="btn-admin-mobile" onclick="showAdminPanel(); toggleMobileMenu();" class="hidden w-full text-left px-3 py-3 text-base font-medium text-purple-600 hover:bg-purple-50 rounded-lg">Panel Admin</button>
-                <button id="btn-login-mobile" onclick="openLoginModal(); toggleMobileMenu();" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg">Admin</button>
-                <button id="btn-logout-mobile" onclick="logout(); toggleMobileMenu();" class="hidden w-full text-left px-3 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-lg">Cerrar sesión</button>
+        <div id="mobile-menu" class="sm:hidden hidden bg-white border-t border-gray-200">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="#" onclick="showSection('home'); toggleMobileMenu()" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-purple-800 hover:bg-purple-50 hover:border-purple-500">Inicio</a>
+                <a href="#" onclick="showSection('portfolio'); toggleMobileMenu()" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-purple-800 hover:bg-purple-50 hover:border-purple-500">Mis Trabajos</a>
+                <a href="#" onclick="showSection('catalog'); toggleMobileMenu()" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-purple-800 hover:bg-purple-50 hover:border-purple-500">Catálogo</a>
+                <a href="#" onclick="showSection('reviews'); toggleMobileMenu()" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-purple-800 hover:bg-purple-50 hover:border-purple-500">Reseñas</a>
             </div>
         </div>
     </nav>
 
-    <!-- ===== BANNER PROMOCIONAL ===== -->
-    <div onclick="setCatalogFilter('Promociones'); showSection('catalog');" class="cursor-pointer bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white text-center py-3 px-4 shadow-md relative z-40 overflow-hidden hover:opacity-90 transition-opacity">
-        <div class="animate-pulse flex justify-center items-center gap-3">
-            <i class="fab fa-instagram text-yellow-300 text-lg md:text-xl"></i>
-            <p class="text-sm md:text-base font-semibold tracking-wide">
-                ¡CAMPAÑA EN REDES! Menciona el código <span class="bg-white text-purple-700 px-2 py-0.5 rounded font-bold mx-1 shadow-sm">PRODIGITAL26</span> para un 15% de descuento en cotizaciones nuevas.
-            </p>
-            <i class="fab fa-facebook text-yellow-300 text-lg md:text-xl"></i>
-        </div>
-    </div>
-
-    <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
-        <div id="notification-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-2"></div>
+        <div id="notification-area" class="fixed top-20 right-4 z-50 flex flex-col gap-2"></div>
 
-        <!-- SECCIÓN INICIO (resumida) -->
-        <div id="section-home" class="space-y-16">
-            <div class="relative rounded-[2rem] overflow-hidden bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100 shadow-sm mt-4">
-                <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-                    <svg class="absolute w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                        <defs><pattern id="pattern" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0 40L40 0H20L0 20M40 40V20L20 40" fill="currentColor" stroke="currentColor" stroke-width="1"></path></pattern></defs>
-                        <rect width="100%" height="100%" fill="url(#pattern)"></rect>
-                    </svg>
-                </div>
-                <div class="absolute top-0 right-0 -mr-16 -mt-16 w-72 h-72 bg-gradient-to-br from-pink-300 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-                <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-72 h-72 bg-gradient-to-tr from-indigo-300 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-                <div class="relative p-10 md:p-16 text-center z-10">
-                    <span class="inline-block py-1 px-4 rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 text-sm font-bold tracking-wider mb-4 border border-yellow-300 shadow-sm uppercase"><i class="fas fa-paint-brush mr-2"></i>Trabajos Garantizados</span>
-                    <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight brand-font">Detalles únicos para momentos especiales</h1>
-                    <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">Nos especializamos en productos artesanales personalizados. Creemos que cada detalle entregado debe ser de calidad. Nos acomodamos a tu presupuesto, ofreciendo opciones variadas y garantizando seguridad al mostrarte nuestros trabajos reales.</p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="showSection('catalog')" class="px-8 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"><i class="fas fa-book-open mr-2"></i> Ver Catálogo</button>
-                        <button onclick="downloadCatalog()" class="px-8 py-3.5 bg-white text-purple-700 font-semibold rounded-full border border-purple-200 hover:border-purple-500 hover:bg-purple-50 transition-all shadow-md flex items-center justify-center gap-2 transform hover:-translate-y-1"><i class="fas fa-download text-xl"></i> Descargar PDF</button>
-                    </div>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-pink-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3"><i class="fas fa-heart text-2xl text-pink-500 transform -rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">100% Personalizado</h3><p class="text-gray-600">Creamos lo que tienes en mente. Colores, tamaños y estilos adaptados a tu gusto y ocasión.</p></div>
-                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center mb-4 transform -rotate-3"><i class="fas fa-hand-holding-usd text-2xl text-purple-500 transform rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Ajuste de Presupuesto</h3><p class="text-gray-600">Nuestros precios varían según materiales. Te ofrecemos opciones para acomodarnos a tu presupuesto.</p></div>
-                <div class="text-center p-6"><div class="w-16 h-16 mx-auto bg-indigo-100 rounded-2xl flex items-center justify-center mb-4 transform rotate-3"><i class="fas fa-shield-check text-2xl text-indigo-500 transform -rotate-3"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Calidad Garantizada</h3><p class="text-gray-600">Mira nuestras fotos y videos de trabajos reales. Te garantizamos seguridad y amor en cada detalle.</p></div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN CATÁLOGO -->
-        <div id="section-catalog" class="hidden space-y-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div><h2 class="text-3xl font-bold text-gray-900 brand-font">Nuestros Trabajos Realizados</h2><p class="text-gray-600 mt-2">Explora galerías de fotos y videos para inspirarte.</p></div>
-                <div class="flex flex-wrap gap-2 bg-gray-100 p-1.5 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
-                    <button onclick="setCatalogFilter('Todos')" id="filter-Todos" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-white shadow-sm text-purple-700 whitespace-nowrap">Todos</button>
-                    <button onclick="setCatalogFilter('Arreglos Florales')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Flores</button>
-                    <button onclick="setCatalogFilter('Centros de Mesa')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Centros</button>
-                    <button onclick="setCatalogFilter('Faroles')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Faroles</button>
-                    <button onclick="setCatalogFilter('Maquetas Escolares')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Maquetas</button>
-                    <button onclick="setCatalogFilter('Recuerdos de Fiestas')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Recuerdos</button>
-                    <button onclick="setCatalogFilter('Decoración Cumpleaños')" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Cumpleaños</button>
-                    <button onclick="setCatalogFilter('Promociones')" id="filter-Promociones" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-pink-600 bg-pink-50 hover:bg-pink-100 whitespace-nowrap"><i class="fas fa-star mr-1"></i> Promos</button>
-                </div>
-            </div>
-            <!-- Ordenamiento -->
-            <div class="flex flex-wrap items-center gap-2 text-sm">
-                <span class="text-gray-600 font-medium">Ordenar por:</span>
-                <button onclick="setCatalogSort('price-asc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price-asc">Precio ↑</button>
-                <button onclick="setCatalogSort('price-desc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price-desc">Precio ↓</button>
-                <button onclick="setCatalogSort('name-asc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name-asc">Nombre A-Z</button>
-                <button onclick="setCatalogSort('name-desc')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name-desc">Nombre Z-A</button>
-                <button onclick="setCatalogSort('default')" class="sort-btn px-3 py-1 rounded-full border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="default">Más reciente</button>
-            </div>
-            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-sm mb-6 flex items-start sm:items-center gap-4">
-                <div class="bg-white p-3 rounded-full shadow-sm text-purple-600"><i class="fas fa-handshake text-xl"></i></div>
-                <div><h4 class="font-bold text-gray-900 text-lg mb-1">Nos adaptamos a tu presupuesto</h4><p class="text-gray-700 text-sm md:text-base leading-relaxed">Los precios mostrados son <span class="font-semibold underline decoration-purple-300">referenciales</span>. El costo final varía dependiendo de lo que decidas y quieras. Nos acomodamos al presupuesto de cada cliente ajustando materiales, tamaños y detalles. ¡Añade lo que te guste a tu cotización para asesorarte personalmente!</p></div>
-            </div>
-            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-            <div id="empty-catalog-msg" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300"><i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i><h3 class="text-xl font-bold text-gray-700">No hay productos en esta categoría</h3><p class="text-gray-500 mt-2">Prueba seleccionando otra pestaña.</p></div>
-        </div>
-
-        <!-- SECCIÓN CONTACTO (resumida) -->
-        <div id="section-contact" class="hidden">
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row border border-gray-100">
-                <div class="lg:w-5/12 bg-gradient-to-br from-purple-700 to-indigo-800 p-10 text-white relative overflow-hidden">
-                    <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-5 rounded-full blur-2xl"></div>
-                    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-black opacity-10 rounded-full blur-2xl"></div>
-                    <div class="relative z-10"><h2 class="text-3xl font-bold brand-font mb-2">Hablemos de tu idea</h2><p class="text-purple-100 mb-10">Cuéntanos qué tienes en mente, para qué evento es y para cuándo lo necesitas. Te daremos varias opciones.</p>
-                        <div class="space-y-6">
-                            <div class="flex items-start"><div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0"><i class="fab fa-whatsapp text-2xl"></i></div><div><h4 class="font-semibold text-lg">WhatsApp</h4><p class="text-purple-200">Atención directa y rápida</p><a href="#" class="inline-block mt-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold py-1.5 px-4 rounded-full transition shadow-sm">Enviar Mensaje</a></div></div>
-                            <div class="flex items-start"><div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 shrink-0"><i class="fas fa-map-marker-alt text-2xl"></i></div><div><h4 class="font-semibold text-lg">Entregas</h4><p class="text-purple-200">Consultar zonas de cobertura y envíos disponibles.</p></div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="lg:w-7/12 p-10 bg-gray-50">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Envíanos una consulta rápida</h3>
-                    <form onsubmit="event.preventDefault(); showNotification('Mensaje enviado. Te contactaremos pronto.', 'success'); this.reset();" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label><input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. María Pérez" /></div>
-                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Teléfono / WhatsApp</label><input type="tel" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Número de contacto" /></div>
-                        </div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">¿Qué tipo de evento o detalle buscas?</label><input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white" placeholder="Ej. Cumpleaños, Boda, Regalo sorpresa..." /></div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Cuéntanos más detalles</label><textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white resize-none" placeholder="Colores preferidos, temáticas, presupuesto aproximado..."></textarea></div>
-                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2"><i class="fas fa-paper-plane"></i> Enviar Consulta</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== SECCIÓN ADMIN (con subida de imágenes a Storage) ===== -->
-        <div id="section-admin" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
-                <div class="flex gap-2">
-                    <button onclick="testFirestoreConnection()" class="bg-blue-100 text-blue-800 font-medium py-2 px-4 rounded-lg hover:bg-blue-200 transition text-sm">
-                        <i class="fas fa-plug mr-1"></i> Probar conexión
-                    </button>
-                    <button onclick="restoreSampleCatalog()" class="bg-yellow-100 text-yellow-800 font-medium py-2 px-4 rounded-lg hover:bg-yellow-200 transition text-sm">
-                        <i class="fas fa-undo-alt mr-1"></i> Restaurar ejemplos
-                    </button>
-                    <button onclick="forceReload()" class="bg-green-100 text-green-800 font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition text-sm">
-                        <i class="fas fa-sync-alt mr-1"></i> Forzar recarga
-                    </button>
-                    <button onclick="showSection('catalog')" class="text-purple-600 hover:text-purple-800 font-medium text-sm"><i class="fas fa-arrow-left mr-1"></i> Ver catálogo</button>
-                </div>
-            </div>
-
-            <!-- Formulario -->
-            <div id="admin-form-container" class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
-                <h3 id="form-title" class="text-xl font-bold text-gray-800 mb-4">Agregar nuevo producto</h3>
-                <form id="admin-product-form" onsubmit="event.preventDefault(); saveProductWithImages();">
-                    <input type="hidden" id="edit-product-id" value="" />
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
-                            <input type="text" id="prod-name" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
-                            <select id="prod-category" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none">
-                                <option value="Arreglos Florales">Arreglos Florales</option>
-                                <option value="Centros de Mesa">Centros de Mesa</option>
-                                <option value="Faroles">Faroles</option>
-                                <option value="Maquetas Escolares">Maquetas Escolares</option>
-                                <option value="Recuerdos de Fiestas">Recuerdos de Fiestas</option>
-                                <option value="Decoración Cumpleaños">Decoración Cumpleaños</option>
-                                <option value="Regalos">Regalos</option>
-                                <option value="Eventos">Eventos</option>
-                                <option value="Otros">Otros</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Precio (₡) *</label>
-                            <input type="number" id="prod-price" required min="0" step="1" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Precio promocional (₡) (opcional)</label>
-                            <input type="number" id="prod-promo-price" min="0" step="1" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                            <p class="text-xs text-gray-500 mt-1">Si es mayor que 0 y menor que el precio normal, se mostrará como oferta.</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
-                        <textarea id="prod-desc" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"></textarea>
-                    </div>
-
-                    <!-- Imágenes (subida de archivos) -->
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (sube hasta 5)</label>
-                        <div id="image-upload-container" class="space-y-3">
-                            <!-- Se generan dinámicamente 5 campos de archivo con previsualización -->
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1">Puedes subir archivos de imagen (JPG, PNG, WEBP). Se subirán a Firebase Storage.</p>
-                    </div>
-
-                    <!-- Video -->
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">URL de video (YouTube, Vimeo, etc.)</label>
-                        <input type="url" id="prod-video" placeholder="https://www.youtube.com/embed/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                        <p class="text-xs text-gray-400 mt-1">Si es de YouTube, usa el enlace de inserción (embed).</p>
-                    </div>
-
-                    <!-- TikTok -->
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Link de TikTok (opcional)</label>
-                        <input type="url" id="prod-tiktok" placeholder="https://www.tiktok.com/@usuario/video/..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" />
-                    </div>
-
-                    <div class="mt-6 flex gap-3">
-                        <button type="submit" id="form-submit-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition shadow">Guardar producto</button>
-                        <button type="button" onclick="resetForm()" class="bg-gray-200 text-gray-700 font-bold py-2.5 px-6 rounded-lg hover:bg-gray-300 transition">Cancelar</button>
-                    </div>
-                    <div id="form-error-msg" class="mt-3 text-red-600 text-sm hidden"></div>
-                    <div id="upload-progress" class="mt-3 text-blue-600 text-sm hidden">Subiendo imágenes...</div>
-                </form>
-            </div>
-
-            <!-- Lista de productos -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
-                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">Productos existentes</h3>
-                    <div class="flex gap-2 text-sm">
-                        <span class="text-gray-600">Ordenar:</span>
-                        <button onclick="setAdminSort('name')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="name">Nombre</button>
-                        <button onclick="setAdminSort('price')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="price">Precio</button>
-                        <button onclick="setAdminSort('date')" class="admin-sort-btn px-2 py-1 rounded border border-gray-300 hover:border-purple-400 transition text-gray-700" data-sort="date">Fecha</button>
-                    </div>
-                </div>
-                <div id="admin-product-list" class="space-y-3"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- ===== MODALES ===== -->
-    <!-- Modal de detalle de producto -->
-    <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4">
-        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
-            <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
-            <div class="md:w-1/2 h-72 md:h-auto relative bg-gray-900 group">
-                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden relative"></div>
-                <div id="modal-product-badge" class="absolute top-4 left-4 z-10"></div>
-                <button id="modal-prev-btn" onclick="prevMedia()" class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-left"></i></button>
-                <button id="modal-next-btn" onclick="nextMedia()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-right"></i></button>
-                <div id="modal-media-indicators" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
-                <div id="modal-media-type-label" class="absolute top-4 right-16 bg-black/60 text-white text-xs px-2 py-1 rounded shadow-md z-10 backdrop-blur-sm hidden"><i class="fas fa-video mr-1"></i> Video</div>
-            </div>
-            <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto hide-scrollbar relative">
-                <span id="modal-product-category" class="text-xs font-bold text-purple-600 uppercase tracking-widest mb-1 block"></span>
-                <h3 id="modal-product-name" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 brand-font leading-tight"></h3>
-                <div id="modal-product-price" class="mb-3 text-xl flex items-center flex-wrap gap-2"></div>
-                <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mb-4 rounded"></div>
-                <p id="modal-product-desc" class="text-gray-600 mb-4 text-sm leading-relaxed whitespace-pre-line flex-grow"></p>
-                <div id="modal-tiktok-link" class="mb-4 hidden">
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-medium">
-                        <i class="fab fa-tiktok text-xl"></i> Ver en TikTok
+        <!-- Home Section -->
+        <section id="home" class="fade-in">
+            <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 text-center border border-gray-100">
+                <h1 id="hero-title" class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Detalles únicos para momentos especiales</h1>
+                <p id="hero-subtitle" class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Nos especializamos en productos artesanales personalizados. Creemos que cada detalle entregado debe ser de calidad. Nos acomodamos al presupuesto de cada cliente, ofreciendo opciones variadas dependiendo de los materiales elegidos. ¡Garantizamos seguridad y amor en cada trabajo!
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="showSection('catalog')" class="px-8 py-3 bg-purple-600 text-white font-medium rounded-full hover:bg-purple-700 transition shadow-md">Ver Catálogo</button>
+                    <a href="https://wa.me/50672039921?text=Hola,%20me%20gustar%C3%ADa%20cotizar%20un%20trabajo%20personalizado." target="_blank" class="px-8 py-3 bg-green-500 text-white font-medium rounded-full hover:bg-green-600 transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp text-lg"></i> Contáctanos
                     </a>
                 </div>
-                <div class="bg-indigo-50/80 border border-indigo-100 p-4 rounded-xl mb-6 text-sm text-indigo-900 flex flex-col gap-2 shadow-inner">
-                    <div class="flex items-start gap-2 font-semibold"><i class="fas fa-info-circle text-indigo-500 mt-0.5 text-lg"></i><p>Cotización Flexible y Segura</p></div>
-                    <p class="text-xs opacity-90 pl-6 leading-relaxed">Este precio es referencial. <b>Nos acomodamos a tu presupuesto</b> ajustando tamaños o materiales. Al elegirnos, tienes la garantía de estar viendo nuestros trabajos 100% reales.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mt-12">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-hand-sparkles"></i></div>
+                    <h3 class="font-semibold text-lg mb-2">100% Personalizado</h3>
+                    <p class="text-gray-500 text-sm">Trabajamos contigo para crear exactamente lo que tienes en mente.</p>
                 </div>
-                <button id="modal-add-btn" class="w-full mt-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition shadow-lg flex justify-center items-center gap-2 transform hover:-translate-y-0.5">
-                    <i class="fas fa-cart-plus text-lg"></i> Añadir a mi Cotización
-                </button>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-tags"></i></div>
+                    <h3 class="font-semibold text-lg mb-2">Precios Flexibles</h3>
+                    <p class="text-gray-500 text-sm">Nos ajustamos a tu presupuesto ofreciendo diferentes opciones de materiales.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-medal"></i></div>
+                    <h3 class="font-semibold text-lg mb-2">Calidad Garantizada</h3>
+                    <p class="text-gray-500 text-sm">Cuidamos cada detalle para que recibas un producto excepcional.</p>
+                </div>
+            </div>
+
+            <div id="home-ads-section" class="mt-16 pt-12 border-t border-gray-200 hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-left">Novedades y Publicidad</h2>
+                <div id="home-ads-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="hidden fade-in">
+            <div class="mb-8 flex justify-between items-end border-b pb-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900">Mis Trabajos Realizados</h2>
+                    <p class="text-gray-500 mt-2">Una muestra de la calidad y el amor que ponemos en cada detalle.</p>
+                </div>
+            </div>
+            <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <section id="catalog" class="hidden fade-in">
+            <div class="mb-8 flex justify-between items-end border-b pb-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900">Catálogo de Productos</h2>
+                    <p class="text-gray-500 mt-2">Recuerda que los precios pueden variar según los materiales y la personalización que desees.</p>
+                </div>
+            </div>
+            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        </section>
+
+        <section id="reviews" class="hidden fade-in">
+            <div class="mb-8 border-b pb-4">
+                <h2 class="text-3xl font-bold text-gray-900">Lo que dicen nuestros clientes</h2>
+                <p class="text-gray-500 mt-2">La satisfacción de quienes confían en nuestro trabajo.</p>
+            </div>
+            <div id="reviews-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+            <div class="mt-12 bg-purple-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-semibold mb-4">¿Ya eres cliente?</h3>
+                <p class="text-gray-600 mb-6">Nos encantaría conocer tu experiencia. Tu opinión nos ayuda a mejorar.</p>
+                <button onclick="openReviewModal()" class="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">Dejar una Reseña</button>
+            </div>
+        </section>
+
+        <section id="admin-dashboard" class="hidden fade-in bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Panel de Administración</h2>
+                <div class="space-x-2">
+                    <button onclick="openSettingsModal()" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition">
+                        <i class="fas fa-cog mr-1"></i> Configuración
+                    </button>
+                    <button onclick="logoutAdmin()" class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition">Cerrar Sesión</button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button onclick="switchAdminTab('admin-portfolio')" id="tab-portfolio" class="admin-tab px-4 py-2 rounded-md bg-purple-100 text-purple-700 font-medium">Gestionar Trabajos</button>
+                <button onclick="switchAdminTab('admin-catalog')" id="tab-catalog" class="admin-tab px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200">Gestionar Catálogo</button>
+                <button onclick="switchAdminTab('admin-reviews')" id="tab-reviews" class="admin-tab px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200">Gestionar Reseñas</button>
+                <button onclick="switchAdminTab('admin-ads')" id="tab-ads" class="admin-tab px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200">Gestionar Publicidad</button>
+            </div>
+
+            <!-- Admin Portfolio -->
+            <div id="admin-portfolio" class="admin-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Mis Trabajos (Portafolio)</h3>
+                    <button onclick="openAddPortfolioModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
+                        <i class="fas fa-plus mr-1"></i> Añadir Foto
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título/Descripción</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th></tr>
+                        </thead>
+                        <tbody id="admin-portfolio-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Catalog -->
+            <div id="admin-catalog" class="admin-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Productos del Catálogo</h3>
+                    <button onclick="openAddCatalogModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
+                        <i class="fas fa-plus mr-1"></i> Añadir Producto
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Base</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th></tr>
+                        </thead>
+                        <tbody id="admin-catalog-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Reviews -->
+            <div id="admin-reviews" class="admin-content hidden">
+                <div class="mb-4"><h3 class="text-lg font-semibold">Reseñas de Clientes</h3><p class="text-sm text-gray-500">Aprobar o eliminar reseñas.</p></div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reseña</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th></tr>
+                        </thead>
+                        <tbody id="admin-reviews-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Ads -->
+            <div id="admin-ads" class="admin-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Publicidad en Inicio</h3>
+                    <button onclick="openAddAdModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
+                        <i class="fas fa-plus mr-1"></i> Añadir Publicidad
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th></tr>
+                        </thead>
+                        <tbody id="admin-ads-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <a href="https://wa.me/50672039921?text=Hola,%20vengo%20de%20la%20p%C3%A1gina%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n." 
+       target="_blank" 
+       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 hover:scale-110 transition-transform z-40 flex items-center justify-center">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity cursor-pointer" aria-hidden="true" onclick="toggleCart()"></div>
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <div class="pointer-events-auto w-screen max-w-md transform transition ease-in-out duration-500 sm:duration-700" id="cart-panel">
+                    <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                        <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                            <div class="flex items-start justify-between">
+                                <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Carrito de Cotización</h2>
+                                <div class="ml-3 flex h-7 items-center">
+                                    <button type="button" onclick="toggleCart()" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
+                                        <span class="absolute -inset-0.5"></span>
+                                        <span class="sr-only">Cerrar panel</span>
+                                        <i class="fas fa-times text-xl"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Añade productos aquí para enviar una solicitud de cotización por WhatsApp.</p>
+                            <div class="mt-8">
+                                <div class="flow-root">
+                                    <ul id="cart-items-list" role="list" class="-my-6 divide-y divide-gray-200"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                                <p>Subtotal (Estimado)</p>
+                                <p id="cart-total">₡0</p>
+                            </div>
+                            <p class="mt-0.5 text-sm text-gray-500">Los precios finales se confirmarán según la personalización requerida.</p>
+                            <div class="mt-6">
+                                <button onclick="sendQuoteViaWhatsApp()" class="w-full flex items-center justify-center rounded-md border border-transparent bg-green-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-green-600">
+                                    <i class="fab fa-whatsapp mr-2"></i> Solicitar Cotización
+                                </button>
+                            </div>
+                            <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                <p>o <button type="button" onclick="toggleCart()" class="font-medium text-purple-600 hover:text-purple-500">Continuar viendo <span aria-hidden="true"> &rarr;</span></button></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de cotización -->
-    <div id="cart-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-clipboard-list text-purple-600"></i> Mi Cotización</h3>
-                <button onclick="closeModal('cart-modal')" class="text-gray-400 hover:text-gray-700"><i class="fas fa-times text-xl"></i></button>
+    <!-- Login Modal (Firebase Auth) -->
+    <div id="login-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-sm w-full mx-4 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Acceso Administrativo</h3>
+                <button onclick="closeModal('login-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
             </div>
-            <div id="cart-items" class="p-5 overflow-y-auto flex-grow space-y-4 bg-white"></div>
-            <div class="p-5 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-                <div class="flex justify-between items-center mb-4"><span class="text-gray-600 font-medium">Total Estimado:</span><span id="cart-total" class="text-2xl font-bold text-gray-900">₡0</span></div>
-                <p class="text-xs text-center text-gray-500 mb-4">*El precio final se ajustará según tus requerimientos exactos.</p>
-                <button onclick="sendQuoteWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl hover:bg-[#20bd5a] transition shadow-md flex justify-center items-center gap-2"><i class="fab fa-whatsapp text-xl"></i> Enviar Cotización por WhatsApp</button>
+            <p class="text-sm text-gray-500 mb-4">Ingresa con tu correo y contraseña de Firebase.</p>
+            <input type="email" id="login-email" class="w-full border border-gray-300 rounded px-3 py-2 mb-3 focus:outline-none focus:border-purple-500" placeholder="Correo electrónico">
+            <input type="password" id="login-password" class="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none focus:border-purple-500" placeholder="Contraseña">
+            <button onclick="attemptLogin()" class="w-full bg-purple-600 text-white rounded py-2 hover:bg-purple-700">Ingresar</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Configuración del Sitio</h3>
+                <button onclick="closeModal('settings-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Título Principal (Inicio)</label>
+                    <input type="text" id="edit-hero-title" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo del Administrador</label>
+                    <input type="email" id="admin-email-display" class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" disabled>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeModal('settings-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+                <button onclick="saveSettings()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de login -->
-    <div id="login-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl p-8 relative">
-            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i class="fas fa-times"></i></button>
-            <div class="text-center mb-6"><div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600"><i class="fas fa-lock text-xl"></i></div><h3 class="text-xl font-bold text-gray-900">Acceso Administrativo</h3><p class="text-gray-500 text-sm mt-1">Ingresa con tu correo y contraseña</p></div>
-            <form id="login-form" onsubmit="event.preventDefault(); login();" class="space-y-4">
-                <div><label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label><input type="email" id="login-email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="admin@manualidadesmd.com" /></div>
-                <div><label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label><input type="password" id="login-password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="••••••••" /></div>
-                <button type="submit" class="w-full bg-gray-900 text-white font-bold py-2.5 rounded-lg hover:bg-gray-800 transition shadow mt-2">Ingresar</button>
-            </form>
+    <!-- Portfolio Modal -->
+    <div id="portfolio-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="portfolio-modal-title">Añadir Trabajo</h3>
+                <button onclick="closeModal('portfolio-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="port-id">
+            <div class="space-y-4">
+                <div class="border border-gray-200 p-3 rounded-md bg-gray-50">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Trabajo</label>
+                    <input type="file" id="port-file" accept=".jpg,.jpeg,.png" class="mb-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    <p class="text-xs text-gray-500 mb-2 text-center">- O usa un enlace directo -</p>
+                    <input type="text" id="port-img" class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="https://ejemplo.com/foto.jpg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Título del Trabajo</label>
+                    <input type="text" id="port-title" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Ej: Centros de mesa para Boda">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción Breve</label>
+                    <textarea id="port-desc" rows="3" class="w-full border border-gray-300 rounded px-3 py-2"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enlace a TikTok / Facebook (Opcional)</label>
+                    <input type="text" id="port-social" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://www.tiktok.com/@tu_cuenta/video/...">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeModal('portfolio-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+                <button onclick="savePortfolioItem()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Guardar</button>
+            </div>
         </div>
     </div>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-white border-t border-gray-100 py-8 mt-auto z-10 relative">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mx-auto mb-3 transform rotate-3">M</div>
-            <h2 class="text-xl font-bold text-gray-900 brand-font">Manualidades MD</h2>
-            <p class="text-gray-500 text-sm mt-1 mb-4">Detalles únicos para momentos especiales.</p>
-            <p class="text-gray-400 text-xs">© 2026 Manualidades MD. Todos los derechos reservados.</p>
-            <p class="text-purple-300 text-[10px] mt-2">Estrategia Digital Generada con IA</p>
+    <!-- Catalog Modal -->
+    <div id="catalog-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="catalog-modal-title">Añadir Producto</h3>
+                <button onclick="closeModal('catalog-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="cat-id">
+            <div class="space-y-4">
+                <div class="border border-gray-200 p-3 rounded-md bg-gray-50">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Producto</label>
+                    <input type="file" id="cat-file" accept=".jpg,.jpeg,.png" class="mb-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    <p class="text-xs text-gray-500 mb-2 text-center">- O usa un enlace directo -</p>
+                    <input type="text" id="cat-img" class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="URL de la imagen (opcional)">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto</label>
+                    <input type="text" id="cat-name" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Ej: Caja Sorpresa Personalizada">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio Base Estimado (₡)</label>
+                    <input type="number" id="cat-price" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="15000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                    <textarea id="cat-desc" rows="3" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Opciones de materiales, tamaños, etc."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enlace a TikTok / Facebook (Opcional)</label>
+                    <input type="text" id="cat-social" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://www.facebook.com/...">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeModal('catalog-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+                <button onclick="saveCatalogItem()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ads Modal -->
+    <div id="ads-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="ads-modal-title">Añadir Publicidad</h3>
+                <button onclick="closeModal('ads-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="ad-id">
+            <div class="space-y-4">
+                <div class="border border-gray-200 p-3 rounded-md bg-gray-50">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Subir Foto o Banner (.jpg)</label>
+                    <input type="file" id="ad-file" accept=".jpg,.jpeg,.png" class="mb-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    <p class="text-xs text-gray-500 mb-2 text-center">- O usa un enlace directo -</p>
+                    <input type="text" id="ad-img" class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="URL de la imagen">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Título de la Publicidad</label>
+                    <input type="text" id="ad-title" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Ej: ¡Nuevo Producto en TikTok!">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enlace a TikTok / Facebook (Opcional)</label>
+                    <input type="text" id="ad-social" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Para dirigir al cliente al hacer click">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeModal('ads-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+                <button onclick="saveAdItem()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal (Public) -->
+    <div id="add-review-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Dejar una Reseña</h3>
+                <button onclick="closeModal('add-review-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tu Nombre</label>
+                    <input type="text" id="rev-name" class="w-full border border-gray-300 rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">¿Qué producto adquiriste?</label>
+                    <input type="text" id="rev-product" class="w-full border border-gray-300 rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tu Experiencia</label>
+                    <textarea id="rev-text" rows="4" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Cuéntanos qué te pareció el producto y la atención..."></textarea>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeModal('add-review-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+                <button onclick="submitReview()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Enviar Reseña</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-[70] bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl text-center">
+            <div class="w-16 h-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">¿Estás seguro?</h3>
+            <p class="text-gray-500 mb-6 text-sm">Esta acción no se puede deshacer.</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="closeModal('confirm-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 w-full">Cancelar</button>
+                <button id="confirm-action-btn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 text-sm">&copy; <span id="current-year"></span> Manualidades MD - Noelia Lindo Obando. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- Firebase SDKs (modulares) -->
     <script type="importmap">
         {
             "imports": {
@@ -378,7 +487,7 @@
 
     <script type="module">
         // ================================================================
-        // IMPORTS Y CONFIGURACIÓN
+        // 1. IMPORTS Y CONFIGURACIÓN DE FIREBASE
         // ================================================================
         import { initializeApp } from 'firebase/app';
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -388,22 +497,16 @@
             onSnapshot, 
             doc, 
             getDoc,
+            setDoc,
             addDoc, 
             updateDoc, 
             deleteDoc,
             query,
             orderBy,
-            getDocs,
             writeBatch,
-            setDoc
+            serverTimestamp
         } from 'firebase/firestore';
-        import { 
-            getStorage, 
-            ref, 
-            uploadBytesResumable, 
-            getDownloadURL,
-            deleteObject
-        } from 'firebase/storage';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
         const firebaseConfig = {
             apiKey: "AIzaSyATAqRUThwU_oulXnVtwzZ1aKTjkcvPDQ4",
@@ -421,99 +524,137 @@
         const storage = getStorage(app);
 
         // ================================================================
-        // ESTADO
+        // 2. ESTADO Y CONSTANTES
         // ================================================================
-        const state = {
-            products: [],
-            currentFilter: 'Todos',
-            currentSort: 'default',
-            adminSort: 'date',
-            cart: [],
-            user: null,
-            isAdmin: false,
-            editingId: null,
-            initialLoadDone: false
+        const WHATSAPP_NUMBER = "50672039921";
+        let isLoggedIn = false;
+        let currentUser = null;
+
+        // Datos locales (se sincronizan con Firestore)
+        let state = {
+            siteTitle: "Detalles únicos para momentos especiales",
+            portfolio: [],
+            catalog: [],
+            ads: [],
+            reviews: []
         };
 
+        // Carrito (solo local, no se guarda en Firestore)
+        let cart = [];
+
         // ================================================================
-        // UTILIDADES
+        // 3. FUNCIONES DE UTILIDAD
         // ================================================================
         const formatMoney = (amount) => {
-            return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', maximumFractionDigits: 0 }).format(amount || 0);
+            return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 0 }).format(amount);
         };
 
-        const showNotification = (message, type = 'info') => {
-            const container = document.getElementById('notification-container');
+        const showNotification = (message, type = 'success') => {
+            const container = document.getElementById('notification-area');
             const notif = document.createElement('div');
-            let bg = 'bg-white';
-            let icon = '<i class="fas fa-info-circle text-blue-500"></i>';
-            let border = 'border-l-4 border-blue-500';
-            if (type === 'success') {
-                icon = '<i class="fas fa-check-circle text-green-500"></i>';
-                border = 'border-l-4 border-green-500';
-            } else if (type === 'error') {
-                icon = '<i class="fas fa-exclamation-circle text-red-500"></i>';
-                border = 'border-l-4 border-red-500';
-            }
-            notif.className = `notification ${bg} ${border} p-4 rounded-r shadow-lg flex items-center gap-3 transform transition-all translate-x-full opacity-0 max-w-sm w-full`;
-            notif.innerHTML = `${icon} <p class="text-gray-800 text-sm font-medium">${message}</p>`;
+            const bgColor = type === 'success' ? 'bg-green-500' : (type === 'error' ? 'bg-red-500' : 'bg-blue-500');
+            notif.className = `${bgColor} text-white px-4 py-3 rounded shadow-lg flex items-center justify-between min-w-[250px] transform transition-all duration-300 translate-x-full`;
+            notif.innerHTML = `<span>${message}</span><button class="ml-4 focus:outline-none" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
             container.appendChild(notif);
-            requestAnimationFrame(() => {
-                notif.classList.remove('translate-x-full', 'opacity-0');
-            });
+            setTimeout(() => notif.classList.remove('translate-x-full'), 10);
             setTimeout(() => {
-                notif.classList.add('translate-x-full', 'opacity-0');
+                notif.classList.add('opacity-0');
                 setTimeout(() => notif.remove(), 300);
-            }, 4000);
+            }, 3000);
+        };
+
+        // Procesar imagen local a base64 comprimida
+        const processImageAndSave = (fileInputId, textInputId, callback) => {
+            const fileInput = document.getElementById(fileInputId);
+            const textInput = document.getElementById(textInputId);
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        callback(dataUrl);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                callback(textInput ? textInput.value.trim() : '');
+            }
         };
 
         // ================================================================
-        // NAVEGACIÓN Y MODALES
+        // 4. NAVEGACIÓN Y UI
         // ================================================================
-        window.showSection = function(sectionId) {
-            document.querySelectorAll('#section-home, #section-catalog, #section-contact, #section-admin').forEach(el => el.classList.add('hidden'));
-            const target = document.getElementById(`section-${sectionId}`);
-            if (target) target.classList.remove('hidden');
+        const showSection = (sectionId) => {
+            const sections = ['home', 'portfolio', 'catalog', 'reviews', 'admin-dashboard'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            if (sectionId === 'admin-dashboard' && !isLoggedIn) {
+                document.getElementById('home').classList.remove('hidden');
+                openAdminLogin();
+                return;
+            }
+            document.getElementById(sectionId).classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+        window.showSection = showSection;
 
-        window.toggleMobileMenu = function() {
+        const toggleMobileMenu = () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         };
+        window.toggleMobileMenu = toggleMobileMenu;
 
         const openModal = (id) => {
-            const modal = document.getElementById(id);
-            modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            document.getElementById(id).classList.remove('hidden');
+            document.body.classList.add('modal-active');
+        };
+        const closeModal = (id) => {
+            document.getElementById(id).classList.add('hidden');
+            document.body.classList.remove('modal-active');
         };
         window.openModal = openModal;
-
-        const closeModal = (id) => {
-            const modal = document.getElementById(id);
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        };
         window.closeModal = closeModal;
 
-        window.openLoginModal = function() { openModal('login-modal'); };
-        window.openCartModal = function() { updateCartUI(); openModal('cart-modal'); };
-
         // ================================================================
-        // AUTENTICACIÓN
+        // 5. AUTENTICACIÓN FIREBASE
         // ================================================================
-        async function checkIfAdmin(uid) {
-            try {
-                const adminRef = doc(db, 'admins', uid);
-                const docSnap = await getDoc(adminRef);
-                return docSnap.exists();
-            } catch (e) {
-                console.error('❌ Error verificando admin:', e);
-                return false;
+        const openAdminLogin = () => {
+            if (isLoggedIn) {
+                showSection('admin-dashboard');
+            } else {
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                openModal('login-modal');
             }
-        }
+        };
+        window.openAdminLogin = openAdminLogin;
 
-        window.login = async function() {
+        const attemptLogin = async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
             if (!email || !password) {
@@ -521,998 +662,815 @@
                 return;
             }
             try {
-                const userCred = await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, email, password);
                 closeModal('login-modal');
-                showNotification(`✅ Bienvenido ${userCred.user.email}`, 'success');
-                console.log('✅ Usuario autenticado:', userCred.user.uid);
+                showNotification('Bienvenido, administrador');
             } catch (error) {
-                console.error('❌ Login error:', error);
-                showNotification('❌ Credenciales incorrectas o error de conexión', 'error');
+                console.error('Login error:', error);
+                showNotification('Credenciales incorrectas o error de conexión', 'error');
             }
         };
+        window.attemptLogin = attemptLogin;
 
-        window.logout = async function() {
+        const logoutAdmin = async () => {
             try {
                 await signOut(auth);
-                showNotification('Sesión cerrada', 'info');
-            } catch (e) {
+                showNotification('Sesión cerrada');
+            } catch (error) {
                 showNotification('Error al cerrar sesión', 'error');
             }
         };
+        window.logoutAdmin = logoutAdmin;
 
-        onAuthStateChanged(auth, async (user) => {
+        // Escuchar cambios de autenticación
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                state.user = user;
-                const isAdmin = await checkIfAdmin(user.uid);
-                state.isAdmin = isAdmin;
-                updateUIForAuth(true);
-                console.log(`🔑 Usuario: ${user.email} | Admin: ${isAdmin}`);
-                if (isAdmin) {
-                    showNotification('✅ Modo administrador activado', 'success');
-                } else {
-                    showNotification('⚠️ Usuario sin permisos de administrador', 'info');
+                currentUser = user;
+                isLoggedIn = true;
+                document.getElementById('admin-email-display').value = user.email || 'No disponible';
+                // Mostrar dashboard si estamos en admin o se pide
+                if (document.getElementById('admin-dashboard').classList.contains('hidden') === false) {
+                    // ya está visible
                 }
+                // Habilitar edición visual en las tarjetas? (opcional)
             } else {
-                state.user = null;
-                state.isAdmin = false;
-                updateUIForAuth(false);
-                if (state.currentSection === 'admin') {
-                    showSection('catalog');
+                currentUser = null;
+                isLoggedIn = false;
+                // Si estaba en admin, redirigir a home
+                if (!document.getElementById('admin-dashboard').classList.contains('hidden')) {
+                    showSection('home');
                 }
             }
+            // Actualizar UI (mostrar/ocultar botones admin)
+            updateAuthUI();
         });
 
-        function updateUIForAuth(loggedIn) {
-            const isAdmin = state.isAdmin;
-            document.getElementById('btn-login-desktop').classList.toggle('hidden', loggedIn);
-            document.getElementById('btn-logout-desktop').classList.toggle('hidden', !loggedIn);
-            document.getElementById('btn-login-mobile').classList.toggle('hidden', loggedIn);
-            document.getElementById('btn-logout-mobile').classList.toggle('hidden', !loggedIn);
-            const adminMobile = document.getElementById('btn-admin-mobile');
-            if (isAdmin && loggedIn) {
-                adminMobile.classList.remove('hidden');
-            } else {
-                adminMobile.classList.add('hidden');
-            }
-        }
-
-        window.showAdminPanel = function() {
-            if (state.isAdmin) {
-                showSection('admin');
-                renderAdminProductList();
-                setupImageUploadUI(); // Inicializar campos de imagen
-            } else {
-                showNotification('No tienes permisos de administrador', 'error');
-            }
+        const updateAuthUI = () => {
+            // No hay cambios visuales en los botones, pero se puede añadir un indicador
         };
 
         // ================================================================
-        // PRUEBA DE CONEXIÓN
+        // 6. SINCRONIZACIÓN CON FIRESTORE (onSnapshot)
         // ================================================================
-        window.testFirestoreConnection = async function() {
-            try {
-                showNotification('Probando conexión a Firestore...', 'info');
-                const testRef = doc(db, 'test', 'connection');
-                await setDoc(testRef, { timestamp: new Date().toISOString() });
-                await deleteDoc(testRef);
-                showNotification('✅ Conexión exitosa a Firestore', 'success');
-                console.log('✅ Prueba de Firestore exitosa');
-            } catch (e) {
-                console.error('❌ Error de conexión a Firestore:', e);
-                showNotification('❌ Error al conectar con Firestore: ' + e.message, 'error');
-            }
-        };
-
-        // ================================================================
-        // FORZAR RECARGA
-        // ================================================================
-        window.forceReload = function() {
-            showNotification('🔄 Recargando catálogo desde Firestore...', 'info');
-            const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
-            getDocs(q).then((snapshot) => {
-                const products = [];
+        // Función para iniciar la escucha de todas las colecciones
+        const startFirestoreListeners = () => {
+            // Colección: portfolio
+            onSnapshot(collection(db, 'portfolio'), (snapshot) => {
+                const data = [];
                 snapshot.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
+                    data.push({ id: doc.id, ...doc.data() });
                 });
-                state.products = products;
-                renderCatalog();
-                renderAdminProductList();
-                showNotification(`✅ ${products.length} productos cargados`, 'success');
-            }).catch(e => {
-                showNotification('❌ Error al recargar: ' + e.message, 'error');
+                state.portfolio = data;
+                renderPortfolio();
+                if (isLoggedIn) renderAdminPortfolio();
+            }, (error) => {
+                console.error('Error en portfolio snapshot:', error);
             });
-        };
 
-        // ================================================================
-        // SUBIDA DE IMÁGENES A FIREBASE STORAGE
-        // ================================================================
-        // Guardar referencia a los archivos seleccionados
-        let selectedFiles = [];
-
-        function setupImageUploadUI() {
-            const container = document.getElementById('image-upload-container');
-            container.innerHTML = '';
-            // Crear 5 campos de archivo con previsualización
-            for (let i = 0; i < 5; i++) {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-3 p-2 border border-gray-200 rounded-lg';
-                div.innerHTML = `
-                    <div class="file-input-wrapper">
-                        <button type="button" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">Seleccionar imagen</button>
-                        <input type="file" accept="image/*" class="image-file-input" data-index="${i}" />
-                    </div>
-                    <img src="" alt="Vista previa" class="image-preview hidden" id="preview-${i}" />
-                    <span class="text-xs text-gray-500 file-name" id="filename-${i}">Ningún archivo</span>
-                    <button type="button" onclick="clearImage(${i})" class="text-red-500 hover:text-red-700 text-sm hidden" id="clear-btn-${i}"><i class="fas fa-times"></i></button>
-                `;
-                container.appendChild(div);
-
-                const fileInput = div.querySelector('.image-file-input');
-                fileInput.addEventListener('change', (e) => handleFileSelect(e, i));
-            }
-        }
-
-        window.clearImage = function(index) {
-            const fileInput = document.querySelector(`.image-file-input[data-index="${index}"]`);
-            if (fileInput) {
-                fileInput.value = '';
-                const preview = document.getElementById(`preview-${index}`);
-                preview.classList.add('hidden');
-                preview.src = '';
-                document.getElementById(`filename-${index}`).textContent = 'Ningún archivo';
-                document.getElementById(`clear-btn-${index}`).classList.add('hidden');
-                selectedFiles = selectedFiles.filter(f => f.index !== index);
-            }
-        };
-
-        function handleFileSelect(event, index) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Validar tipo de archivo
-            if (!file.type.startsWith('image/')) {
-                showNotification('Solo se permiten imágenes', 'error');
-                event.target.value = '';
-                return;
-            }
-
-            // Guardar referencia
-            selectedFiles = selectedFiles.filter(f => f.index !== index);
-            selectedFiles.push({ index, file });
-
-            // Mostrar previsualización
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const preview = document.getElementById(`preview-${index}`);
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
-                document.getElementById(`filename-${index}`).textContent = file.name;
-                document.getElementById(`clear-btn-${index}`).classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        async function uploadImages() {
-            const uploadedUrls = [];
-            const progressEl = document.getElementById('upload-progress');
-            progressEl.classList.remove('hidden');
-            progressEl.textContent = 'Subiendo imágenes... 0/' + selectedFiles.length;
-
-            for (let i = 0; i < selectedFiles.length; i++) {
-                const { index, file } = selectedFiles[i];
-                const storageRef = ref(storage, `catalog/${Date.now()}_${file.name}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-
-                await new Promise((resolve, reject) => {
-                    uploadTask.on(
-                        'state_changed',
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            progressEl.textContent = `Subiendo imágenes... ${i+1}/${selectedFiles.length} (${Math.round(progress)}%)`;
-                        },
-                        (error) => {
-                            console.error('Error subiendo archivo:', error);
-                            reject(error);
-                        },
-                        async () => {
-                            try {
-                                const url = await getDownloadURL(uploadTask.snapshot.ref);
-                                uploadedUrls.push(url);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        }
-                    );
-                });
-            }
-
-            progressEl.classList.add('hidden');
-            return uploadedUrls;
-        }
-
-        // ================================================================
-        // GUARDAR PRODUCTO CON IMÁGENES SUBIDAS
-        // ================================================================
-        window.saveProductWithImages = async function() {
-            const errorMsg = document.getElementById('form-error-msg');
-            errorMsg.classList.add('hidden');
-
-            if (!state.user || !state.isAdmin) {
-                showNotification('Debes iniciar sesión como administrador', 'error');
-                return;
-            }
-
-            const name = document.getElementById('prod-name').value.trim();
-            const category = document.getElementById('prod-category').value;
-            const price = parseFloat(document.getElementById('prod-price').value);
-            const promoPrice = parseFloat(document.getElementById('prod-promo-price').value) || 0;
-            const desc = document.getElementById('prod-desc').value.trim();
-            const videoUrl = document.getElementById('prod-video').value.trim();
-            const tiktokUrl = document.getElementById('prod-tiktok').value.trim();
-            const editId = document.getElementById('edit-product-id').value;
-
-            // Validaciones básicas
-            if (!name) { errorMsg.textContent = 'El nombre es obligatorio'; errorMsg.classList.remove('hidden'); return; }
-            if (!category) { errorMsg.textContent = 'Selecciona una categoría'; errorMsg.classList.remove('hidden'); return; }
-            if (isNaN(price) || price < 0) { errorMsg.textContent = 'Ingresa un precio válido'; errorMsg.classList.remove('hidden'); return; }
-            if (!desc) { errorMsg.textContent = 'La descripción es obligatoria'; errorMsg.classList.remove('hidden'); return; }
-
-            // Verificar si hay archivos seleccionados o imágenes existentes en edición
-            let imageUrls = [];
-            if (editId) {
-                // En edición, conservar imágenes anteriores si no se subieron nuevas
-                const product = state.products.find(p => p.id === editId);
-                if (product && product.images) {
-                    imageUrls = product.images;
-                }
-            }
-
-            // Si hay archivos seleccionados, subirlos y reemplazar las imágenes
-            if (selectedFiles.length > 0) {
-                try {
-                    const uploadedUrls = await uploadImages();
-                    imageUrls = uploadedUrls;
-                } catch (e) {
-                    console.error('Error subiendo imágenes:', e);
-                    errorMsg.textContent = 'Error al subir imágenes: ' + e.message;
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-            }
-
-            if (imageUrls.length === 0) {
-                errorMsg.textContent = 'Agrega al menos una imagen (selecciona archivos)';
-                errorMsg.classList.remove('hidden');
-                return;
-            }
-
-            const productData = {
-                name,
-                category,
-                price,
-                promoPrice,
-                isPromo: (promoPrice > 0 && promoPrice < price),
-                desc,
-                images: imageUrls,
-                videoUrl: videoUrl || '',
-                tiktokUrl: tiktokUrl || '',
-                updatedAt: new Date().toISOString()
-            };
-
-            console.log('📦 Guardando producto:', productData);
-
-            try {
-                if (editId) {
-                    await updateDoc(doc(db, 'catalog', editId), productData);
-                    showNotification('✅ Producto actualizado correctamente', 'success');
-                } else {
-                    const docRef = await addDoc(collection(db, 'catalog'), { ...productData, createdAt: new Date().toISOString() });
-                    console.log('✅ Producto creado con ID:', docRef.id);
-                    showNotification('✅ Producto creado correctamente', 'success');
-                }
-                resetForm();
-                // Limpiar archivos seleccionados
-                selectedFiles = [];
-                forceReload();
-            } catch (e) {
-                console.error('❌ Error guardando producto:', e);
-                errorMsg.textContent = 'Error al guardar: ' + e.message;
-                errorMsg.classList.remove('hidden');
-                showNotification('❌ Error al guardar el producto', 'error');
-            }
-        };
-
-        // ================================================================
-        // ELIMINAR PRODUCTO (también elimina imágenes del Storage)
-        // ================================================================
-        window.deleteProduct = async function(id) {
-            if (!state.isAdmin) return;
-            if (!confirm('¿Eliminar este producto permanentemente?')) return;
-            try {
-                const product = state.products.find(p => p.id === id);
-                if (product && product.images) {
-                    // Eliminar imágenes de Storage (opcional, para no dejar basura)
-                    for (const url of product.images) {
-                        try {
-                            const imageRef = ref(storage, url);
-                            await deleteObject(imageRef);
-                        } catch (e) {
-                            console.warn('No se pudo eliminar imagen de Storage:', e);
-                        }
-                    }
-                }
-                await deleteDoc(doc(db, 'catalog', id));
-                showNotification('✅ Producto eliminado', 'success');
-                forceReload();
-            } catch (e) {
-                showNotification('❌ Error al eliminar', 'error');
-            }
-        };
-
-        // ================================================================
-        // EDITAR PRODUCTO (carga datos en el formulario)
-        // ================================================================
-        window.editProduct = function(id) {
-            if (!state.isAdmin) return;
-            const product = state.products.find(p => p.id === id);
-            if (!product) {
-                showNotification('Producto no encontrado', 'error');
-                return;
-            }
-
-            document.getElementById('edit-product-id').value = id;
-            document.getElementById('prod-name').value = product.name;
-            document.getElementById('prod-category').value = product.category;
-            document.getElementById('prod-price').value = product.price;
-            document.getElementById('prod-promo-price').value = product.promoPrice || '';
-            document.getElementById('prod-desc').value = product.desc;
-            document.getElementById('prod-video').value = product.videoUrl || '';
-            document.getElementById('prod-tiktok').value = product.tiktokUrl || '';
-            document.getElementById('form-title').textContent = 'Editar producto';
-            document.getElementById('form-submit-btn').textContent = 'Actualizar producto';
-
-            // Limpiar selección de archivos
-            selectedFiles = [];
-            // Restablecer los campos de imagen
-            setupImageUploadUI();
-            // Mostrar imágenes existentes como previews (si se quiere)
-            // Aquí podríamos mostrar las URLs, pero como son archivos, no podemos previsualizarlos fácilmente.
-            // En su lugar, mantenemos los campos de archivo vacíos y el usuario puede subir nuevas imágenes.
-
-            document.getElementById('admin-form-container').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        function resetForm() {
-            document.getElementById('edit-product-id').value = '';
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-category').value = 'Arreglos Florales';
-            document.getElementById('prod-price').value = '';
-            document.getElementById('prod-promo-price').value = '';
-            document.getElementById('prod-desc').value = '';
-            document.getElementById('prod-video').value = '';
-            document.getElementById('prod-tiktok').value = '';
-            document.getElementById('form-title').textContent = 'Agregar nuevo producto';
-            document.getElementById('form-submit-btn').textContent = 'Guardar producto';
-            // Reiniciar campos de imagen
-            selectedFiles = [];
-            setupImageUploadUI();
-            document.getElementById('form-error-msg').classList.add('hidden');
-        }
-        window.resetForm = resetForm;
-
-        // ================================================================
-        // CATÁLOGO DE EJEMPLO
-        // ================================================================
-        const SAMPLE_PRODUCTS = [
-            {
-                name: "Ramo Eterno de Rosas Preservadas",
-                category: "Arreglos Florales",
-                price: 32000,
-                promoPrice: 25000,
-                isPromo: true,
-                desc: "Ramo de rosas naturales preservadas que duran más de un año. Incluye caja de presentación y tarjeta personalizada.\n\nPerfecto para aniversarios, cumpleaños o detalles de lujo.",
-                images: [
-                    "https://placehold.co/800x800/fce4ec/f06292?text=Ramo+Rosas",
-                    "https://placehold.co/800x800/f8bbd0/c2185b?text=Detalle+Caja"
-                ],
-                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                tiktokUrl: "https://www.tiktok.com/@usuario/video/123456789"
-            },
-            {
-                name: "Centro de Mesa Bautizo Angelical",
-                category: "Centros de Mesa",
-                price: 15000,
-                promoPrice: 12000,
-                isPromo: true,
-                desc: "Base de madera pintada a mano con figuras de ángeles en foami y flores blancas. Perfecto para bautizos y comuniones.\n\n*Precio por unidad. Descuento a partir de 10 unidades.",
-                images: [
-                    "https://placehold.co/800x800/e3f2fd/0d47a1?text=Centro+Bautizo",
-                    "https://placehold.co/800x800/bbdefb/1565c0?text=Ángulo+Superior"
-                ],
-                videoUrl: "",
-                tiktokUrl: ""
-            },
-            {
-                name: "Farol Mágico LED Personalizado",
-                category: "Faroles",
-                price: 9500,
-                promoPrice: 7500,
-                isPromo: true,
-                desc: "Farol de vidrio con base de madera, iluminado por luces cálidas LED. Se puede personalizar con nombres o fechas.\n\nIdeal para decoración de bodas, cumpleaños o como lámpara de noche.",
-                images: [
-                    "https://placehold.co/800x800/fff9c4/f9a825?text=Farol+LED"
-                ],
-                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                tiktokUrl: ""
-            },
-            {
-                name: "Maqueta Sistema Solar 3D",
-                category: "Maquetas Escolares",
-                price: 18000,
-                promoPrice: 15000,
-                isPromo: true,
-                desc: "Maqueta del sistema solar con planetas pintados a mano, suspendidos con hilos de nylon. Incluye base giratoria.\n\nPerfecto para ferias científicas y regalos educativos.",
-                images: [
-                    "https://placehold.co/800x800/ede7f6/4527a0?text=Sistema+Solar",
-                    "https://placehold.co/800x800/d1c4e9/311b92?text=Planetas"
-                ],
-                videoUrl: "",
-                tiktokUrl: ""
-            },
-            {
-                name: "Recuerdos Boda - Velas Aromáticas",
-                category: "Recuerdos de Fiestas",
-                price: 3500,
-                promoPrice: 3000,
-                isPromo: true,
-                desc: "Velas aromáticas en envase de vidrio con etiqueta rústica personalizada. El detalle perfecto para agradecer a tus invitados.\n\n*Aroma y decoración ajustable al presupuesto.",
-                images: [
-                    "https://placehold.co/800x800/fef3c7/b45309?text=Velas+Boda",
-                    "https://placehold.co/800x800/fde68a/78350f?text=Empaque+Individual"
-                ],
-                videoUrl: "",
-                tiktokUrl: ""
-            },
-            {
-                name: "Guirnalda de Banderines Personalizada",
-                category: "Decoración Cumpleaños",
-                price: 4500,
-                promoPrice: 3800,
-                isPromo: true,
-                desc: "Guirnalda de banderines de tela con letras de fieltro. Puedes elegir el mensaje (hasta 15 caracteres).\n\nReutilizable y fácil de colgar.",
-                images: [
-                    "https://placehold.co/800x800/fff9c4/f57f17?text=Banderines",
-                    "https://placehold.co/800x800/fff8e1/ff6f00?text=Detalle+Letras"
-                ],
-                videoUrl: "",
-                tiktokUrl: ""
-            }
-        ];
-
-        window.restoreSampleCatalog = async function() {
-            if (!state.isAdmin) {
-                showNotification('No tienes permisos', 'error');
-                return;
-            }
-            if (!confirm('Esto eliminará todos los productos actuales y los reemplazará con los de ejemplo. ¿Continuar?')) return;
-
-            try {
-                // Eliminar productos y sus imágenes del storage (opcional)
-                const snapshot = await getDocs(collection(db, 'catalog'));
-                const batch = writeBatch(db);
-                for (const docSnap of snapshot.docs) {
-                    const product = docSnap.data();
-                    if (product.images) {
-                        for (const url of product.images) {
-                            try {
-                                const imageRef = ref(storage, url);
-                                await deleteObject(imageRef);
-                            } catch (e) { /* ignore */ }
-                        }
-                    }
-                    batch.delete(docSnap.ref);
-                }
-                await batch.commit();
-
-                const colRef = collection(db, 'catalog');
-                for (const prod of SAMPLE_PRODUCTS) {
-                    await addDoc(colRef, {
-                        ...prod,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    });
-                }
-                showNotification('✅ Catálogo restaurado con los productos de ejemplo', 'success');
-                forceReload();
-            } catch (e) {
-                console.error('Error restaurando catálogo:', e);
-                showNotification('❌ Error al restaurar: ' + e.message, 'error');
-            }
-        };
-
-        // ================================================================
-        // SIEMBRA AUTOMÁTICA (si está vacío)
-        // ================================================================
-        async function seedIfEmpty() {
-            try {
-                const snapshot = await getDocs(collection(db, 'catalog'));
-                if (snapshot.empty) {
-                    showNotification('Cargando catálogo de ejemplo...', 'info');
-                    const colRef = collection(db, 'catalog');
-                    for (const prod of SAMPLE_PRODUCTS) {
-                        await addDoc(colRef, {
-                            ...prod,
-                            createdAt: new Date().toISOString(),
-                            updatedAt: new Date().toISOString()
-                        });
-                    }
-                    showNotification('✅ Catálogo de ejemplo cargado exitosamente', 'success');
-                }
-            } catch (e) {
-                console.error('Error al sembrar datos:', e);
-                showNotification('Error al cargar datos de ejemplo', 'error');
-            }
-        }
-
-        // ================================================================
-        // ESCUCHA EN TIEMPO REAL
-        // ================================================================
-        function listenCatalog() {
-            const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
-            onSnapshot(q, (snapshot) => {
-                const products = [];
+            // Colección: catalog
+            onSnapshot(collection(db, 'catalog'), (snapshot) => {
+                const data = [];
                 snapshot.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
+                    data.push({ id: doc.id, ...doc.data() });
                 });
-                state.products = products;
-                console.log(`📦 Catálogo actualizado: ${products.length} productos`);
+                state.catalog = data;
                 renderCatalog();
-                renderAdminProductList();
-                if (!state.initialLoadDone) {
-                    state.initialLoadDone = true;
-                    if (products.length === 0) {
-                        seedIfEmpty();
+                if (isLoggedIn) renderAdminCatalog();
+            }, (error) => {
+                console.error('Error en catalog snapshot:', error);
+            });
+
+            // Colección: ads
+            onSnapshot(collection(db, 'ads'), (snapshot) => {
+                const data = [];
+                snapshot.forEach(doc => {
+                    data.push({ id: doc.id, ...doc.data() });
+                });
+                state.ads = data;
+                renderHomeAds();
+                if (isLoggedIn) renderAdminAds();
+            }, (error) => {
+                console.error('Error en ads snapshot:', error);
+            });
+
+            // Colección: reviews
+            onSnapshot(collection(db, 'reviews'), (snapshot) => {
+                const data = [];
+                snapshot.forEach(doc => {
+                    data.push({ id: doc.id, ...doc.data() });
+                });
+                state.reviews = data;
+                renderReviews();
+                if (isLoggedIn) renderAdminReviews();
+            }, (error) => {
+                console.error('Error en reviews snapshot:', error);
+            });
+
+            // Colección: settings (un solo documento)
+            onSnapshot(doc(db, 'settings', 'main'), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.siteTitle) {
+                        state.siteTitle = data.siteTitle;
+                        document.getElementById('hero-title').textContent = state.siteTitle;
+                        document.getElementById('edit-hero-title').value = state.siteTitle;
                     }
                 }
             }, (error) => {
-                console.error('❌ Error en onSnapshot:', error);
-                showNotification('Error al cargar catálogo', 'error');
+                console.error('Error en settings snapshot:', error);
             });
-        }
-
-        // ================================================================
-        // ORDENAMIENTO
-        // ================================================================
-        window.setCatalogSort = function(sortType) {
-            state.currentSort = sortType;
-            document.querySelectorAll('.sort-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-purple-600', 'text-white');
-                if (btn.dataset.sort === sortType) {
-                    btn.classList.add('active', 'bg-purple-600', 'text-white');
-                }
-            });
-            renderCatalog();
         };
 
-        window.setAdminSort = function(sortType) {
-            state.adminSort = sortType;
-            document.querySelectorAll('.admin-sort-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-purple-600', 'text-white');
-                if (btn.dataset.sort === sortType) {
-                    btn.classList.add('active', 'bg-purple-600', 'text-white');
+        // Inicialización: si no hay datos en Firestore, crear documentos de ejemplo
+        const seedFirestore = async () => {
+            try {
+                // Verificar si hay datos en portfolio
+                const portfolioSnap = await getDocs(collection(db, 'portfolio'));
+                if (portfolioSnap.empty) {
+                    const samplePortfolio = [
+                        { title: "Recuerdos Boda Vintage", desc: "Set de recuerdos personalizados con temática vintage para boda.", img: "https://placehold.co/600x400/e9d5ff/7e22ce?text=Recuerdos+Boda", social: "" },
+                        { title: "Caja Sorpresa Cumpleaños", desc: "Caja elaborada a mano con detalles interactivos y fotos.", img: "https://placehold.co/600x400/fbcfe8/be185d?text=Caja+Sorpresa", social: "" },
+                        { title: "Centros de Mesa Baby Shower", desc: "Tiernos centros de mesa temáticos, ajustados al presupuesto del cliente.", img: "https://placehold.co/600x400/bfdbfe/1d4ed8?text=Centro+Mesa", social: "" }
+                    ];
+                    const batch = writeBatch(db);
+                    samplePortfolio.forEach(item => {
+                        const ref = doc(collection(db, 'portfolio'));
+                        batch.set(ref, item);
+                    });
+                    await batch.commit();
                 }
+
+                // Verificar catalog
+                const catalogSnap = await getDocs(collection(db, 'catalog'));
+                if (catalogSnap.empty) {
+                    const sampleCatalog = [
+                        { name: "Invitaciones Personalizadas (Set x10)", price: 8000, desc: "Diseño único, varios tipos de papel a elegir. Precio varía según acabados.", img: "https://placehold.co/400x400/f3f4f6/4b5563?text=Invitaciones", social: "" },
+                        { name: "Arreglo Floral en Papel", price: 15000, desc: "Flores eternas hechas a mano. Colores a elección.", img: "https://placehold.co/400x400/f3f4f6/4b5563?text=Arreglo+Floral", social: "" },
+                        { name: "Letras 3D Decorativas", price: 5000, desc: "Precio por letra. Decoración temática para mesas principales.", img: "https://placehold.co/400x400/f3f4f6/4b5563?text=Letras+3D", social: "" },
+                        { name: "Empaque de Regalo Premium", price: 3500, desc: "Cajas armadas a mano, lazos personalizados y tarjetas.", img: "https://placehold.co/400x400/f3f4f6/4b5563?text=Empaque", social: "" }
+                    ];
+                    const batch = writeBatch(db);
+                    sampleCatalog.forEach(item => {
+                        const ref = doc(collection(db, 'catalog'));
+                        batch.set(ref, item);
+                    });
+                    await batch.commit();
+                }
+
+                // Verificar reviews
+                const reviewsSnap = await getDocs(collection(db, 'reviews'));
+                if (reviewsSnap.empty) {
+                    const sampleReviews = [
+                        { name: "María Fernanda", product: "Invitaciones de Boda", text: "Excelente trabajo, Noelia captó exactamente lo que queríamos. La calidad es impecable y se ajustó a nuestro presupuesto.", status: 'approved' },
+                        { name: "Carlos R.", product: "Caja Sorpresa", text: "A mi novia le encantó. Los detalles son muy bonitos y se nota que lo hace con mucha dedicación. Muy recomendada.", status: 'approved' }
+                    ];
+                    const batch = writeBatch(db);
+                    sampleReviews.forEach(item => {
+                        const ref = doc(collection(db, 'reviews'));
+                        batch.set(ref, item);
+                    });
+                    await batch.commit();
+                }
+
+                // Verificar settings
+                const settingsSnap = await getDoc(doc(db, 'settings', 'main'));
+                if (!settingsSnap.exists()) {
+                    await setDoc(doc(db, 'settings', 'main'), {
+                        siteTitle: "Detalles únicos para momentos especiales"
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error al sembrar datos:', error);
+            }
+        };
+
+        // Función auxiliar para obtener todos los documentos de una colección (usada en seed)
+        const getDocs = (collectionRef) => {
+            return new Promise((resolve, reject) => {
+                const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+                    resolve(snapshot);
+                    unsubscribe();
+                }, reject);
             });
-            renderAdminProductList();
         };
 
         // ================================================================
-        // RENDERIZADO DEL CATÁLOGO (PÚBLICO)
+        // 7. RENDERIZADO PÚBLICO
         // ================================================================
-        function renderCatalog() {
-            const grid = document.getElementById('catalog-grid');
-            const emptyMsg = document.getElementById('empty-catalog-msg');
+        const getSocialButton = (url) => {
+            if (!url) return '';
+            let icon = 'fa-link';
+            let text = 'Ver Enlace';
+            if (url.includes('tiktok.com')) { icon = 'fa-tiktok'; text = 'Ver en TikTok'; }
+            if (url.includes('facebook.com') || url.includes('fb.watch')) { icon = 'fa-facebook'; text = 'Ver en Facebook'; }
+            return `<a href="${url}" target="_blank" class="mt-3 inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"><i class="fab ${icon} mr-1.5"></i> ${text}</a>`;
+        };
+
+        const renderHomeAds = () => {
+            const section = document.getElementById('home-ads-section');
+            const grid = document.getElementById('home-ads-grid');
             grid.innerHTML = '';
-
-            let filtered = state.products;
-            if (state.currentFilter === 'Promociones') {
-                filtered = filtered.filter(p => p.isPromo === true);
-            } else if (state.currentFilter !== 'Todos') {
-                filtered = filtered.filter(p => p.category === state.currentFilter);
-            }
-
-            const sort = state.currentSort;
-            if (sort === 'price-asc') {
-                filtered.sort((a, b) => a.price - b.price);
-            } else if (sort === 'price-desc') {
-                filtered.sort((a, b) => b.price - a.price);
-            } else if (sort === 'name-asc') {
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sort === 'name-desc') {
-                filtered.sort((a, b) => b.name.localeCompare(a.name));
-            } else {
-                filtered.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
-            }
-
-            if (filtered.length === 0) {
-                grid.classList.add('hidden');
-                emptyMsg.classList.remove('hidden');
+            if (state.ads.length === 0) {
+                section.classList.add('hidden');
                 return;
             }
-            grid.classList.remove('hidden');
-            emptyMsg.classList.add('hidden');
-
-            filtered.forEach(item => {
-                const isPromo = item.isPromo && item.promoPrice > 0 && item.promoPrice < item.price;
-                const priceDisplay = isPromo
-                    ? `<span class="line-through text-gray-400 text-sm mr-2">${formatMoney(item.price)}</span><span class="text-pink-600 font-bold text-lg">${formatMoney(item.promoPrice)}</span>`
-                    : `<span class="text-purple-700 font-bold text-lg">${formatMoney(item.price)}</span>`;
-
-                const promoBadge = isPromo
-                    ? `<div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md z-20 animate-pulse"><i class="fas fa-tag"></i> OFERTA</div>`
-                    : '';
-
-                const coverImage = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/400x400/e2e8f0/64748b?text=Sin+Imagen';
-                const hasVideo = item.videoUrl && item.videoUrl.trim() !== '';
-                const hasTiktok = item.tiktokUrl && item.tiktokUrl.trim() !== '';
-                let mediaIcons = '';
-                if (hasVideo || hasTiktok || (item.images && item.images.length > 1)) {
-                    mediaIcons = `<div class="absolute top-2 left-2 flex gap-1 z-20">`;
-                    if (hasVideo) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-video"></i></span>`;
-                    if (hasTiktok) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fab fa-tiktok"></i></span>`;
-                    if (item.images && item.images.length > 1) mediaIcons += `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-images"></i> ${item.images.length}</span>`;
-                    mediaIcons += `</div>`;
-                }
-
-                const isAdmin = state.isAdmin;
-
+            section.classList.remove('hidden');
+            state.ads.forEach(ad => {
+                const clickableWrapperStart = ad.social ? `<a href="${ad.social}" target="_blank" class="block group">` : `<div class="block">`;
+                const clickableWrapperEnd = ad.social ? `</a>` : `</div>`;
+                const hoverEffect = ad.social ? 'group-hover:scale-105 transition duration-300' : '';
                 grid.innerHTML += `
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-xl transition transform hover:-translate-y-1 relative group premium-card">
-                        ${promoBadge}
-                        <div class="relative overflow-hidden h-56 cursor-pointer bg-gray-100" onclick="openProductModal('${item.id}')">
-                            ${mediaIcons}
-                            <img src="${coverImage}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=Producto'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                                <span class="text-white text-sm font-semibold flex items-center shadow-lg"><i class="fas fa-search-plus mr-2"></i> Ver detalles</span>
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition">
+                        ${clickableWrapperStart}
+                            <div class="relative overflow-hidden h-56">
+                                <img src="${ad.img}" alt="${ad.title}" class="w-full h-full object-cover ${hoverEffect}" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Publicidad'">
                             </div>
-                        </div>
-                        <div class="p-5 flex-grow flex flex-col relative">
-                            <div class="absolute -top-4 right-4 bg-white px-3 py-1 rounded-full text-[10px] font-bold text-purple-600 shadow border border-purple-50 uppercase tracking-wider">
-                                ${(item.category || 'General')}
+                            <div class="p-4 flex flex-col justify-between items-start">
+                                <h3 class="font-bold text-gray-900">${ad.title}</h3>
+                                ${getSocialButton(ad.social)}
                             </div>
-                            <h3 class="font-bold text-lg text-gray-900 mb-1 leading-tight line-clamp-1 cursor-pointer hover:text-purple-600 mt-2" onclick="openProductModal('${item.id}')">${item.name}</h3>
-                            <div class="mb-2 flex items-center">${priceDisplay}</div>
-                            <p class="text-gray-500 text-xs mb-4 flex-grow line-clamp-2">${item.desc}</p>
-                            <div class="flex gap-2 mt-auto pt-4 border-t border-gray-50">
-                                ${isAdmin ? `
-                                    <button onclick="editProduct('${item.id}')" class="flex-1 bg-indigo-50 text-indigo-700 font-semibold py-2 rounded-lg hover:bg-indigo-100 transition-colors text-sm flex justify-center items-center">
-                                        <i class="fas fa-edit mr-1"></i> Editar
-                                    </button>
-                                    <button onclick="deleteProduct('${item.id}')" class="flex-1 bg-red-50 text-red-600 font-semibold py-2 rounded-lg hover:bg-red-100 transition-colors text-sm flex justify-center items-center">
-                                        <i class="fas fa-trash-alt mr-1"></i> Eliminar
-                                    </button>
-                                ` : `
-                                    <button onclick="openProductModal('${item.id}')" class="w-10 flex-shrink-0 bg-white text-gray-400 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 hover:text-purple-600 transition-colors flex items-center justify-center">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="addToCart('${item.id}')" class="flex-grow bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 font-semibold py-2 rounded-lg hover:from-purple-200 hover:to-indigo-200 transition-colors text-sm flex justify-center items-center shadow-sm">
-                                        <i class="fas fa-plus mr-2"></i> Cotizar Idea
-                                    </button>
-                                `}
-                            </div>
+                        ${clickableWrapperEnd}
+                    </div>
+                `;
+            });
+        };
+
+        const renderPortfolio = () => {
+            const grid = document.getElementById('portfolio-grid');
+            grid.innerHTML = '';
+            if (state.portfolio.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">Pronto añadiremos más trabajos a nuestro portafolio.</p>';
+                return;
+            }
+            state.portfolio.forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Imagen+no+disponible'">
+                        <div class="p-5 flex-grow flex flex-col">
+                            <h3 class="font-bold text-lg text-gray-900 mb-2">${item.title}</h3>
+                            <p class="text-gray-600 text-sm flex-grow">${item.desc}</p>
+                            ${getSocialButton(item.social)}
                         </div>
                     </div>
                 `;
             });
-        }
+        };
 
-        // ================================================================
-        // RENDERIZADO ADMIN
-        // ================================================================
-        function renderAdminProductList() {
-            const container = document.getElementById('admin-product-list');
-            if (!container) return;
-
-            let list = [...state.products];
-            if (state.adminSort === 'name') {
-                list.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (state.adminSort === 'price') {
-                list.sort((a, b) => a.price - b.price);
-            } else {
-                list.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
-            }
-
-            if (list.length === 0) {
-                container.innerHTML = '<p class="text-gray-500">No hay productos aún.</p>';
+        const renderCatalog = () => {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '';
+            if (state.catalog.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">Catálogo en actualización.</p>';
                 return;
             }
-            let html = '';
-            list.forEach(p => {
-                const price = formatMoney(p.price);
-                const coverImg = p.images && p.images.length > 0 ? p.images[0] : 'https://placehold.co/100x100';
-                html += `
-                    <div class="flex items-center justify-between p-3 border-b border-gray-100 hover:bg-gray-50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden shrink-0">
-                                <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
-                            </div>
+            state.catalog.forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=Producto'">
+                        <div class="p-5 flex-grow flex flex-col">
+                            <h3 class="font-bold text-lg text-gray-900 mb-1">${item.name}</h3>
+                            <p class="text-purple-600 font-semibold mb-2">Precio Base: ${formatMoney(item.price)}</p>
+                            <p class="text-gray-600 text-sm mb-3 flex-grow">${item.desc}</p>
+                            <div class="mb-4">${getSocialButton(item.social)}</div>
+                            <button onclick="addToCart('${item.id}')" class="mt-auto w-full bg-purple-100 text-purple-700 font-medium py-2 rounded hover:bg-purple-200 transition">
+                                Añadir a Cotización
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        const renderReviews = () => {
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = '';
+            const approved = state.reviews.filter(r => r.status === 'approved');
+            if (approved.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">Aún no hay reseñas publicadas. ¡Sé el primero!</p>';
+                return;
+            }
+            approved.forEach(rev => {
+                container.innerHTML += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex text-yellow-400 mb-3 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 italic mb-4">"${rev.text}"</p>
+                        <div class="mt-auto border-t pt-4">
+                            <p class="font-semibold text-gray-900">${rev.name}</p>
+                            <p class="text-xs text-gray-500">Compró: ${rev.product}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        // ================================================================
+        // 8. CARRITO
+        // ================================================================
+        const toggleCart = () => {
+            const cartPanel = document.getElementById('cart-sidebar');
+            const cartContent = document.getElementById('cart-panel');
+            if (cartPanel.classList.contains('hidden')) {
+                cartPanel.classList.remove('hidden');
+                setTimeout(() => cartContent.classList.remove('translate-x-full'), 10);
+            } else {
+                cartContent.classList.add('translate-x-full');
+                setTimeout(() => cartPanel.classList.add('hidden'), 500);
+            }
+        };
+        window.toggleCart = toggleCart;
+
+        const addToCart = (productId) => {
+            const product = state.catalog.find(p => p.id === productId);
+            if (!product) return;
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCartUI();
+            showNotification(`Añadido: ${product.name}`);
+        };
+        window.addToCart = addToCart;
+
+        const removeFromCart = (productId) => {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        };
+        window.removeFromCart = removeFromCart;
+
+        const updateCartUI = () => {
+            const list = document.getElementById('cart-items-list');
+            const totalEl = document.getElementById('cart-total');
+            const countBadge = document.getElementById('cart-count');
+            list.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                count += item.quantity;
+                list.innerHTML += `
+                    <li class="flex py-6">
+                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                            <img src="${item.img}" alt="${item.name}" class="h-full w-full object-cover object-center" onerror="this.src='https://placehold.co/100x100/e2e8f0/64748b'">
+                        </div>
+                        <div class="ml-4 flex flex-1 flex-col">
                             <div>
-                                <h4 class="font-semibold text-gray-800">${p.name}</h4>
-                                <p class="text-sm text-gray-500">${p.category} - ${price}</p>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3 class="text-sm">${item.name}</h3>
+                                    <p class="ml-4 whitespace-nowrap">${formatMoney(item.price * item.quantity)}</p>
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Precio base c/u: ${formatMoney(item.price)}</p>
+                            </div>
+                            <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Cant: ${item.quantity}</p>
+                                <div class="flex">
+                                    <button type="button" onclick="removeFromCart('${item.id}')" class="font-medium text-red-600 hover:text-red-500">Eliminar</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="editProduct('${p.id}')" class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
+                    </li>
                 `;
             });
-            container.innerHTML = html;
-        }
 
-        // ================================================================
-        // FILTROS
-        // ================================================================
-        window.setCatalogFilter = function(filter) {
-            state.currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = 'filter-btn px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-all';
-                if (btn.id === `filter-${filter}`) {
-                    if (filter === 'Promociones') {
-                        btn.classList.add('font-bold', 'text-pink-700', 'bg-pink-100', 'shadow-sm', 'border', 'border-pink-200');
-                    } else {
-                        btn.classList.add('font-semibold', 'text-purple-700', 'bg-white', 'shadow-sm');
-                    }
-                } else {
-                    if (btn.id === 'filter-Promociones') {
-                        btn.classList.add('font-medium', 'text-pink-600', 'bg-pink-50', 'hover:bg-pink-100');
-                    } else {
-                        btn.classList.add('font-medium', 'text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-200/50');
-                    }
-                }
-            });
-            renderCatalog();
+            totalEl.textContent = formatMoney(total);
+            if (count > 0) {
+                countBadge.textContent = count;
+                countBadge.classList.remove('hidden');
+            } else {
+                countBadge.classList.add('hidden');
+                list.innerHTML = '<p class="text-center text-gray-500 py-4">Tu carrito de cotización está vacío.</p>';
+            }
         };
 
-        // ================================================================
-        // MODAL DE DETALLE DE PRODUCTO
-        // ================================================================
-        let currentProductMedia = [];
-        let currentMediaIndex = 0;
-
-        window.openProductModal = function(productId) {
-            const product = state.products.find(p => p.id === productId);
-            if (!product) {
-                showNotification('Producto no encontrado', 'error');
+        const sendQuoteViaWhatsApp = () => {
+            if (cart.length === 0) {
+                showNotification("Añade productos al carrito primero.", "error");
                 return;
             }
+            let message = "Hola Manualidades MD, me gustaría cotizar los siguientes productos que vi en su catálogo web:\n\n";
+            cart.forEach(item => {
+                message += `- ${item.quantity}x ${item.name} (Precio base ref: ${formatMoney(item.price)})\n`;
+            });
+            message += "\n*Entiendo que el precio final depende de la personalización y materiales que elija.*\n";
+            message += "¿Podríamos conversar sobre los detalles?";
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+        };
+        window.sendQuoteViaWhatsApp = sendQuoteViaWhatsApp;
 
-            const mediaItems = [];
-            if (product.images && product.images.length > 0) {
-                product.images.forEach(url => {
-                    mediaItems.push({ type: 'img', src: url });
+        // ================================================================
+        // 9. RESEÑAS PÚBLICAS
+        // ================================================================
+        const openReviewModal = () => {
+            document.getElementById('rev-name').value = '';
+            document.getElementById('rev-product').value = '';
+            document.getElementById('rev-text').value = '';
+            openModal('add-review-modal');
+        };
+        window.openReviewModal = openReviewModal;
+
+        const submitReview = async () => {
+            const name = document.getElementById('rev-name').value.trim();
+            const product = document.getElementById('rev-product').value.trim();
+            const text = document.getElementById('rev-text').value.trim();
+            if (!name || !product || !text) {
+                showNotification("Completa todos los campos.", "error");
+                return;
+            }
+            try {
+                await addDoc(collection(db, 'reviews'), {
+                    name,
+                    product,
+                    text,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
                 });
+                closeModal('add-review-modal');
+                showNotification("¡Gracias! Tu reseña ha sido enviada y está pendiente de aprobación.");
+            } catch (error) {
+                console.error('Error al guardar reseña:', error);
+                showNotification('Error al enviar la reseña', 'error');
             }
-            if (product.videoUrl && product.videoUrl.trim() !== '') {
-                mediaItems.push({ type: 'video', src: product.videoUrl });
-            }
-            if (mediaItems.length === 0) {
-                mediaItems.push({ type: 'img', src: 'https://placehold.co/800x800/e2e8f0/64748b?text=Sin+imagen' });
-            }
-
-            currentProductMedia = mediaItems;
-            currentMediaIndex = 0;
-
-            const prevBtn = document.getElementById('modal-prev-btn');
-            const nextBtn = document.getElementById('modal-next-btn');
-            const indicators = document.getElementById('modal-media-indicators');
-            if (currentProductMedia.length > 1) {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-                indicators.innerHTML = currentProductMedia.map((_, idx) =>
-                    `<div class="media-indicator h-2 ${idx === 0 ? 'w-6 bg-white' : 'w-2 bg-white/50'} rounded-full transition-all duration-300 shadow"></div>`
-                ).join('');
-            } else {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-                indicators.innerHTML = '';
-            }
-
-            updateModalMedia();
-
-            document.getElementById('modal-product-category').textContent = product.category || 'General';
-            document.getElementById('modal-product-name').textContent = product.name;
-            document.getElementById('modal-product-desc').textContent = product.desc;
-
-            const isPromo = product.isPromo && product.promoPrice > 0 && product.promoPrice < product.price;
-            const priceHtml = isPromo
-                ? `<span class="text-3xl font-bold text-pink-600">${formatMoney(product.promoPrice)}</span> <span class="line-through text-gray-400 text-lg ml-2">${formatMoney(product.price)}</span>`
-                : `<span class="text-3xl font-bold text-purple-700">${formatMoney(product.price)}</span>`;
-            document.getElementById('modal-product-price').innerHTML = priceHtml;
-
-            const badgeEl = document.getElementById('modal-product-badge');
-            if (isPromo) {
-                badgeEl.innerHTML = `<span class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded shadow-lg animate-pulse flex items-center gap-1"><i class="fas fa-tag"></i> OFERTA ESPECIAL</span>`;
-            } else {
-                badgeEl.innerHTML = '';
-            }
-
-            const tiktokContainer = document.getElementById('modal-tiktok-link');
-            if (product.tiktokUrl && product.tiktokUrl.trim() !== '') {
-                tiktokContainer.classList.remove('hidden');
-                tiktokContainer.querySelector('a').href = product.tiktokUrl;
-            } else {
-                tiktokContainer.classList.add('hidden');
-            }
-
-            document.getElementById('modal-add-btn').onclick = () => {
-                addToCart(productId);
-                closeModal('product-modal');
-            };
-
-            openModal('product-modal');
         };
-
-        function updateModalMedia() {
-            const container = document.getElementById('modal-media-content');
-            const typeLabel = document.getElementById('modal-media-type-label');
-            const media = currentProductMedia[currentMediaIndex];
-            if (!media) return;
-
-            container.style.opacity = '0';
-            setTimeout(() => {
-                if (media.type === 'video') {
-                    const videoId = media.src.includes('embed') ? media.src : 
-                        media.src.includes('youtube.com/watch?v=') ? media.src.replace('watch?v=', 'embed/') : media.src;
-                    container.innerHTML = `
-                        <div class="modal-video-container w-full h-full">
-                            <iframe src="${videoId}" frameborder="0" allowfullscreen class="w-full h-full"></iframe>
-                        </div>
-                    `;
-                    typeLabel.innerHTML = '<i class="fas fa-video mr-1"></i> Video';
-                    typeLabel.classList.remove('hidden');
-                } else {
-                    container.innerHTML = `<img src="${media.src}" class="w-full h-full object-cover bg-gray-100" onerror="this.src='https://placehold.co/800x800/e2e8f0/64748b?text=Imagen+no+disponible'">`;
-                    typeLabel.classList.add('hidden');
-                }
-                container.style.opacity = '1';
-                container.style.transition = 'opacity 0.3s ease';
-            }, 150);
-
-            document.querySelectorAll('.media-indicator').forEach((ind, idx) => {
-                if (idx === currentMediaIndex) {
-                    ind.classList.replace('bg-white/50', 'bg-white');
-                    ind.classList.add('w-6');
-                    ind.classList.remove('w-2');
-                } else {
-                    ind.classList.replace('bg-white', 'bg-white/50');
-                    ind.classList.add('w-2');
-                    ind.classList.remove('w-6');
-                }
-            });
-        }
-
-        window.nextMedia = function() {
-            if (currentProductMedia.length <= 1) return;
-            currentMediaIndex = (currentMediaIndex + 1) % currentProductMedia.length;
-            updateModalMedia();
-        };
-
-        window.prevMedia = function() {
-            if (currentProductMedia.length <= 1) return;
-            currentMediaIndex = (currentMediaIndex - 1 + currentProductMedia.length) % currentProductMedia.length;
-            updateModalMedia();
-        };
+        window.submitReview = submitReview;
 
         // ================================================================
-        // CARRITO
+        // 10. ADMIN: RENDERIZADO DE TABLAS
         // ================================================================
-        window.addToCart = function(productId) {
-            const product = state.products.find(p => p.id === productId);
-            if (!product) {
-                showNotification('Producto no encontrado', 'error');
-                return;
-            }
-            state.cart.push({ ...product, cartId: Date.now() });
-            updateCartUI();
-            showNotification(`"${product.name}" añadido a tu cotización`, 'success');
-        };
-
-        window.removeFromCart = function(cartId) {
-            state.cart = state.cart.filter(item => item.cartId !== cartId);
-            updateCartUI();
-        };
-
-        function updateCartUI() {
-            const count = state.cart.length;
-            document.getElementById('cart-badge-desktop').textContent = count;
-            document.getElementById('cart-badge-mobile').textContent = count;
-            document.getElementById('cart-badge-desktop').classList.toggle('hidden', count === 0);
-            document.getElementById('cart-badge-mobile').classList.toggle('hidden', count === 0);
-
-            const container = document.getElementById('cart-items');
-            if (count === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 text-gray-400">
-                        <i class="fas fa-shopping-basket text-4xl mb-3"></i>
-                        <p>Tu lista de cotización está vacía</p>
-                        <p class="text-sm mt-2">Agrega productos del catálogo para armar tu idea.</p>
-                    </div>`;
-                document.getElementById('cart-total').textContent = '₡0';
-                return;
-            }
-
-            let html = '';
-            let total = 0;
-            state.cart.forEach(item => {
-                const finalPrice = (item.isPromo && item.promoPrice > 0) ? item.promoPrice : item.price;
-                total += finalPrice;
-                const coverImg = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/100x100';
-                html += `
-                    <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
-                        <div class="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden shrink-0">
-                            <img src="${coverImg}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100'">
-                        </div>
-                        <div class="flex-grow">
-                            <h4 class="text-sm font-bold text-gray-900 line-clamp-1">${item.name}</h4>
-                            <p class="text-sm text-purple-600 font-semibold">${formatMoney(finalPrice)}</p>
-                        </div>
-                        <button onclick="removeFromCart(${item.cartId})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-colors shrink-0">
-                            <i class="fas fa-trash-alt text-xs"></i>
-                        </button>
-                    </div>
+        const renderAdminPortfolio = () => {
+            const tbody = document.getElementById('admin-portfolio-list');
+            tbody.innerHTML = '';
+            state.portfolio.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap"><img src="${item.img}" class="h-12 w-12 rounded object-cover" onerror="this.src='https://placehold.co/50x50/e2e8f0/64748b'"></td>
+                        <td class="px-6 py-4"><div class="text-sm font-medium text-gray-900">${item.title}</div><div class="text-sm text-gray-500 truncate max-w-xs">${item.desc}</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editPortfolioItem('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                            <button onclick="deletePortfolioItem('${item.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
                 `;
             });
-            container.innerHTML = html;
-            document.getElementById('cart-total').textContent = formatMoney(total);
-        }
+        };
 
-        window.sendQuoteWhatsApp = function() {
-            if (state.cart.length === 0) {
-                showNotification('No tienes artículos para cotizar', 'error');
-                return;
-            }
-            let msg = "¡Hola Manualidades MD! 👋\nMe gustaría cotizar los siguientes detalles y adaptarlos a mi presupuesto:\n\n";
-            let total = 0;
-            state.cart.forEach((item, index) => {
-                const finalPrice = (item.isPromo && item.promoPrice > 0) ? item.promoPrice : item.price;
-                total += finalPrice;
-                msg += `${index + 1}. *${item.name}* (Ref: ${formatMoney(finalPrice)})\n`;
+        const renderAdminCatalog = () => {
+            const tbody = document.getElementById('admin-catalog-list');
+            tbody.innerHTML = '';
+            state.catalog.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap flex items-center">
+                            <img src="${item.img}" class="h-10 w-10 rounded-full object-cover mr-3" onerror="this.src='https://placehold.co/50x50/e2e8f0/64748b'">
+                            <div class="text-sm font-medium text-gray-900">${item.name}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-900">${formatMoney(item.price)}</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editCatalogItem('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteCatalogItem('${item.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
             });
-            msg += `\n*Total Referencial:* ${formatMoney(total)}\n\nQuisiera saber qué opciones de materiales/tamaños me ofrecen. ¡Gracias!`;
-            const encodedMsg = encodeURIComponent(msg);
-            const phone = "50600000000"; // Reemplaza con tu número
-            window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
-            closeModal('cart-modal');
+        };
+
+        const renderAdminReviews = () => {
+            const tbody = document.getElementById('admin-reviews-list');
+            tbody.innerHTML = '';
+            state.reviews.forEach(rev => {
+                const statusColor = rev.status === 'approved' ? 'text-green-600 bg-green-100' : 'text-yellow-600 bg-yellow-100';
+                const statusText = rev.status === 'approved' ? 'Aprobada' : 'Pendiente';
+                let actions = rev.status === 'pending' ? `<button onclick="approveReview('${rev.id}')" class="text-green-600 hover:text-green-900 mr-3" title="Aprobar"><i class="fas fa-check"></i></button>` : '';
+                actions += `<button onclick="deleteReview('${rev.id}')" class="text-red-600 hover:text-red-900" title="Eliminar"><i class="fas fa-trash"></i></button>`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4"><div class="text-sm font-medium text-gray-900">${rev.name}</div><div class="text-xs text-gray-500">${rev.product}</div></td>
+                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${rev.text}</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${statusText}</span></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">${actions}</td>
+                    </tr>
+                `;
+            });
+        };
+
+        const renderAdminAds = () => {
+            const tbody = document.getElementById('admin-ads-list');
+            tbody.innerHTML = '';
+            state.ads.forEach(ad => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap"><img src="${ad.img}" class="h-12 w-24 rounded object-cover" onerror="this.src='https://placehold.co/100x50/e2e8f0/64748b'"></td>
+                        <td class="px-6 py-4"><div class="text-sm font-medium text-gray-900">${ad.title}</div></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editAdItem('${ad.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteAdItem('${ad.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
         };
 
         // ================================================================
-        // DESCARGA PDF (SIMULACIÓN)
+        // 11. ADMIN: CRUD OPERACIONES
         // ================================================================
-        window.downloadCatalog = function() {
-            showNotification('Generando Catálogo PDF... (Simulación)', 'success');
-            setTimeout(() => showNotification('Descarga iniciada', 'success'), 1500);
+        // --- Portfolio ---
+        const openAddPortfolioModal = () => {
+            document.getElementById('portfolio-modal-title').textContent = "Añadir Trabajo";
+            document.getElementById('port-id').value = '';
+            document.getElementById('port-file').value = '';
+            document.getElementById('port-img').value = '';
+            document.getElementById('port-title').value = '';
+            document.getElementById('port-desc').value = '';
+            document.getElementById('port-social').value = '';
+            openModal('portfolio-modal');
         };
+        window.openAddPortfolioModal = openAddPortfolioModal;
 
-        // ================================================================
-        // INICIALIZACIÓN
-        // ================================================================
-        listenCatalog();
-        showSection('home');
+        const editPortfolioItem = (id) => {
+            const item = state.portfolio.find(p => p.id === id);
+            if (!item) return;
+            document.getElementById('portfolio-modal-title').textContent = "Editar Trabajo";
+            document.getElementById('port-id').value = item.id;
+            document.getElementById('port-file').value = '';
+            document.getElementById('port-img').value = item.img;
+            document.getElementById('port-title').value = item.title;
+            document.getElementById('port-desc').value = item.desc;
+            document.getElementById('port-social').value = item.social || '';
+            openModal('portfolio-modal');
+        };
+        window.editPortfolioItem = editPortfolioItem;
 
-        document.querySelectorAll('.fixed.inset-0.bg-black\\/70, .fixed.inset-0.bg-black.bg-opacity-50').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    const modalId = overlay.id;
-                    closeModal(modalId);
+        const savePortfolioItem = () => {
+            const id = document.getElementById('port-id').value;
+            const title = document.getElementById('port-title').value.trim();
+            const desc = document.getElementById('port-desc').value.trim();
+            const social = document.getElementById('port-social').value.trim();
+            if (!title) { showNotification("El título es obligatorio", "error"); return; }
+
+            processImageAndSave('port-file', 'port-img', async (imgData) => {
+                const img = imgData || 'https://placehold.co/600x400/e2e8f0/64748b?text=Sin+Imagen';
+                try {
+                    if (id) {
+                        await updateDoc(doc(db, 'portfolio', id), { img, title, desc, social });
+                    } else {
+                        await addDoc(collection(db, 'portfolio'), { img, title, desc, social });
+                    }
+                    closeModal('portfolio-modal');
+                    showNotification("Portafolio actualizado.");
+                } catch (error) {
+                    console.error('Error guardando portafolio:', error);
+                    showNotification('Error al guardar', 'error');
                 }
             });
+        };
+        window.savePortfolioItem = savePortfolioItem;
+
+        const deletePortfolioItem = (id) => {
+            confirmDelete(async () => {
+                try {
+                    await deleteDoc(doc(db, 'portfolio', id));
+                    showNotification("Trabajo eliminado.");
+                } catch (error) {
+                    showNotification('Error al eliminar', 'error');
+                }
+            });
+        };
+        window.deletePortfolioItem = deletePortfolioItem;
+
+        // --- Catalog ---
+        const openAddCatalogModal = () => {
+            document.getElementById('catalog-modal-title').textContent = "Añadir Producto";
+            document.getElementById('cat-id').value = '';
+            document.getElementById('cat-file').value = '';
+            document.getElementById('cat-img').value = '';
+            document.getElementById('cat-name').value = '';
+            document.getElementById('cat-price').value = '';
+            document.getElementById('cat-desc').value = '';
+            document.getElementById('cat-social').value = '';
+            openModal('catalog-modal');
+        };
+        window.openAddCatalogModal = openAddCatalogModal;
+
+        const editCatalogItem = (id) => {
+            const item = state.catalog.find(c => c.id === id);
+            if (!item) return;
+            document.getElementById('catalog-modal-title').textContent = "Editar Producto";
+            document.getElementById('cat-id').value = item.id;
+            document.getElementById('cat-file').value = '';
+            document.getElementById('cat-img').value = item.img;
+            document.getElementById('cat-name').value = item.name;
+            document.getElementById('cat-price').value = item.price;
+            document.getElementById('cat-desc').value = item.desc;
+            document.getElementById('cat-social').value = item.social || '';
+            openModal('catalog-modal');
+        };
+        window.editCatalogItem = editCatalogItem;
+
+        const saveCatalogItem = () => {
+            const id = document.getElementById('cat-id').value;
+            const name = document.getElementById('cat-name').value.trim();
+            const price = parseFloat(document.getElementById('cat-price').value);
+            const desc = document.getElementById('cat-desc').value.trim();
+            const social = document.getElementById('cat-social').value.trim();
+            if (!name || isNaN(price)) { showNotification("Nombre y precio válido son obligatorios", "error"); return; }
+
+            processImageAndSave('cat-file', 'cat-img', async (imgData) => {
+                const img = imgData || 'https://placehold.co/400x400/e2e8f0/64748b?text=Sin+Imagen';
+                try {
+                    if (id) {
+                        await updateDoc(doc(db, 'catalog', id), { img, name, price, desc, social });
+                    } else {
+                        await addDoc(collection(db, 'catalog'), { img, name, price, desc, social });
+                    }
+                    closeModal('catalog-modal');
+                    showNotification("Catálogo actualizado.");
+                } catch (error) {
+                    console.error('Error guardando catálogo:', error);
+                    showNotification('Error al guardar', 'error');
+                }
+            });
+        };
+        window.saveCatalogItem = saveCatalogItem;
+
+        const deleteCatalogItem = (id) => {
+            confirmDelete(async () => {
+                try {
+                    await deleteDoc(doc(db, 'catalog', id));
+                    // También eliminar del carrito local
+                    cart = cart.filter(item => item.id !== id);
+                    updateCartUI();
+                    showNotification("Producto eliminado.");
+                } catch (error) {
+                    showNotification('Error al eliminar', 'error');
+                }
+            });
+        };
+        window.deleteCatalogItem = deleteCatalogItem;
+
+        // --- Ads ---
+        const openAddAdModal = () => {
+            document.getElementById('ads-modal-title').textContent = "Añadir Publicidad";
+            document.getElementById('ad-id').value = '';
+            document.getElementById('ad-file').value = '';
+            document.getElementById('ad-img').value = '';
+            document.getElementById('ad-title').value = '';
+            document.getElementById('ad-social').value = '';
+            openModal('ads-modal');
+        };
+        window.openAddAdModal = openAddAdModal;
+
+        const editAdItem = (id) => {
+            const ad = state.ads.find(a => a.id === id);
+            if (!ad) return;
+            document.getElementById('ads-modal-title').textContent = "Editar Publicidad";
+            document.getElementById('ad-id').value = ad.id;
+            document.getElementById('ad-file').value = '';
+            document.getElementById('ad-img').value = ad.img;
+            document.getElementById('ad-title').value = ad.title;
+            document.getElementById('ad-social').value = ad.social || '';
+            openModal('ads-modal');
+        };
+        window.editAdItem = editAdItem;
+
+        const saveAdItem = () => {
+            const id = document.getElementById('ad-id').value;
+            const title = document.getElementById('ad-title').value.trim();
+            const social = document.getElementById('ad-social').value.trim();
+            if (!title) { showNotification("El título es obligatorio", "error"); return; }
+
+            processImageAndSave('ad-file', 'ad-img', async (imgData) => {
+                const img = imgData || 'https://placehold.co/600x400/e2e8f0/64748b?text=Nueva+Publicidad';
+                try {
+                    if (id) {
+                        await updateDoc(doc(db, 'ads', id), { img, title, social });
+                    } else {
+                        await addDoc(collection(db, 'ads'), { img, title, social });
+                    }
+                    closeModal('ads-modal');
+                    showNotification("Publicidad actualizada.");
+                } catch (error) {
+                    console.error('Error guardando publicidad:', error);
+                    showNotification('Error al guardar', 'error');
+                }
+            });
+        };
+        window.saveAdItem = saveAdItem;
+
+        const deleteAdItem = (id) => {
+            confirmDelete(async () => {
+                try {
+                    await deleteDoc(doc(db, 'ads', id));
+                    showNotification("Publicidad eliminada.");
+                } catch (error) {
+                    showNotification('Error al eliminar', 'error');
+                }
+            });
+        };
+        window.deleteAdItem = deleteAdItem;
+
+        // --- Reviews Admin ---
+        const approveReview = async (id) => {
+            try {
+                await updateDoc(doc(db, 'reviews', id), { status: 'approved' });
+                showNotification("Reseña aprobada.");
+            } catch (error) {
+                showNotification('Error al aprobar', 'error');
+            }
+        };
+        window.approveReview = approveReview;
+
+        const deleteReview = (id) => {
+            confirmDelete(async () => {
+                try {
+                    await deleteDoc(doc(db, 'reviews', id));
+                    showNotification("Reseña eliminada.");
+                } catch (error) {
+                    showNotification('Error al eliminar', 'error');
+                }
+            });
+        };
+        window.deleteReview = deleteReview;
+
+        // ================================================================
+        // 12. CONFIGURACIÓN (SETTINGS)
+        // ================================================================
+        const openSettingsModal = () => {
+            document.getElementById('edit-hero-title').value = state.siteTitle;
+            openModal('settings-modal');
+        };
+        window.openSettingsModal = openSettingsModal;
+
+        const saveSettings = async () => {
+            const newTitle = document.getElementById('edit-hero-title').value.trim();
+            if (!newTitle) return;
+            try {
+                await setDoc(doc(db, 'settings', 'main'), { siteTitle: newTitle }, { merge: true });
+                state.siteTitle = newTitle;
+                document.getElementById('hero-title').textContent = newTitle;
+                closeModal('settings-modal');
+                showNotification("Configuración guardada.");
+            } catch (error) {
+                console.error('Error guardando settings:', error);
+                showNotification('Error al guardar', 'error');
+            }
+        };
+        window.saveSettings = saveSettings;
+
+        // ================================================================
+        // 13. CONFIRMACIÓN DE ELIMINACIÓN
+        // ================================================================
+        let pendingDeleteCallback = null;
+        const confirmDelete = (callback) => {
+            pendingDeleteCallback = callback;
+            openModal('confirm-modal');
+        };
+        document.getElementById('confirm-action-btn').addEventListener('click', () => {
+            if (pendingDeleteCallback) {
+                pendingDeleteCallback();
+                pendingDeleteCallback = null;
+            }
+            closeModal('confirm-modal');
         });
 
-        console.log('🚀 Manualidades MD con subida de imágenes a Firebase Storage');
-        console.log('ℹ️ Para usar el panel admin, inicia sesión y asegúrate de tener un documento en la colección "admins" con tu UID.');
-        console.log('ℹ️ Puedes subir hasta 5 imágenes por producto directamente desde tu computadora.');
+        // ================================================================
+        // 14. ADMIN: TABS
+        // ================================================================
+        const switchAdminTab = (tabId) => {
+            ['admin-portfolio', 'admin-catalog', 'admin-reviews', 'admin-ads'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            ['tab-portfolio', 'tab-catalog', 'tab-reviews', 'tab-ads'].forEach(id => {
+                document.getElementById(id).className = "admin-tab px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200";
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtnId = tabId.replace('admin-', 'tab-');
+            document.getElementById(activeBtnId).className = "admin-tab px-4 py-2 rounded-md bg-purple-100 text-purple-700 font-medium";
+        };
+        window.switchAdminTab = switchAdminTab;
+
+        // ================================================================
+        // 15. INICIALIZACIÓN
+        // ================================================================
+        // Año en footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Iniciar escucha en Firestore y sembrar datos si es necesario
+        seedFirestore().then(() => {
+            startFirestoreListeners();
+        }).catch(err => {
+            console.error('Error al sembrar datos:', err);
+            // Aún así iniciar escucha
+            startFirestoreListeners();
+        });
+
+        // Mostrar sección home por defecto
+        showSection('home');
+
+        console.log('🚀 Aplicación iniciada con Firebase');
     </script>
+
 </body>
 </html>
