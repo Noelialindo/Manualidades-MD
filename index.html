@@ -13,15 +13,13 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .premium-card { border: 1px solid rgba(212, 175, 55, 0.2); }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #7c3aed; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .modal-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .animate-blob { animation: blob 7s infinite; }
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animation-delay-2000 { animation-delay: 2s; }
-        .modal-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .modal-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        /* Estilos para ordenamiento */
         .sort-btn.active { background-color: #7c3aed; color: white; }
+        .notification { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -119,7 +117,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN CATÁLOGO (con ordenamiento) -->
+        <!-- SECCIÓN CATÁLOGO -->
         <div id="section-catalog" class="hidden space-y-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div><h2 class="text-3xl font-bold text-gray-900 brand-font">Nuestros Trabajos Realizados</h2><p class="text-gray-600 mt-2">Explora galerías de fotos y videos para inspirarte.</p></div>
@@ -179,7 +177,7 @@
             </div>
         </div>
 
-        <!-- ===== SECCIÓN ADMIN (con ordenamiento en la lista) ===== -->
+        <!-- ===== SECCIÓN ADMIN ===== -->
         <div id="section-admin" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
@@ -189,6 +187,9 @@
                     </button>
                     <button onclick="restoreSampleCatalog()" class="bg-yellow-100 text-yellow-800 font-medium py-2 px-4 rounded-lg hover:bg-yellow-200 transition text-sm">
                         <i class="fas fa-undo-alt mr-1"></i> Restaurar ejemplos
+                    </button>
+                    <button onclick="forceReload()" class="bg-green-100 text-green-800 font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition text-sm">
+                        <i class="fas fa-sync-alt mr-1"></i> Forzar recarga
                     </button>
                     <button onclick="showSection('catalog')" class="text-purple-600 hover:text-purple-800 font-medium text-sm"><i class="fas fa-arrow-left mr-1"></i> Ver catálogo</button>
                 </div>
@@ -241,9 +242,7 @@
                     <!-- Imágenes (hasta 5) -->
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (URLs, hasta 5)</label>
-                        <div id="images-container" class="space-y-2">
-                            <!-- Se generan 5 campos por JS -->
-                        </div>
+                        <div id="images-container" class="space-y-2"></div>
                         <p class="text-xs text-gray-400 mt-1">Puedes dejar campos vacíos. Se mostrarán hasta 5 imágenes en la galería.</p>
                     </div>
 
@@ -268,7 +267,7 @@
                 </form>
             </div>
 
-            <!-- Lista de productos (con ordenamiento) -->
+            <!-- Lista de productos -->
             <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
                     <h3 class="text-xl font-bold text-gray-800">Productos existentes</h3>
@@ -285,7 +284,7 @@
     </main>
 
     <!-- ===== MODALES ===== -->
-    <!-- Modal de detalle de producto (público) -->
+    <!-- Modal de detalle de producto -->
     <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
             <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
@@ -319,7 +318,7 @@
         </div>
     </div>
 
-    <!-- Modal de cotización (carrito) -->
+    <!-- Modal de cotización -->
     <div id="cart-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
             <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
@@ -412,8 +411,8 @@
         const state = {
             products: [],
             currentFilter: 'Todos',
-            currentSort: 'default',    // para catálogo público
-            adminSort: 'date',          // para lista admin
+            currentSort: 'default',
+            adminSort: 'date',
             cart: [],
             user: null,
             isAdmin: false,
@@ -441,7 +440,7 @@
                 icon = '<i class="fas fa-exclamation-circle text-red-500"></i>';
                 border = 'border-l-4 border-red-500';
             }
-            notif.className = `${bg} ${border} p-4 rounded-r shadow-lg flex items-center gap-3 transform transition-all translate-x-full opacity-0 max-w-sm w-full`;
+            notif.className = `notification ${bg} ${border} p-4 rounded-r shadow-lg flex items-center gap-3 transform transition-all translate-x-full opacity-0 max-w-sm w-full`;
             notif.innerHTML = `${icon} <p class="text-gray-800 text-sm font-medium">${message}</p>`;
             container.appendChild(notif);
             requestAnimationFrame(() => {
@@ -494,7 +493,7 @@
                 const docSnap = await getDoc(adminRef);
                 return docSnap.exists();
             } catch (e) {
-                console.error('Error verificando admin:', e);
+                console.error('❌ Error verificando admin:', e);
                 return false;
             }
         }
@@ -509,11 +508,11 @@
             try {
                 const userCred = await signInWithEmailAndPassword(auth, email, password);
                 closeModal('login-modal');
-                showNotification(`Bienvenido ${userCred.user.email}`, 'success');
+                showNotification(`✅ Bienvenido ${userCred.user.email}`, 'success');
                 console.log('✅ Usuario autenticado:', userCred.user.uid);
             } catch (error) {
-                console.error('Login error:', error);
-                showNotification('Credenciales incorrectas o error de conexión', 'error');
+                console.error('❌ Login error:', error);
+                showNotification('❌ Credenciales incorrectas o error de conexión', 'error');
             }
         };
 
@@ -532,11 +531,11 @@
                 const isAdmin = await checkIfAdmin(user.uid);
                 state.isAdmin = isAdmin;
                 updateUIForAuth(true);
-                console.log('🔑 Usuario:', user.email, '| Admin:', isAdmin);
+                console.log(`🔑 Usuario: ${user.email} | Admin: ${isAdmin}`);
                 if (isAdmin) {
-                    showNotification('Modo administrador activado', 'success');
+                    showNotification('✅ Modo administrador activado', 'success');
                 } else {
-                    showNotification('Usuario sin permisos de administrador', 'info');
+                    showNotification('⚠️ Usuario sin permisos de administrador', 'info');
                 }
             } else {
                 state.user = null;
@@ -589,14 +588,39 @@
         };
 
         // ================================================================
+        // FORZAR RECARGA MANUAL
+        // ================================================================
+        window.forceReload = function() {
+            showNotification('🔄 Recargando catálogo desde Firestore...', 'info');
+            // La escucha en tiempo real ya refresca, pero forzamos una nueva consulta
+            const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
+            getDocs(q).then((snapshot) => {
+                const products = [];
+                snapshot.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                state.products = products;
+                renderCatalog();
+                renderAdminProductList();
+                showNotification(`✅ ${products.length} productos cargados`, 'success');
+            }).catch(e => {
+                showNotification('❌ Error al recargar: ' + e.message, 'error');
+            });
+        };
+
+        // ================================================================
         // CRUD DE PRODUCTOS
         // ================================================================
         window.saveProduct = async function() {
             const errorMsg = document.getElementById('form-error-msg');
             errorMsg.classList.add('hidden');
 
-            if (!state.user || !state.isAdmin) {
-                showNotification('Debes iniciar sesión como administrador', 'error');
+            if (!state.user) {
+                showNotification('Debes iniciar sesión', 'error');
+                return;
+            }
+            if (!state.isAdmin) {
+                showNotification('No tienes permisos de administrador', 'error');
                 return;
             }
 
@@ -614,7 +638,6 @@
             if (isNaN(price) || price < 0) { errorMsg.textContent = 'Ingresa un precio válido'; errorMsg.classList.remove('hidden'); return; }
             if (!desc) { errorMsg.textContent = 'La descripción es obligatoria'; errorMsg.classList.remove('hidden'); return; }
 
-            // Obtener imágenes
             const imageInputs = document.querySelectorAll('#images-container .image-url');
             const images = [];
             imageInputs.forEach(input => {
@@ -645,18 +668,20 @@
             try {
                 if (editId) {
                     await updateDoc(doc(db, 'catalog', editId), productData);
-                    showNotification('Producto actualizado correctamente', 'success');
+                    showNotification('✅ Producto actualizado correctamente', 'success');
                 } else {
                     const docRef = await addDoc(collection(db, 'catalog'), { ...productData, createdAt: new Date().toISOString() });
                     console.log('✅ Producto creado con ID:', docRef.id);
-                    showNotification('Producto creado correctamente', 'success');
+                    showNotification('✅ Producto creado correctamente', 'success');
                 }
                 resetForm();
+                // Forzar recarga después de guardar
+                forceReload();
             } catch (e) {
                 console.error('❌ Error guardando producto:', e);
                 errorMsg.textContent = 'Error al guardar: ' + e.message;
                 errorMsg.classList.remove('hidden');
-                showNotification('Error al guardar el producto', 'error');
+                showNotification('❌ Error al guardar el producto', 'error');
             }
         };
 
@@ -665,16 +690,20 @@
             if (!confirm('¿Eliminar este producto permanentemente?')) return;
             try {
                 await deleteDoc(doc(db, 'catalog', id));
-                showNotification('Producto eliminado', 'success');
+                showNotification('✅ Producto eliminado', 'success');
+                forceReload();
             } catch (e) {
-                showNotification('Error al eliminar', 'error');
+                showNotification('❌ Error al eliminar', 'error');
             }
         };
 
         window.editProduct = function(id) {
             if (!state.isAdmin) return;
             const product = state.products.find(p => p.id === id);
-            if (!product) return;
+            if (!product) {
+                showNotification('Producto no encontrado', 'error');
+                return;
+            }
 
             document.getElementById('edit-product-id').value = id;
             document.getElementById('prod-name').value = product.name;
@@ -866,10 +895,11 @@
                         updatedAt: new Date().toISOString()
                     });
                 }
-                showNotification('Catálogo restaurado con los productos de ejemplo', 'success');
+                showNotification('✅ Catálogo restaurado con los productos de ejemplo', 'success');
+                forceReload();
             } catch (e) {
                 console.error('Error restaurando catálogo:', e);
-                showNotification('Error al restaurar: ' + e.message, 'error');
+                showNotification('❌ Error al restaurar: ' + e.message, 'error');
             }
         };
 
@@ -889,7 +919,7 @@
                             updatedAt: new Date().toISOString()
                         });
                     }
-                    showNotification('Catálogo de ejemplo cargado exitosamente', 'success');
+                    showNotification('✅ Catálogo de ejemplo cargado exitosamente', 'success');
                 }
             } catch (e) {
                 console.error('Error al sembrar datos:', e);
@@ -908,6 +938,7 @@
                     products.push({ id: doc.id, ...doc.data() });
                 });
                 state.products = products;
+                console.log(`📦 Catálogo actualizado: ${products.length} productos`);
                 renderCatalog();
                 renderAdminProductList();
                 if (!state.initialLoadDone) {
@@ -917,31 +948,25 @@
                     }
                 }
             }, (error) => {
-                console.error('Error en onSnapshot:', error);
+                console.error('❌ Error en onSnapshot:', error);
                 showNotification('Error al cargar catálogo', 'error');
             });
         }
 
         // ================================================================
-        // ORDENAMIENTO PARA CATÁLOGO PÚBLICO
+        // ORDENAMIENTO
         // ================================================================
         window.setCatalogSort = function(sortType) {
             state.currentSort = sortType;
-            // Actualizar clases de botones
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-purple-600', 'text-white');
                 if (btn.dataset.sort === sortType) {
                     btn.classList.add('active', 'bg-purple-600', 'text-white');
-                } else {
-                    btn.classList.add('border-gray-300', 'text-gray-700');
                 }
             });
             renderCatalog();
         };
 
-        // ================================================================
-        // ORDENAMIENTO PARA LISTA ADMIN
-        // ================================================================
         window.setAdminSort = function(sortType) {
             state.adminSort = sortType;
             document.querySelectorAll('.admin-sort-btn').forEach(btn => {
@@ -954,7 +979,7 @@
         };
 
         // ================================================================
-        // RENDERIZADO DEL CATÁLOGO (PÚBLICO)
+        // RENDERIZADO DEL CATÁLOGO
         // ================================================================
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
@@ -968,7 +993,6 @@
                 filtered = filtered.filter(p => p.category === state.currentFilter);
             }
 
-            // Aplicar ordenamiento
             const sort = state.currentSort;
             if (sort === 'price-asc') {
                 filtered.sort((a, b) => a.price - b.price);
@@ -979,7 +1003,6 @@
             } else if (sort === 'name-desc') {
                 filtered.sort((a, b) => b.name.localeCompare(a.name));
             } else {
-                // default: por fecha de actualización (más reciente primero)
                 filtered.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
             }
 
@@ -1056,7 +1079,7 @@
         }
 
         // ================================================================
-        // RENDERIZADO ADMIN (con ordenamiento)
+        // RENDERIZADO ADMIN
         // ================================================================
         function renderAdminProductList() {
             const container = document.getElementById('admin-product-list');
@@ -1068,7 +1091,6 @@
             } else if (state.adminSort === 'price') {
                 list.sort((a, b) => a.price - b.price);
             } else {
-                // date
                 list.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
             }
 
@@ -1126,7 +1148,7 @@
         };
 
         // ================================================================
-        // MODAL DE DETALLE DE PRODUCTO (Galería)
+        // MODAL DE DETALLE DE PRODUCTO
         // ================================================================
         let currentProductMedia = [];
         let currentMediaIndex = 0;
@@ -1361,12 +1383,8 @@
         });
 
         console.log('🚀 Manualidades MD con panel completo y ordenamiento');
-        console.log('ℹ️ Ahora puedes ordenar por precio, nombre y fecha.');
+        console.log('ℹ️ Si no ves los cambios, usa el botón "Forzar recarga"');
         console.log('ℹ️ Asegúrate de tener un documento en la colección "admins" con el UID del admin.');
-
-        window.renderCatalog = renderCatalog;
-        window.renderAdminProductList = renderAdminProductList;
-        window.updateCartUI = updateCartUI;
     </script>
 
 </body>
