@@ -20,6 +20,9 @@
         .animation-delay-2000 { animation-delay: 2s; }
         .sort-btn.active { background-color: #7c3aed; color: white; }
         .notification { transition: all 0.3s ease; }
+        .image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -177,7 +180,7 @@
             </div>
         </div>
 
-        <!-- ===== SECCIÓN ADMIN ===== -->
+        <!-- ===== SECCIÓN ADMIN (con subida de imágenes a Storage) ===== -->
         <div id="section-admin" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-3xl font-bold text-gray-900 brand-font">Panel de Administración</h2>
@@ -198,7 +201,7 @@
             <!-- Formulario -->
             <div id="admin-form-container" class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 id="form-title" class="text-xl font-bold text-gray-800 mb-4">Agregar nuevo producto</h3>
-                <form id="admin-product-form" onsubmit="event.preventDefault(); saveProduct();">
+                <form id="admin-product-form" onsubmit="event.preventDefault(); saveProductWithImages();">
                     <input type="hidden" id="edit-product-id" value="" />
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -239,11 +242,13 @@
                         <textarea id="prod-desc" required rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"></textarea>
                     </div>
 
-                    <!-- Imágenes (hasta 5) -->
+                    <!-- Imágenes (subida de archivos) -->
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (URLs, hasta 5)</label>
-                        <div id="images-container" class="space-y-2"></div>
-                        <p class="text-xs text-gray-400 mt-1">Puedes dejar campos vacíos. Se mostrarán hasta 5 imágenes en la galería.</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Imágenes (sube hasta 5)</label>
+                        <div id="image-upload-container" class="space-y-3">
+                            <!-- Se generan dinámicamente 5 campos de archivo con previsualización -->
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Puedes subir archivos de imagen (JPG, PNG, WEBP). Se subirán a Firebase Storage.</p>
                     </div>
 
                     <!-- Video -->
@@ -264,6 +269,7 @@
                         <button type="button" onclick="resetForm()" class="bg-gray-200 text-gray-700 font-bold py-2.5 px-6 rounded-lg hover:bg-gray-300 transition">Cancelar</button>
                     </div>
                     <div id="form-error-msg" class="mt-3 text-red-600 text-sm hidden"></div>
+                    <div id="upload-progress" class="mt-3 text-blue-600 text-sm hidden">Subiendo imágenes...</div>
                 </form>
             </div>
 
@@ -364,7 +370,8 @@
             "imports": {
                 "firebase/app": "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js",
                 "firebase/auth": "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js"
             }
         }
     </script>
@@ -390,6 +397,13 @@
             writeBatch,
             setDoc
         } from 'firebase/firestore';
+        import { 
+            getStorage, 
+            ref, 
+            uploadBytesResumable, 
+            getDownloadURL,
+            deleteObject
+        } from 'firebase/storage';
 
         const firebaseConfig = {
             apiKey: "AIzaSyATAqRUThwU_oulXnVtwzZ1aKTjkcvPDQ4",
@@ -404,6 +418,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         // ================================================================
         // ESTADO
@@ -565,6 +580,7 @@
             if (state.isAdmin) {
                 showSection('admin');
                 renderAdminProductList();
+                setupImageUploadUI(); // Inicializar campos de imagen
             } else {
                 showNotification('No tienes permisos de administrador', 'error');
             }
@@ -588,11 +604,10 @@
         };
 
         // ================================================================
-        // FORZAR RECARGA MANUAL
+        // FORZAR RECARGA
         // ================================================================
         window.forceReload = function() {
             showNotification('🔄 Recargando catálogo desde Firestore...', 'info');
-            // La escucha en tiempo real ya refresca, pero forzamos una nueva consulta
             const q = query(collection(db, 'catalog'), orderBy('updatedAt', 'desc'));
             getDocs(q).then((snapshot) => {
                 const products = [];
@@ -609,18 +624,122 @@
         };
 
         // ================================================================
-        // CRUD DE PRODUCTOS
+        // SUBIDA DE IMÁGENES A FIREBASE STORAGE
         // ================================================================
-        window.saveProduct = async function() {
+        // Guardar referencia a los archivos seleccionados
+        let selectedFiles = [];
+
+        function setupImageUploadUI() {
+            const container = document.getElementById('image-upload-container');
+            container.innerHTML = '';
+            // Crear 5 campos de archivo con previsualización
+            for (let i = 0; i < 5; i++) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-2 border border-gray-200 rounded-lg';
+                div.innerHTML = `
+                    <div class="file-input-wrapper">
+                        <button type="button" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm">Seleccionar imagen</button>
+                        <input type="file" accept="image/*" class="image-file-input" data-index="${i}" />
+                    </div>
+                    <img src="" alt="Vista previa" class="image-preview hidden" id="preview-${i}" />
+                    <span class="text-xs text-gray-500 file-name" id="filename-${i}">Ningún archivo</span>
+                    <button type="button" onclick="clearImage(${i})" class="text-red-500 hover:text-red-700 text-sm hidden" id="clear-btn-${i}"><i class="fas fa-times"></i></button>
+                `;
+                container.appendChild(div);
+
+                const fileInput = div.querySelector('.image-file-input');
+                fileInput.addEventListener('change', (e) => handleFileSelect(e, i));
+            }
+        }
+
+        window.clearImage = function(index) {
+            const fileInput = document.querySelector(`.image-file-input[data-index="${index}"]`);
+            if (fileInput) {
+                fileInput.value = '';
+                const preview = document.getElementById(`preview-${index}`);
+                preview.classList.add('hidden');
+                preview.src = '';
+                document.getElementById(`filename-${index}`).textContent = 'Ningún archivo';
+                document.getElementById(`clear-btn-${index}`).classList.add('hidden');
+                selectedFiles = selectedFiles.filter(f => f.index !== index);
+            }
+        };
+
+        function handleFileSelect(event, index) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validar tipo de archivo
+            if (!file.type.startsWith('image/')) {
+                showNotification('Solo se permiten imágenes', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            // Guardar referencia
+            selectedFiles = selectedFiles.filter(f => f.index !== index);
+            selectedFiles.push({ index, file });
+
+            // Mostrar previsualización
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById(`preview-${index}`);
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                document.getElementById(`filename-${index}`).textContent = file.name;
+                document.getElementById(`clear-btn-${index}`).classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadImages() {
+            const uploadedUrls = [];
+            const progressEl = document.getElementById('upload-progress');
+            progressEl.classList.remove('hidden');
+            progressEl.textContent = 'Subiendo imágenes... 0/' + selectedFiles.length;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const { index, file } = selectedFiles[i];
+                const storageRef = ref(storage, `catalog/${Date.now()}_${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on(
+                        'state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            progressEl.textContent = `Subiendo imágenes... ${i+1}/${selectedFiles.length} (${Math.round(progress)}%)`;
+                        },
+                        (error) => {
+                            console.error('Error subiendo archivo:', error);
+                            reject(error);
+                        },
+                        async () => {
+                            try {
+                                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                                uploadedUrls.push(url);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        }
+                    );
+                });
+            }
+
+            progressEl.classList.add('hidden');
+            return uploadedUrls;
+        }
+
+        // ================================================================
+        // GUARDAR PRODUCTO CON IMÁGENES SUBIDAS
+        // ================================================================
+        window.saveProductWithImages = async function() {
             const errorMsg = document.getElementById('form-error-msg');
             errorMsg.classList.add('hidden');
 
-            if (!state.user) {
-                showNotification('Debes iniciar sesión', 'error');
-                return;
-            }
-            if (!state.isAdmin) {
-                showNotification('No tienes permisos de administrador', 'error');
+            if (!state.user || !state.isAdmin) {
+                showNotification('Debes iniciar sesión como administrador', 'error');
                 return;
             }
 
@@ -633,19 +752,37 @@
             const tiktokUrl = document.getElementById('prod-tiktok').value.trim();
             const editId = document.getElementById('edit-product-id').value;
 
+            // Validaciones básicas
             if (!name) { errorMsg.textContent = 'El nombre es obligatorio'; errorMsg.classList.remove('hidden'); return; }
             if (!category) { errorMsg.textContent = 'Selecciona una categoría'; errorMsg.classList.remove('hidden'); return; }
             if (isNaN(price) || price < 0) { errorMsg.textContent = 'Ingresa un precio válido'; errorMsg.classList.remove('hidden'); return; }
             if (!desc) { errorMsg.textContent = 'La descripción es obligatoria'; errorMsg.classList.remove('hidden'); return; }
 
-            const imageInputs = document.querySelectorAll('#images-container .image-url');
-            const images = [];
-            imageInputs.forEach(input => {
-                const url = input.value.trim();
-                if (url) images.push(url);
-            });
-            if (images.length === 0) {
-                errorMsg.textContent = 'Agrega al menos una imagen (URL)';
+            // Verificar si hay archivos seleccionados o imágenes existentes en edición
+            let imageUrls = [];
+            if (editId) {
+                // En edición, conservar imágenes anteriores si no se subieron nuevas
+                const product = state.products.find(p => p.id === editId);
+                if (product && product.images) {
+                    imageUrls = product.images;
+                }
+            }
+
+            // Si hay archivos seleccionados, subirlos y reemplazar las imágenes
+            if (selectedFiles.length > 0) {
+                try {
+                    const uploadedUrls = await uploadImages();
+                    imageUrls = uploadedUrls;
+                } catch (e) {
+                    console.error('Error subiendo imágenes:', e);
+                    errorMsg.textContent = 'Error al subir imágenes: ' + e.message;
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            if (imageUrls.length === 0) {
+                errorMsg.textContent = 'Agrega al menos una imagen (selecciona archivos)';
                 errorMsg.classList.remove('hidden');
                 return;
             }
@@ -657,7 +794,7 @@
                 promoPrice,
                 isPromo: (promoPrice > 0 && promoPrice < price),
                 desc,
-                images,
+                images: imageUrls,
                 videoUrl: videoUrl || '',
                 tiktokUrl: tiktokUrl || '',
                 updatedAt: new Date().toISOString()
@@ -675,7 +812,8 @@
                     showNotification('✅ Producto creado correctamente', 'success');
                 }
                 resetForm();
-                // Forzar recarga después de guardar
+                // Limpiar archivos seleccionados
+                selectedFiles = [];
                 forceReload();
             } catch (e) {
                 console.error('❌ Error guardando producto:', e);
@@ -685,10 +823,25 @@
             }
         };
 
+        // ================================================================
+        // ELIMINAR PRODUCTO (también elimina imágenes del Storage)
+        // ================================================================
         window.deleteProduct = async function(id) {
             if (!state.isAdmin) return;
             if (!confirm('¿Eliminar este producto permanentemente?')) return;
             try {
+                const product = state.products.find(p => p.id === id);
+                if (product && product.images) {
+                    // Eliminar imágenes de Storage (opcional, para no dejar basura)
+                    for (const url of product.images) {
+                        try {
+                            const imageRef = ref(storage, url);
+                            await deleteObject(imageRef);
+                        } catch (e) {
+                            console.warn('No se pudo eliminar imagen de Storage:', e);
+                        }
+                    }
+                }
                 await deleteDoc(doc(db, 'catalog', id));
                 showNotification('✅ Producto eliminado', 'success');
                 forceReload();
@@ -697,6 +850,9 @@
             }
         };
 
+        // ================================================================
+        // EDITAR PRODUCTO (carga datos en el formulario)
+        // ================================================================
         window.editProduct = function(id) {
             if (!state.isAdmin) return;
             const product = state.products.find(p => p.id === id);
@@ -716,17 +872,13 @@
             document.getElementById('form-title').textContent = 'Editar producto';
             document.getElementById('form-submit-btn').textContent = 'Actualizar producto';
 
-            const container = document.getElementById('images-container');
-            container.innerHTML = '';
-            const images = product.images || [];
-            if (images.length === 0) {
-                addImageField('');
-            } else {
-                images.forEach(url => addImageField(url));
-            }
-            while (container.children.length < 5) {
-                addImageField('');
-            }
+            // Limpiar selección de archivos
+            selectedFiles = [];
+            // Restablecer los campos de imagen
+            setupImageUploadUI();
+            // Mostrar imágenes existentes como previews (si se quiere)
+            // Aquí podríamos mostrar las URLs, pero como son archivos, no podemos previsualizarlos fácilmente.
+            // En su lugar, mantenemos los campos de archivo vacíos y el usuario puede subir nuevas imágenes.
 
             document.getElementById('admin-form-container').scrollIntoView({ behavior: 'smooth' });
         };
@@ -742,46 +894,12 @@
             document.getElementById('prod-tiktok').value = '';
             document.getElementById('form-title').textContent = 'Agregar nuevo producto';
             document.getElementById('form-submit-btn').textContent = 'Guardar producto';
-            const container = document.getElementById('images-container');
-            container.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
-                addImageField('');
-            }
+            // Reiniciar campos de imagen
+            selectedFiles = [];
+            setupImageUploadUI();
             document.getElementById('form-error-msg').classList.add('hidden');
         }
         window.resetForm = resetForm;
-
-        // ================================================================
-        // MANEJO DE CAMPOS DE IMAGEN
-        // ================================================================
-        function addImageField(value = '') {
-            const container = document.getElementById('images-container');
-            const div = document.createElement('div');
-            div.className = 'flex gap-2 items-center';
-            div.innerHTML = `
-                <input type="text" placeholder="URL de imagen" class="image-url flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" value="${value}" />
-                <button type="button" onclick="removeImageField(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-times"></i></button>
-            `;
-            container.appendChild(div);
-        }
-
-        window.removeImageField = function(btn) {
-            const container = document.getElementById('images-container');
-            if (container.children.length <= 1) {
-                showNotification('Debe haber al menos un campo de imagen', 'error');
-                return;
-            }
-            btn.closest('.flex').remove();
-        };
-
-        // Inicializar el formulario con 5 campos vacíos al cargar
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('images-container');
-            container.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
-                addImageField('');
-            }
-        });
 
         // ================================================================
         // CATÁLOGO DE EJEMPLO
@@ -880,11 +998,21 @@
             if (!confirm('Esto eliminará todos los productos actuales y los reemplazará con los de ejemplo. ¿Continuar?')) return;
 
             try {
+                // Eliminar productos y sus imágenes del storage (opcional)
                 const snapshot = await getDocs(collection(db, 'catalog'));
                 const batch = writeBatch(db);
-                snapshot.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
+                for (const docSnap of snapshot.docs) {
+                    const product = docSnap.data();
+                    if (product.images) {
+                        for (const url of product.images) {
+                            try {
+                                const imageRef = ref(storage, url);
+                                await deleteObject(imageRef);
+                            } catch (e) { /* ignore */ }
+                        }
+                    }
+                    batch.delete(docSnap.ref);
+                }
                 await batch.commit();
 
                 const colRef = collection(db, 'catalog');
@@ -904,7 +1032,7 @@
         };
 
         // ================================================================
-        // SIEMBRA AUTOMÁTICA
+        // SIEMBRA AUTOMÁTICA (si está vacío)
         // ================================================================
         async function seedIfEmpty() {
             try {
@@ -979,7 +1107,7 @@
         };
 
         // ================================================================
-        // RENDERIZADO DEL CATÁLOGO
+        // RENDERIZADO DEL CATÁLOGO (PÚBLICO)
         // ================================================================
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
@@ -1382,10 +1510,9 @@
             });
         });
 
-        console.log('🚀 Manualidades MD con panel completo y ordenamiento');
-        console.log('ℹ️ Si no ves los cambios, usa el botón "Forzar recarga"');
-        console.log('ℹ️ Asegúrate de tener un documento en la colección "admins" con el UID del admin.');
+        console.log('🚀 Manualidades MD con subida de imágenes a Firebase Storage');
+        console.log('ℹ️ Para usar el panel admin, inicia sesión y asegúrate de tener un documento en la colección "admins" con tu UID.');
+        console.log('ℹ️ Puedes subir hasta 5 imágenes por producto directamente desde tu computadora.');
     </script>
-
 </body>
 </html>
