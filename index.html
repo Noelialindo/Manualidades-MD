@@ -9,20 +9,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9fafb;
-            color: #1f2937;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #1f2937; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-active { overflow: hidden; }
-        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
-        .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 
         /* Galería miniaturas */
         .thumb-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
@@ -32,22 +25,22 @@
             position: absolute; top: -6px; right: -6px; background: #ef4444; color: white;
             border-radius: 50%; width: 20px; height: 20px; font-size: 12px;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            border: 2px solid white; transition: transform 0.2s;
+            border: 2px solid white;
         }
-        .thumb-item .remove-thumb:hover { transform: scale(1.15); }
         .thumb-item.video-thumb { background: #1e293b; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
 
-        /* Carrusel para catálogo */
-        .carousel-container { position: relative; overflow: hidden; border-radius: 12px; }
+        /* Carrusel */
+        .carousel-container { position: relative; overflow: hidden; border-radius: 12px; background: #f3f4f6; }
         .carousel-track { display: flex; transition: transform 0.4s ease; }
         .carousel-slide { min-width: 100%; }
         .carousel-slide img { width: 100%; height: 280px; object-fit: cover; }
+        .carousel-slide video { width: 100%; height: 280px; object-fit: cover; }
         .carousel-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(0,0,0,0.5); color: white; border: none;
             width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s; z-index: 5;
+            z-index: 5;
         }
         .carousel-btn:hover { background: rgba(0,0,0,0.8); }
         .carousel-btn.prev { left: 6px; }
@@ -56,16 +49,17 @@
         .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: #d1d5db; cursor: pointer; border: none; }
         .carousel-dot.active { background: #7c3aed; }
 
-        /* Badge de video */
         .video-badge {
             position: absolute; bottom: 8px; right: 8px;
             background: rgba(0,0,0,0.7); color: white; padding: 4px 10px;
             border-radius: 20px; font-size: 11px; display: flex; align-items: center; gap: 4px;
         }
+        .admin-tab { transition: all 0.2s; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
+<!-- NAV (igual que antes) -->
 <nav class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -81,16 +75,15 @@
                 <a href="#" onclick="showSection('reviews')" class="border-transparent text-gray-500 hover:border-purple-500 hover:text-purple-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reseñas</a>
             </div>
             <div class="flex items-center space-x-4">
-                <button onclick="toggleCart()" class="relative p-2 text-gray-400 hover:text-purple-500 focus:outline-none">
+                <button onclick="toggleCart()" class="relative p-2 text-gray-400 hover:text-purple-500">
                     <i class="fas fa-shopping-cart text-xl"></i>
                     <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
                 </button>
-                <button onclick="openAdminLogin()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <button onclick="openAdminLogin()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-user-cog"></i>
                 </button>
                 <div class="flex items-center sm:hidden ml-2">
-                    <button onclick="toggleMobileMenu()" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500">
-                        <span class="sr-only">Abrir menú</span>
+                    <button onclick="toggleMobileMenu()" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
@@ -115,7 +108,7 @@
         <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 text-center border border-gray-100">
             <h1 id="hero-title" class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Detalles únicos para momentos especiales</h1>
             <p id="hero-subtitle" class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Nos especializamos en productos artesanales personalizados. Creemos que cada detalle entregado debe ser de calidad. Nos acomodamos al presupuesto de cada cliente, ofreciendo opciones variadas dependiendo de los materiales elegidos. ¡Garantizamos seguridad y amor en cada trabajo!
+                Nos especializamos en productos artesanales personalizados. ¡Garantizamos seguridad y amor en cada trabajo!
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <button onclick="showSection('catalog')" class="px-8 py-3 bg-purple-600 text-white font-medium rounded-full hover:bg-purple-700 transition shadow-md">Ver Catálogo</button>
@@ -133,7 +126,7 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
                 <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-tags"></i></div>
                 <h3 class="font-semibold text-lg mb-2">Precios Flexibles</h3>
-                <p class="text-gray-500 text-sm">Nos ajustamos a tu presupuesto ofreciendo diferentes opciones de materiales.</p>
+                <p class="text-gray-500 text-sm">Nos ajustamos a tu presupuesto con diferentes opciones de materiales.</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
                 <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-medal"></i></div>
@@ -150,10 +143,7 @@
     <!-- PORTFOLIO -->
     <section id="portfolio" class="hidden fade-in">
         <div class="mb-8 flex justify-between items-end border-b pb-4">
-            <div>
-                <h2 class="text-3xl font-bold text-gray-900">Mis Trabajos Realizados</h2>
-                <p class="text-gray-500 mt-2">Una muestra de la calidad y el amor que ponemos en cada detalle.</p>
-            </div>
+            <div><h2 class="text-3xl font-bold text-gray-900">Mis Trabajos Realizados</h2><p class="text-gray-500 mt-2">Una muestra de la calidad y el amor que ponemos en cada detalle.</p></div>
         </div>
         <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
@@ -161,20 +151,14 @@
     <!-- CATALOGO -->
     <section id="catalog" class="hidden fade-in">
         <div class="mb-8 flex justify-between items-end border-b pb-4">
-            <div>
-                <h2 class="text-3xl font-bold text-gray-900">Catálogo de Productos</h2>
-                <p class="text-gray-500 mt-2">Precios base estimados. ¡Cotiza tu diseño personalizado!</p>
-            </div>
+            <div><h2 class="text-3xl font-bold text-gray-900">Catálogo de Productos</h2><p class="text-gray-500 mt-2">Precios base estimados. ¡Cotiza tu diseño personalizado!</p></div>
         </div>
         <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- REVIEWS -->
     <section id="reviews" class="hidden fade-in">
-        <div class="mb-8 border-b pb-4">
-            <h2 class="text-3xl font-bold text-gray-900">Lo que dicen nuestros clientes</h2>
-            <p class="text-gray-500 mt-2">La satisfacción de quienes confían en nuestro trabajo.</p>
-        </div>
+        <div class="mb-8 border-b pb-4"><h2 class="text-3xl font-bold text-gray-900">Lo que dicen nuestros clientes</h2><p class="text-gray-500 mt-2">La satisfacción de quienes confían en nuestro trabajo.</p></div>
         <div id="reviews-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
         <div class="mt-12 bg-purple-50 rounded-xl p-8 text-center">
             <h3 class="text-xl font-semibold mb-4">¿Ya eres cliente?</h3>
@@ -188,9 +172,7 @@
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <h2 class="text-2xl font-bold text-gray-800">Panel de Administración</h2>
             <div class="space-x-2">
-                <button onclick="openSettingsModal()" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition">
-                    <i class="fas fa-cog mr-1"></i> Configuración
-                </button>
+                <button onclick="openSettingsModal()" class="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition"><i class="fas fa-cog mr-1"></i> Configuración</button>
                 <button onclick="logoutAdmin()" class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition">Cerrar Sesión</button>
             </div>
         </div>
@@ -201,13 +183,10 @@
             <button onclick="switchAdminTab('admin-ads')" id="tab-ads" class="admin-tab px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200">Gestionar Publicidad</button>
         </div>
 
-        <!-- Admin Portfolio -->
         <div id="admin-portfolio" class="admin-content">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Mis Trabajos (Portafolio)</h3>
-                <button onclick="openAddPortfolioModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
-                    <i class="fas fa-plus mr-1"></i> Añadir Foto
-                </button>
+                <h3 class="text-lg font-semibold">Mis Trabajos</h3>
+                <button onclick="openAddPortfolioModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition"><i class="fas fa-plus mr-1"></i> Añadir</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -217,25 +196,21 @@
             </div>
         </div>
 
-        <!-- Admin Catalog -->
         <div id="admin-catalog" class="admin-content hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Productos del Catálogo</h3>
-                <button onclick="openAddCatalogModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
-                    <i class="fas fa-plus mr-1"></i> Añadir Producto
-                </button>
+                <button onclick="openAddCatalogModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition"><i class="fas fa-plus mr-1"></i> Añadir Producto</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio Base</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th></tr></thead>
+                    <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th></tr></thead>
                     <tbody id="admin-catalog-list" class="bg-white divide-y divide-gray-200"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Admin Reviews -->
         <div id="admin-reviews" class="admin-content hidden">
-            <div class="mb-4"><h3 class="text-lg font-semibold">Reseñas de Clientes</h3><p class="text-sm text-gray-500">Aprobar o eliminar reseñas.</p></div>
+            <div class="mb-4"><h3 class="text-lg font-semibold">Reseñas de Clientes</h3></div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reseña</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th></tr></thead>
@@ -244,13 +219,10 @@
             </div>
         </div>
 
-        <!-- Admin Ads -->
         <div id="admin-ads" class="admin-content hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Publicidad en Inicio</h3>
-                <button onclick="openAddAdModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition">
-                    <i class="fas fa-plus mr-1"></i> Añadir Publicidad
-                </button>
+                <button onclick="openAddAdModal()" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition"><i class="fas fa-plus mr-1"></i> Añadir</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -268,7 +240,7 @@
 </a>
 
 <!-- Cart Sidebar -->
-<div id="cart-sidebar" class="fixed inset-0 z-50 overflow-hidden hidden" role="dialog" aria-modal="true">
+<div id="cart-sidebar" class="fixed inset-0 z-50 overflow-hidden hidden" role="dialog">
     <div class="absolute inset-0 overflow-hidden">
         <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity cursor-pointer" onclick="toggleCart()"></div>
         <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -287,7 +259,6 @@
                             <p>Subtotal Estimado</p>
                             <p id="cart-total">₡0</p>
                         </div>
-                        <p class="mt-0.5 text-sm text-gray-500">Precio final según personalización.</p>
                         <div class="mt-6">
                             <button onclick="sendQuoteViaWhatsApp()" class="w-full flex items-center justify-center rounded-md bg-green-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-green-600">
                                 <i class="fab fa-whatsapp mr-2"></i> Solicitar Cotización
@@ -317,7 +288,7 @@
     <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
         <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">Configuración</h3><button onclick="closeModal('settings-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button></div>
         <div class="space-y-4">
-            <div><label class="block text-sm font-medium text-gray-700 mb-1">Título Principal</label><input type="text" id="edit-hero-title" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-purple-500"></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Título Principal</label><input type="text" id="edit-hero-title" class="w-full border border-gray-300 rounded px-3 py-2"></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Correo Admin</label><input type="email" id="admin-email-display" class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" disabled></div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
@@ -333,7 +304,7 @@
         <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold" id="portfolio-modal-title">Añadir Trabajo</h3><button onclick="closeModal('portfolio-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button></div>
         <input type="hidden" id="port-id">
         <div class="space-y-4">
-            <div><label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label><input type="file" id="port-file" accept=".jpg,.jpeg,.png" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">URL de Imagen</label><input type="text" id="port-img" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://ejemplo.com/foto.jpg"></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Título</label><input type="text" id="port-title" class="w-full border border-gray-300 rounded px-3 py-2"></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label><textarea id="port-desc" rows="3" class="w-full border border-gray-300 rounded px-3 py-2"></textarea></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Enlace TikTok/Facebook</label><input type="text" id="port-social" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://..."></div>
@@ -345,7 +316,7 @@
     </div>
 </div>
 
-<!-- CATALOG MODAL (mejorado) -->
+<!-- CATALOG MODAL MEJORADO -->
 <div id="catalog-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
     <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 shadow-xl max-h-[95vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
@@ -366,20 +337,34 @@
 
             <!-- MÚLTIPLES IMÁGENES -->
             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <label class="block text-sm font-medium text-gray-700 mb-2">📸 Imágenes del Producto (máx 10)</label>
-                <div class="flex flex-wrap gap-2 mb-2">
-                    <input type="file" id="cat-file-multi" accept=".jpg,.jpeg,.png" multiple class="text-sm text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-                    <span class="text-xs text-gray-400 self-center">o URLs separadas por coma</span>
-                </div>
-                <input type="text" id="cat-img-urls" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm" placeholder="https://img1.jpg, https://img2.jpg, ...">
+                <label class="block text-sm font-medium text-gray-700 mb-2">📸 Imágenes del Producto (URLs separadas por coma)</label>
+                <input type="text" id="cat-images" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://img1.jpg, https://img2.jpg, https://img3.jpg">
+                <p class="text-xs text-gray-400 mt-1">Puedes usar imágenes de tu galería o subirlas a un servicio como Imgur</p>
                 <div id="cat-thumb-preview" class="thumb-grid"></div>
-                <p class="text-xs text-gray-400 mt-1">Sube varias fotos o pega URLs. Se mostrarán en un carrusel.</p>
             </div>
 
             <!-- VIDEO -->
             <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <label class="block text-sm font-medium text-gray-700 mb-2">🎬 Video (Opcional)</label>
-                <div class="flex flex-wrap gap-2">
-                    <input type="file" id="cat-video-file" accept=".mp4,.webm,.mov" class="text-sm text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-                    <span class="text-xs text-gray-400 self-center">o</span>
-                    <input type="text" id="cat-video-url" class="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+                <label class="block text-sm font-medium text-gray-700 mb-2">🎬 Video (URL de YouTube o TikTok)</label>
+                <input type="text" id="cat-video" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://www.tiktok.com/@usuario/video/123456789">
+                <p class="text-xs text-gray-400 mt-1">Pega el enlace del video que quieras mostrar</p>
+            </div>
+
+            <!-- TIKTOK REFERENCE -->
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <label class="block text-sm font-medium text-gray-700 mb-2">🔗 Referencia TikTok (Opcional)</label>
+                <input type="text" id="cat-tiktok" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="https://www.tiktok.com/@usuario/video/123456789">
+                <p class="text-xs text-gray-400 mt-1">Enlace directo al video de referencia</p>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-end gap-3">
+            <button onclick="closeModal('catalog-modal')" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Cancelar</button>
+            <button onclick="saveCatalogItem()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Ads Modal -->
+<div id="ads-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+        <div class="flex justify-between items-center mb-4"><h3 class="text-xl
