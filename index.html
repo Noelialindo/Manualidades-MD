@@ -133,6 +133,210 @@
             justify-content: center;
             border: 2px solid white;
         }
+
+        /* Modal de edición */
+        .edit-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .edit-modal-overlay.active {
+            display: flex;
+        }
+        .edit-modal {
+            background: white;
+            border-radius: 24px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .edit-modal::-webkit-scrollbar {
+            width: 6px;
+        }
+        .edit-modal::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 3px;
+        }
+        .edit-modal .form-group {
+            margin-bottom: 18px;
+        }
+        .edit-modal label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+        .edit-modal input,
+        .edit-modal textarea,
+        .edit-modal select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+        .edit-modal input:focus,
+        .edit-modal textarea:focus,
+        .edit-modal select:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        }
+        .edit-modal .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .edit-modal .media-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        .edit-modal .media-item img,
+        .edit-modal .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .edit-modal .media-item .remove-media {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 22px;
+            height: 22px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .edit-modal .media-item .remove-media:hover {
+            transform: scale(1.15);
+        }
+        .edit-modal .media-item .media-type-badge {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .edit-modal .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edit-modal .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+        }
+        .edit-modal .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edit-modal .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .edit-modal .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edit-modal .btn-danger:hover {
+            background: #dc2626;
+        }
+        .edit-modal .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .edit-modal .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #7c3aed;
+        }
+        .edit-modal .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .edit-modal .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .edit-modal .file-upload-area:hover {
+            border-color: #7c3aed;
+            background: #f5f3ff;
+        }
+        .edit-modal .file-upload-area i {
+            font-size: 28px;
+            color: #9ca3af;
+        }
+        .edit-modal .file-upload-area p {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+        .edit-modal .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 640px) {
+            .edit-modal .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -160,7 +364,6 @@
                         <i class="fas fa-shopping-bag text-xl"></i>
                         <span id="cart-badge-desktop" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-pink-500 rounded-full hidden">0</span>
                     </button>
-                    <!-- Botón Admin en navbar -->
                     <button onclick="toggleAdminMode()" id="admin-toggle-btn" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full font-medium transition flex items-center gap-2">
                         <i class="fas fa-user-shield"></i> <span id="admin-status-text">Admin</span>
                     </button>
@@ -305,6 +508,13 @@
                 </div>
             </div>
 
+            <!-- Botón para agregar nuevo producto (solo visible para admin) -->
+            <div id="admin-add-product-btn" class="hidden">
+                <button onclick="openEditModal()" class="w-full md:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-plus-circle text-xl"></i> Agregar Nuevo Producto
+                </button>
+            </div>
+
             <!-- Caja Informativa sobre Presupuestos -->
             <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-sm mb-6 flex items-start sm:items-center gap-4">
                 <div class="bg-white p-3 rounded-full shadow-sm text-purple-600">
@@ -385,681 +595,4 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Cuéntanos más detalles</label>
                             <textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition bg-white resize-none" placeholder="Colores preferidos, temáticas, presupuesto aproximado..."></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition shadow-lg flex justify-center items-center gap-2">
-                            <i class="fas fa-paper-plane"></i> Enviar Consulta
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Product Details Modal -->
-    <div id="product-modal" class="fixed inset-0 z-[60] bg-black/70 hidden flex items-center justify-center backdrop-blur-sm p-2 sm:p-4 transition-opacity">
-        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative transform transition-all max-h-[95vh]">
-            <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-gray-700 hover:text-red-500 hover:bg-red-50 shadow-lg z-20 transition-colors"><i class="fas fa-times text-lg"></i></button>
-            
-            <div class="md:w-1/2 h-72 md:h-auto relative bg-gray-900 group">
-                <div id="modal-media-content" class="w-full h-full flex items-center justify-center overflow-hidden"></div>
-                <div id="modal-product-badge" class="absolute top-4 left-4 z-10"></div>
-                <button id="modal-prev-btn" onclick="prevMedia()" class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-left"></i></button>
-                <button id="modal-next-btn" onclick="nextMedia()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/90 transition opacity-0 group-hover:opacity-100 z-10 shadow-lg"><i class="fas fa-chevron-right"></i></button>
-                <div id="modal-media-indicators" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
-                <div id="modal-media-type-label" class="absolute top-4 right-16 bg-black/60 text-white text-xs px-2 py-1 rounded shadow-md z-10 backdrop-blur-sm hidden">
-                    <i class="fas fa-video mr-1"></i> Video
-                </div>
-            </div>
-
-            <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto hide-scrollbar relative">
-                <span id="modal-product-category" class="text-xs font-bold text-purple-600 uppercase tracking-widest mb-1 block"></span>
-                <h3 id="modal-product-name" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 brand-font leading-tight"></h3>
-                <div id="modal-product-price" class="mb-3 text-xl flex items-center flex-wrap gap-2"></div>
-                <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mb-4 rounded"></div>
-                <p id="modal-product-desc" class="text-gray-600 mb-6 text-sm leading-relaxed whitespace-pre-line flex-grow"></p>
-                <div class="bg-indigo-50/80 border border-indigo-100 p-4 rounded-xl mb-6 text-sm text-indigo-900 flex flex-col gap-2 shadow-inner">
-                    <div class="flex items-start gap-2 font-semibold">
-                        <i class="fas fa-info-circle text-indigo-500 mt-0.5 text-lg"></i>
-                        <p>Cotización Flexible y Segura</p>
-                    </div>
-                    <p class="text-xs opacity-90 pl-6 leading-relaxed">
-                        Este precio es referencial. <b>Nos acomodamos a tu presupuesto</b> ajustando tamaños o materiales. Al elegirnos, tienes la garantía de estar viendo nuestros trabajos 100% reales.
-                    </p>
-                </div>
-                <button id="modal-add-btn" class="w-full mt-auto bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition shadow-lg flex justify-center items-center gap-2 transform hover:-translate-y-0.5">
-                    <i class="fas fa-cart-plus text-lg"></i> Añadir a mi Cotización
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Cart / Quote Modal -->
-    <div id="cart-modal" class="fixed inset-0 z-[60] bg-black bg-opacity-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-clipboard-list text-purple-600"></i> Mi Cotización</h3>
-                <button onclick="closeModal('cart-modal')" class="text-gray-400 hover:text-gray-700"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="cart-items" class="p-5 overflow-y-auto flex-grow space-y-4 bg-white"></div>
-            <div class="p-5 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-gray-600 font-medium">Total Estimado:</span>
-                    <span id="cart-total" class="text-2xl font-bold text-gray-900">₡0</span>
-                </div>
-                <p class="text-xs text-center text-gray-500 mb-4">*El precio final se ajustará según tus requerimientos exactos.</p>
-                <button onclick="sendQuoteWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl hover:bg-[#20bd5a] transition shadow-md flex justify-center items-center gap-2">
-                    <i class="fab fa-whatsapp text-xl"></i> Enviar Cotización por WhatsApp
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 py-8 mt-auto z-10 relative">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mx-auto mb-3 transform rotate-3">M</div>
-            <h2 class="text-xl font-bold text-gray-900 brand-font">Manualidades MD</h2>
-            <p class="text-gray-500 text-sm mt-1 mb-4">Detalles únicos para momentos especiales.</p>
-            <p class="text-gray-400 text-xs">© 2026 Manualidades MD. Todos los derechos reservados.</p>
-            <p class="text-purple-300 text-[10px] mt-2">Estrategia Digital Generada con IA</p>
-        </div>
-    </footer>
-
-    <!-- FAB para Admin Mode -->
-    <button id="admin-fab" onclick="toggleAdminMode()" class="admin-fab" title="Modo Administrador">
-        <i class="fas fa-user-shield"></i>
-        <span id="fab-badge" class="badge hidden">!</span>
-    </button>
-
-    <!-- Modal de Login Rápido -->
-    <div id="quick-login-modal" class="fixed inset-0 z-[100] bg-black/60 hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl p-8 relative">
-            <button onclick="closeQuickLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i class="fas fa-times"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 text-purple-600">
-                    <i class="fas fa-lock text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Acceso Admin</h3>
-                <p class="text-gray-500 text-sm mt-1">Ingresa para editar el catálogo</p>
-            </div>
-            <form id="quick-login-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input id="quick-email" type="email" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="admin@manualidadesmd.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input id="quick-password" type="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none" placeholder="••••••••">
-                </div>
-                <button type="submit" class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-lg hover:bg-purple-700 transition shadow mt-2">
-                    <i class="fas fa-sign-in-alt mr-2"></i> Ingresar
-                </button>
-                <p class="text-xs text-center text-gray-400 mt-3">Solo personal autorizado</p>
-            </form>
-        </div>
-    </div>
-
-    <script type="module">
-        // ============================================================
-        // 1. IMPORTS DE FIREBASE
-        // ============================================================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { 
-            getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, addDoc, getDoc
-        } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-        import {
-            getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
-        } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
-        import {
-            getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
-        } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-
-        // ============================================================
-        // 2. CONFIGURACIÓN
-        // ============================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyATAqRUThwU_oulXnVtwzZ1aKTjkcvPDQ4",
-            authDomain: "variadades-md.firebaseapp.com",
-            projectId: "variadades-md",
-            storageBucket: "variadades-md.firebasestorage.app",
-            messagingSenderId: "928706849001",
-            appId: "1:928706849001:web:51b22318627566fad6e878",
-            measurementId: "G-EKMKEGQTGM"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-        const auth = getAuth(app);
-
-        // ============================================================
-        // 3. STATE
-        // ============================================================
-        const state = {
-            cart: [],
-            currentSection: 'home',
-            currentFilter: 'Todos',
-            catalog: [],
-            isAdmin: false,
-            editingProductId: null
-        };
-
-        // ============================================================
-        // 4. REFERENCIAS DOM
-        // ============================================================
-        const $ = (id) => document.getElementById(id);
-        const catalogGrid = $('catalog-grid');
-        const emptyMsg = $('empty-catalog-msg');
-        const adminFab = $('admin-fab');
-        const fabBadge = $('fab-badge');
-        const adminStatusText = $('admin-status-text');
-        const mobileAdminStatus = $('mobile-admin-status');
-        const quickLoginModal = $('quick-login-modal');
-
-        // ============================================================
-        // 5. FUNCIONES DE UTILIDAD
-        // ============================================================
-        const formatMoney = (amount) => {
-            return new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', maximumFractionDigits: 0 }).format(amount);
-        };
-
-        const showNotification = (message, type = 'info') => {
-            const container = $('notification-container');
-            const notif = document.createElement('div');
-            let bg = 'bg-white', icon = '<i class="fas fa-info-circle text-blue-500"></i>', border = 'border-l-4 border-blue-500';
-            if(type === 'success') { icon = '<i class="fas fa-check-circle text-green-500"></i>'; border = 'border-l-4 border-green-500'; }
-            else if (type === 'error') { icon = '<i class="fas fa-exclamation-circle text-red-500"></i>'; border = 'border-l-4 border-red-500'; }
-            
-            notif.className = `${bg} ${border} p-4 rounded-r shadow-lg flex items-center gap-3 transform transition-all translate-x-full opacity-0 max-w-sm w-full`;
-            notif.innerHTML = `${icon} <p class="text-gray-800 text-sm font-medium">${message}</p>`;
-            container.appendChild(notif);
-            
-            requestAnimationFrame(() => {
-                notif.classList.remove('translate-x-full', 'opacity-0');
-            });
-            setTimeout(() => {
-                notif.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => notif.remove(), 300);
-            }, 4000);
-        };
-
-        // ============================================================
-        // 6. AUTENTICACIÓN
-        // ============================================================
-        let currentUser = null;
-
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            state.isAdmin = !!user;
-            updateAdminUI();
-            if (user) {
-                showNotification(`✅ Bienvenido admin: ${user.email}`, 'success');
-            }
-        });
-
-        const updateAdminUI = () => {
-            const isLoggedIn = state.isAdmin;
-            
-            // Textos
-            adminStatusText.textContent = isLoggedIn ? '👑 Admin' : 'Admin';
-            mobileAdminStatus.textContent = isLoggedIn ? '👑 Cerrar Sesión Admin' : 'Administración';
-            
-            // FAB
-            adminFab.classList.toggle('logged-in', isLoggedIn);
-            adminFab.innerHTML = isLoggedIn 
-                ? '<i class="fas fa-sign-out-alt"></i>' 
-                : '<i class="fas fa-user-shield"></i>';
-            
-            fabBadge.classList.toggle('hidden', !isLoggedIn);
-            
-            // Recargar catálogo para mostrar/ocultar controles
-            renderCatalog();
-        };
-
-        // Login rápido
-        $('quick-login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = $('quick-email').value;
-            const password = $('quick-password').value;
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                closeQuickLogin();
-                showNotification('✅ Sesión iniciada como administrador', 'success');
-            } catch (error) {
-                showNotification('❌ Error: ' + error.message, 'error');
-            }
-        });
-
-        const closeQuickLogin = () => {
-            quickLoginModal.classList.add('hidden');
-        };
-
-        // Toggle admin mode
-        window.toggleAdminMode = () => {
-            if (state.isAdmin) {
-                // Cerrar sesión
-                signOut(auth);
-                showNotification('Sesión cerrada', 'info');
-            } else {
-                // Abrir login
-                quickLoginModal.classList.remove('hidden');
-            }
-        };
-
-        // ============================================================
-        // 7. CRUD DE PRODUCTOS
-        // ============================================================
-
-        // Cargar productos desde Firestore
-        function loadProductsFromFirestore() {
-            const productsRef = collection(db, 'productos');
-            
-            onSnapshot(productsRef, (snapshot) => {
-                state.catalog = [];
-                snapshot.forEach((doc) => {
-                    state.catalog.push({ id: doc.id, ...doc.data() });
-                });
-                renderCatalog();
-                updateCartUI();
-            }, (error) => {
-                console.error('Error cargando productos:', error);
-                showNotification('Error cargando catálogo', 'error');
-            });
-        }
-
-        // Actualizar producto
-        async function updateProduct(productId, data) {
-            try {
-                const docRef = doc(db, 'productos', productId);
-                await updateDoc(docRef, {
-                    ...data,
-                    updatedAt: new Date().toISOString()
-                });
-                showNotification('✅ Producto actualizado', 'success');
-                return true;
-            } catch (error) {
-                console.error('Error actualizando:', error);
-                showNotification('❌ Error: ' + error.message, 'error');
-                return false;
-            }
-        }
-
-        // Eliminar producto
-        async function deleteProduct(productId) {
-            if (!confirm('⚠️ ¿Eliminar este producto permanentemente?')) return;
-            
-            try {
-                const docRef = doc(db, 'productos', productId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const media = docSnap.data().media || [];
-                    for (const m of media) {
-                        try {
-                            const fileRef = ref(storage, m.src);
-                            await deleteObject(fileRef);
-                        } catch (e) { /* ignore */ }
-                    }
-                }
-                await deleteDoc(docRef);
-                showNotification('✅ Producto eliminado', 'success');
-            } catch (error) {
-                showNotification('❌ Error: ' + error.message, 'error');
-            }
-        }
-
-        // Subir archivos a Storage
-        async function uploadFiles(files) {
-            const uploadPromises = [];
-            for (const file of files) {
-                const fileName = `${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, `productos/${fileName}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-                
-                const uploadPromise = new Promise((resolve, reject) => {
-                    uploadTask.on(
-                        'state_changed',
-                        null,
-                        (error) => reject(error),
-                        async () => {
-                            const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            resolve({
-                                type: file.type.startsWith('video') ? 'video' : 'img',
-                                src: url
-                            });
-                        }
-                    );
-                });
-                uploadPromises.push(uploadPromise);
-            }
-            return Promise.all(uploadPromises);
-        }
-
-        // ============================================================
-        // 8. RENDERIZADO DEL CATÁLOGO (con controles admin)
-        // ============================================================
-        const renderCatalog = () => {
-            catalogGrid.innerHTML = '';
-            let filteredCatalog = state.catalog;
-            
-            if (state.currentFilter === 'Promociones') {
-                filteredCatalog = state.catalog.filter(item => item.isPromo);
-            } else if (state.currentFilter !== 'Todos') {
-                filteredCatalog = state.catalog.filter(item => item.category === state.currentFilter);
-            }
-
-            if (filteredCatalog.length === 0) {
-                catalogGrid.classList.add('hidden');
-                emptyMsg.classList.remove('hidden');
-                return;
-            }
-
-            catalogGrid.classList.remove('hidden');
-            emptyMsg.classList.add('hidden');
-
-            filteredCatalog.forEach(item => {
-                const isPromo = item.isPromo && item.promoPrice > 0 && item.promoPrice < item.price;
-                const isAdmin = state.isAdmin;
-                const productId = item.id;
-                
-                const coverMedia = item.media && item.media.length > 0 ? item.media[0] : { src: 'https://placehold.co/400x400' };
-                const hasVideo = item.media && item.media.some(m => m.type === 'video');
-                const multiImage = item.media && item.media.length > 1;
-                
-                // Construir tarjeta con controles admin si está logueado
-                let cardHtml = `
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-xl transition transform hover:-translate-y-1 relative group premium-card" data-product-id="${productId}">
-                        ${isPromo ? `<div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded shadow-md z-20 animate-pulse"><i class="fas fa-tag"></i> OFERTA</div>` : ''}
-                        
-                        <!-- IMAGEN / VIDEO -->
-                        <div class="relative overflow-hidden h-56 cursor-pointer bg-gray-100" onclick="window.openProductModal('${productId}')">
-                            ${isAdmin ? `
-                                <div class="edit-overlay" onclick="event.stopPropagation(); window.openMediaUploader('${productId}')">
-                                    <div class="bg-purple-600 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                                        <i class="fas fa-camera"></i> Cambiar Fotos/Videos
-                                    </div>
-                                </div>
-                            ` : ''}
-                            ${hasVideo || multiImage ? `
-                                <div class="absolute top-2 left-2 flex gap-1 z-20">
-                                    ${hasVideo ? `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-video"></i></span>` : ''}
-                                    ${multiImage ? `<span class="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm border border-white/20"><i class="fas fa-images"></i> ${item.media.length}</span>` : ''}
-                                </div>
-                            ` : ''}
-                            ${coverMedia.type === 'video' 
-                                ? `<video src="${coverMedia.src}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" muted></video>`
-                                : `<img src="${coverMedia.src}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x400/e2e8f0/64748b?text=Producto'">`
-                            }
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                                <span class="text-white text-sm font-semibold flex items-center shadow-lg"><i class="fas fa-search-plus mr-2"></i> Ver Fotos/Videos</span>
-                            </div>
-                        </div>
-                        
-                        <div class="p-5 flex-grow flex flex-col relative">
-                            <div class="absolute -top-4 right-4 bg-white px-3 py-1 rounded-full text-[10px] font-bold text-purple-600 shadow border border-purple-50 uppercase tracking-wider">
-                                ${(item.category || 'General')}
-                            </div>
-                            
-                            <!-- NOMBRE (editable) -->
-                            ${isAdmin ? `
-                                <div class="flex items-center gap-2 mt-2">
-                                    <input type="text" value="${item.name}" 
-                                           class="edit-input font-bold text-lg text-gray-900 leading-tight flex-grow"
-                                           onchange="window.updateProductField('${productId}', 'name', this.value)"
-                                           placeholder="Nombre del producto">
-                                    <button onclick="window.deleteProduct('${productId}')" class="text-red-400 hover:text-red-600 transition text-sm" title="Eliminar producto">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            ` : `
-                                <h3 class="font-bold text-lg text-gray-900 mb-1 leading-tight line-clamp-1 cursor-pointer hover:text-purple-600 mt-2" onclick="window.openProductModal('${productId}')">${item.name}</h3>
-                            `}
-                            
-                            <!-- PRECIO (editable) -->
-                            ${isAdmin ? `
-                                <div class="mb-2 flex items-center gap-2 flex-wrap mt-1">
-                                    <input type="number" value="${item.price}" 
-                                           class="edit-input edit-input-price font-bold text-purple-700"
-                                           onchange="window.updateProductField('${productId}', 'price', parseFloat(this.value) || 0)"
-                                           placeholder="Precio">
-                                    ${isPromo ? `
-                                        <span class="text-sm text-gray-400">Oferta:</span>
-                                        <input type="number" value="${item.promoPrice}" 
-                                               class="edit-input edit-input-price font-bold text-pink-600"
-                                               onchange="window.updateProductField('${productId}', 'promoPrice', parseFloat(this.value) || 0)"
-                                               placeholder="Promo">
-                                    ` : ''}
-                                    <label class="flex items-center gap-1 text-xs text-gray-500">
-                                        <input type="checkbox" ${item.isPromo ? 'checked' : ''} 
-                                               onchange="window.updateProductField('${productId}', 'isPromo', this.checked)">
-                                        Promo
-                                    </label>
-                                </div>
-                            ` : `
-                                <div class="mb-2 flex items-center">
-                                    ${isPromo 
-                                        ? `<span class="line-through text-gray-400 text-sm mr-2">${formatMoney(item.price)}</span><span class="text-pink-600 font-bold text-lg">${formatMoney(item.promoPrice)}</span>`
-                                        : `<span class="text-purple-700 font-bold text-lg">${formatMoney(item.price)}</span>`
-                                    }
-                                </div>
-                            `}
-                            
-                            <!-- DESCRIPCIÓN (editable) -->
-                            ${isAdmin ? `
-                                <textarea class="edit-input text-gray-500 text-xs mb-2 resize-none" rows="2"
-                                          onchange="window.updateProductField('${productId}', 'desc', this.value)"
-                                          placeholder="Descripción del producto">${item.desc || ''}</textarea>
-                            ` : `
-                                <p class="text-gray-500 text-xs mb-4 flex-grow line-clamp-2">${item.desc || ''}</p>
-                            `}
-                            
-                            <!-- BOTONES DE ACCIÓN -->
-                            <div class="flex gap-2 mt-auto pt-4 border-t border-gray-50">
-                                <button onclick="window.openProductModal('${productId}')" class="w-10 flex-shrink-0 bg-white text-gray-400 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 hover:text-purple-600 transition-colors flex items-center justify-center">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="window.addToCart('${productId}')" class="flex-grow bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 font-semibold py-2 rounded-lg hover:from-purple-200 hover:to-indigo-200 transition-colors text-sm flex justify-center items-center shadow-sm">
-                                    <i class="fas fa-plus mr-2"></i> Cotizar Idea
-                                </button>
-                                ${isAdmin ? `
-                                    <button onclick="window.openMediaUploader('${productId}')" class="w-10 flex-shrink-0 bg-purple-50 text-purple-500 py-2 rounded-lg border border-purple-200 hover:bg-purple-100 transition-colors flex items-center justify-center" title="Subir fotos/videos">
-                                        <i class="fas fa-upload"></i>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                catalogGrid.innerHTML += cardHtml;
-            });
-        };
-
-        // ============================================================
-        // 9. FUNCIONES GLOBALES (para onclick)
-        // ============================================================
-
-        // Actualizar campo de producto
-        window.updateProductField = async (productId, field, value) => {
-            if (!state.isAdmin) return;
-            const data = { [field]: value };
-            await updateProduct(productId, data);
-        };
-
-        // Eliminar producto
-        window.deleteProduct = deleteProduct;
-
-        // Abrir selector de archivos para subir multimedia
-        window.openMediaUploader = (productId) => {
-            if (!state.isAdmin) return;
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.multiple = true;
-            input.accept = 'image/*,video/*';
-            input.onchange = async (e) => {
-                const files = e.target.files;
-                if (files.length === 0) return;
-                
-                try {
-                    showNotification(`Subiendo ${files.length} archivos...`, 'info');
-                    const newMedia = await uploadFiles(files);
-                    
-                    // Obtener media existente
-                    const docRef = doc(db, 'productos', productId);
-                    const docSnap = await getDoc(docRef);
-                    const existingMedia = docSnap.exists() ? (docSnap.data().media || []) : [];
-                    
-                    await updateDoc(docRef, {
-                        media: [...existingMedia, ...newMedia],
-                        updatedAt: new Date().toISOString()
-                    });
-                    
-                    showNotification(`✅ ${files.length} archivos subidos`, 'success');
-                } catch (error) {
-                    showNotification('❌ Error al subir: ' + error.message, 'error');
-                }
-            };
-            input.click();
-        };
-
-        // Abrir modal de producto
-        window.openProductModal = (productId) => {
-            const product = state.catalog.find(p => p.id === productId);
-            if (!product) return;
-
-            // ... (código del modal igual que antes)
-            // Para mantener el código manejable, aquí iría la lógica del modal
-            // que ya tenías implementada
-            showNotification('Abriendo detalles de: ' + product.name, 'info');
-        };
-
-        // Añadir al carrito
-        window.addToCart = (productId) => {
-            const product = state.catalog.find(p => p.id === productId);
-            if (product) {
-                state.cart.push({ ...product, cartId: Date.now() });
-                updateCartUI();
-                showNotification(`"${product.name}" añadido a tu cotización`, 'success');
-            }
-        };
-
-        // Navegación
-        window.showSection = (sectionId) => {
-            ['home', 'catalog', 'contact'].forEach(id => {
-                document.getElementById(`section-${id}`).classList.toggle('hidden', id !== sectionId);
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // Filtros
-        window.setCatalogFilter = (filter) => {
-            state.currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = 'filter-btn px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-all';
-                if (btn.id === `filter-${filter}`) {
-                    btn.classList.add('font-semibold', 'text-purple-700', 'bg-white', 'shadow-sm');
-                } else {
-                    btn.classList.add('font-medium', 'text-gray-600', 'hover:text-gray-900', 'hover:bg-gray-200/50');
-                }
-            });
-            renderCatalog();
-        };
-
-        // ============================================================
-        // 10. CARRITO
-        // ============================================================
-        const updateCartUI = () => {
-            const count = state.cart.length;
-            const bDesktop = document.getElementById('cart-badge-desktop');
-            const bMobile = document.getElementById('cart-badge-mobile');
-            
-            if (count > 0) {
-                bDesktop.textContent = count;
-                bDesktop.classList.remove('hidden');
-                bMobile.textContent = count;
-                bMobile.classList.remove('hidden');
-            } else {
-                bDesktop.classList.add('hidden');
-                bMobile.classList.add('hidden');
-            }
-
-            const container = document.getElementById('cart-items');
-            if (count === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 text-gray-400">
-                        <i class="fas fa-shopping-basket text-4xl mb-3"></i>
-                        <p>Tu lista de cotización está vacía</p>
-                    </div>`;
-                document.getElementById('cart-total').textContent = '₡0';
-                return;
-            }
-
-            let html = '', total = 0;
-            state.cart.forEach(item => {
-                const finalPrice = (item.isPromo && item.promoPrice > 0) ? item.promoPrice : item.price;
-                total += finalPrice;
-                const coverSrc = item.media && item.media.length > 0 ? item.media[0].src : 'https://placehold.co/100x100';
-                html += `
-                    <div class="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
-                        <div class="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden shrink-0">
-                            <img src="${coverSrc}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-grow">
-                            <h4 class="text-sm font-bold text-gray-900 line-clamp-1">${item.name}</h4>
-                            <p class="text-sm text-purple-600 font-semibold">${formatMoney(finalPrice)}</p>
-                        </div>
-                        <button onclick="window.removeFromCart(${item.cartId})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-colors shrink-0">
-                            <i class="fas fa-trash-alt text-xs"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            document.getElementById('cart-total').textContent = formatMoney(total);
-        };
-
-        window.removeFromCart = (cartId) => {
-            state.cart = state.cart.filter(item => item.cartId !== cartId);
-            updateCartUI();
-        };
-
-        // ============================================================
-        // 11. INICIALIZACIÓN
-        // ============================================================
-        loadProductsFromFirestore();
-        updateCartUI();
-
-        // Exponer funciones para uso en HTML
-        window.toggleAdminMode = toggleAdminMode;
-        window.openProductModal = openProductModal;
-        window.addToCart = addToCart;
-        window.removeFromCart = removeFromCart;
-        window.showSection = showSection;
-        window.setCatalogFilter = setCatalogFilter;
-        window.updateProductField = updateProductField;
-        window.deleteProduct = deleteProduct;
-        window.openMediaUploader = openMediaUploader;
-        window.downloadCatalog = () => {
-            showNotification('Generando catálogo PDF...', 'success');
-        };
-        window.sendQuoteWhatsApp = () => {
-            if (state.cart.length === 0) {
-                showNotification('No tienes artículos para cotizar', 'error');
-                return;
-            }
-            let msg = "¡Hola Manualidades MD! 👋\nMe gustaría cotizar:\n\n";
-            let total = 0;
-            state.cart.forEach((item, i) => {
-                const price = (item.isPromo && item.promoPrice > 0) ? item.promoPrice : item.price;
-                total += price;
-                msg += `${i+1}. ${item.name} (${formatMoney(price)})\n`;
-            });
-            msg += `\nTotal: ${formatMoney(total)}\n¡Gracias!`;
-            window.open(`https://wa.me/50600000000?text=${encodeURIComponent(msg)}`, '_blank');
-        };
-
-        console.log('✅ Manualidades MD con Admin Integrado');
-    </script>
-</body>
-</html>
+                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-3.5 rounded-xl hover:bg
